@@ -118,12 +118,36 @@ Sections gained that matter mechanically: crankcase, engine bracket, control cab
 
 Same copyright position as before: watermarked Yamaha illustrations, kept local, deliberately excluded from the published artifact.
 
+## Phase 2: checked against the factory manuals (2026-11-19)
+
+The 111 MB compiled *1984-1999 Yamaha Phazer 480 Series Service Manual* (567 scanned pages, no text layer) was read page by page from images. It holds four Yamaha documents: the 1984-89 PZ480 factory manual (pp.3-156), the 1990 PZ480P/EP manual LIT-12618-PZ-50 (pp.197-488), and supplements for 1991 PZ480R/ER/STR (pp.490-518), 1993 PZ480T/ET/STT (pp.520-535) and 1996 (pp.537-566). PDF page numbers are given here; the printed page is in the data.
+
+**Torque, the 11 "3% low" rows.** Not misreadings. Yamaha's own PZ480 table (p.8-8, PDF p.127) gives N-m, m-kg and ft-lb, and Yamaha works in m-kg: N-m is printed as m-kg x 10 and ft-lb as m-kg x 7.2. So 6.0 m-kg is printed as 60 N-m and 43 ft-lb. The data keeps the printed values, adds the m-kg column where the factory table gives it, and `tools/check.js` now accepts either the exact conversion or Yamaha's rule. Two real corrections came out of it:
+- Primary sheave bolt, seating step: Clymer prints 85 ft-lb; Yamaha's 1993 supplement prints 120 N-m (12 m-kg, 87 ft-lb). Now 87.
+- Slide rail suspension mounting bolts: Clymer prints 70 N-m; Yamaha's table and the 1991 supplement print 69 N-m (6.9 m-kg, 50 ft-lb). Now 69.
+
+**Jetting baseline conflict, closed.** Both manuals were right for their own years. Yamaha's 1984-89 chart (p.8-5, PDF p.124) uses round jets and overlapping arrows, and puts the stock #143.8 at sea level from about -25 to 15 C, which contains the Clymer text's 0 to -20 C. The 1990 chart is a recalibration, richer, on the in-between sizes. The 1991 supplement (p.23, PDF p.513) recalibrates again, back to round sizes, and prints a part number for each jet. The app now carries all three charts and picks by model year. 1992-95 and the Venture get the 1991 chart, labelled as the nearest chart rather than their own.
+
+**Jet part numbers.** The 1991 chart lists #152.5 as 3G2-1423A-81-00, which settles the #152.5 question in favour of the ladder's primary number. It lists #120 to #135 under an older 256-14944-xx-A1 series; those are shown as the 1991 manual numbers, with Partzilla's current numbers kept as the order numbers. No manual lists #121.3.
+
+**Phazer II clutching.** Read for 1990 (p.8-7, PDF p.473) and 1991 (pp.3 and 26, PDF pp.493 and 516). The old Phazer II engagement and shift figures were the 84-89 PZ480 ones; they are replaced:
+- 1990 PZ480P/EP: approx 3,200 / 6,850 rpm, primary 90501-501G3, weights 87F-17632-00 48.5 g, secondary 90508-50793 at 75 degrees.
+- 1991 PZ480R/ER: approx 3,500 / 6,850 rpm, primary 90501-501G3, weights 87F-W176A-00 48.5 g, secondary 90508-50793 at 70 degrees (C-2), plus two high-altitude columns.
+- 1991 PZ480STR: approx 3,200 / 6,850 rpm, primary **90501-45534** (blue-green, 25.0 kg), weights 87M-W176A-00 48.0 g, secondary 90508-50746 at 50 degrees, plus two high-altitude columns.
+
+The 1991 supplement disagrees with itself in two places (page 24 repeats the 1990 weight part number and spring rate); the clutch tables on pages 3 and 26 agree with each other and are used, and the app notes the difference.
+
+**1991 Phazer II ST spring, confirmed.** 90501-45534 is Yamaha's standard primary for the 1991 ST, so Partzilla is right for that sled. It also means the 84-89 conflict spring is a real, softer part (1.06 kg/mm against 1.88), not a typo; the 84-89 warning stands.
+
+**1992-1995.** No 1992 supplement is in the compilation, and the 1993 one covers only the primary sheave (it gives primary spring free length 76.8 mm for PZ480T/ET). Partzilla lists new primary springs from 1992 (527G1 std, 507G2 ST), and the 1996 supplement lists 527G1 for the standard Phazer, so the 1991 clutch figures are not carried forward. These years now show "needs manual" for clutch settings instead of borrowed numbers.
+
 ## Still open
 
 - **Venture VT480 manual** — the one real gap. Nothing in the local set covers it, so the Venture's clutching, gearing and suspension remain unverified.
-- Phazer II 1991–1995 manual pages, to promote those years from `assumed` to verified.
+- **Phazer II 1992-1995** clutch settings and jetting chart. A 1992 supplement would close it.
 - Lug height on the 136 in ST tracks (sources conflict: 0.725" vs 1.5").
-- The `90501-45534-00` vs `90501-52798-00` primary spring conflict — now 2-to-1 against Partzilla, but not closed.
+- The `90501-45534-00` vs `90501-52798-00` primary spring conflict for 1986-89 — now 2-to-1 against Partzilla, but not closed.
 - The secondary spring colour conflict (yellow-blue vs white) — identify by twist angle instead.
 - Chain-link counts in Table 4 for combinations other than the standard 17/29.
-- The 111 MB compiled 1984–1999 PDF would need OCR to become searchable; a page-splitting tool (qpdf/ghostscript/poppler `pdfseparate`) is not installed, and the PDF_Tools MCP is scoped to Documents/Downloads/Desktop and has no page renderer available in this host.
+- Main jet #121.3: two Partzilla numbers and no manual listing; ask a dealer which is current.
+- 1984-85 (PZ480H/J): in the 1984-89 factory manual, but outside the 1986-1995 scope.

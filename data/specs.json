@@ -1,28 +1,26 @@
 {
   "meta": {
-    "version": "0.3",
-    "generated": "2026-11-17",
+    "version": "0.4",
+    "generated": "2026-11-19",
     "coverage": "1986-1995 Yamaha Phazer / Phazer II / Venture (485cc twin)",
     "notPresent": "1984-1985 Phazer - Partzilla's catalog begins at 1986",
     "sources": {
       "clymer8489": "Clymer-style sectioned manual covering PZ480 + EX570, 1984-1989. Local copy. Chapter tables are the source for the Phazer (84-89) column below.",
       "factory9096": "Yamaha factory service manual LIT-12618-PZ-50, 1990-1996 Phazer II. Maintenance Specifications page 8-5 for PZ480P/PZ480EP is the source for the 1990 column and the altitude jetting chart.",
+      "factory8489": "Yamaha factory PZ480 service manual (1984-89), Appendix 8 specifications pp.8-1 to 8-12. Checked 2026-11-19 against the Clymer tables: same figures, and it adds the m-kg column and the 1984-89 altitude chart.",
+      "factory91": "Yamaha PZ480R/ER/STR supplementary service manual (1991). Clutch setting data p.3 and p.26, power train p.24, carburettor setting chart with main jet part numbers p.23.",
       "partzilla": "Current OEM replacement part numbers."
     },
     "partNumberNote": "Partzilla shows current replacement numbers. Where a number looks unchanged across many years, that is often genuinely correct rather than a supersession artifact - the carburettor and its jetting are confirmed identical between the 1984-89 and 1990 manuals.",
-    "verifiedFor": "Engine, carburettor and jetting figures are manual-verified for the Phazer (PZ480, 1984-89) and the 1990 Phazer II (PZ480P/PZ480EP). 1991-1995 carry the same Partzilla part numbers but no manual page was checked for those years.",
+    "verifiedFor": "Engine, carburettor and jetting figures are manual-verified for the Phazer (PZ480, 1984-89) and the 1990 Phazer II (PZ480P/PZ480EP). The 1991 Phazer II, LE and ST clutching and altitude jetting are read off the 1991 supplement. 1992-1995 carry the same carburettor part numbers, but no clutch or jetting page exists for those years in the local manuals.",
     "todo": [
       "Venture VT480 - no manual in the local set. Engine and carburettor part numbers match the Phazer, but clutching, gearing and suspension are a touring setup and are NOT verified.",
-      "Phazer II 1991-1995 - assumed same as 1990 on matching part numbers, not read off a manual page",
-      "Phazer II engagement / shift RPM - the 3,000-3,400 / 6,600-7,000 figures are the 84-89 PZ480 spec",
+      "Phazer II 1992-1995 - no clutch or jetting page in the local manuals. Partzilla lists different primary springs from 1992 (90501-527G1 std, 90501-507G2 ST), so the 1991 clutch figures are not carried forward. The 1991 altitude chart is shown as the nearest factory chart.",
       "lug height on the 136 in ST tracks",
-      "Torque - 11 rows have ft-lb about 3% below the exact conversion of their N-m; check them against the 1984-89 manual tables",
-      "Main jets #121.3 and #152.5 each have two part numbers (older and newer); confirm which is current",
-      "Factory baseline - the 1984-89 manual text (32 to -4 F) disagrees with the 1990 chart (32 to 68 F) for the stock #143.8",
-      "1991 Phazer II ST lists primary spring 90501-45534-00 while the other 1991 sleds list 90501-501G3-00; confirm",
-      "1993 Venture GT - no track-suspension-1 rows were scraped, so its track and slide are unconfirmed"
-    ]
-  },
+      "Main jet #121.3 has two Partzilla part numbers (3G2-1423E-48-00 and 8V0-1423E-48-00) and no manual lists it; confirm which is current with a dealer",
+      "1993 Venture GT - no track-suspension-1 rows were scraped, so its track and slide are unconfirmed",
+      "1984-1985 Phazer (PZ480H/J) - the factory 1984-89 manual covers them, but they are outside the 1986-1995 scope and Partzilla has no parts lists for them"
+    ]  },
 
   "engine": {
     "appliesTo": "PZ480 1984-1989 (manual-verified); Phazer II and Venture share the same engine part numbers",
@@ -88,42 +86,85 @@
     "starterPlunger": "8G8-14171-00-00",
     "fuelPump": "Mikuni DF52",
     "mainJetLadder": [
-      { "size": "120", "pn": "3G2-14231-24-00" },
+      { "size": "120", "pn": "3G2-14231-24-00", "manual1991": "256-14944-24-A1" },
       { "size": "121.3", "pn": "3G2-1423E-48-00", "alt": ["8V0-1423E-48-00"] },
       { "size": "122.5", "pn": "3G2-1423A-75-A1" },
-      { "size": "125", "pn": "3G2-14231-25-00" },
+      { "size": "125", "pn": "3G2-14231-25-00", "manual1991": "256-14944-25-A1" },
       { "size": "126.3", "pn": "3G2-1423E-50-00" },
       { "size": "127.5", "pn": "3G2-1423A-76-00" },
-      { "size": "130", "pn": "3G2-14231-26-A0" },
+      { "size": "130", "pn": "3G2-14231-26-A0", "manual1991": "256-14944-26-A1" },
       { "size": "131.3", "pn": "3G2-1423E-52-00" },
       { "size": "132.5", "pn": "3G2-1423A-77-00" },
-      { "size": "135", "pn": "3G2-14231-27-00" },
+      { "size": "135", "pn": "3G2-14231-27-00", "manual1991": "256-14944-27-A1" },
       { "size": "136.3", "pn": "3G2-1423E-54-00" },
       { "size": "137.5", "pn": "3G2-1423A-78-00" },
       { "size": "138.8", "pn": "3G2-1423E-55-00" },
-      { "size": "140", "pn": "3G2-14231-28-00" },
-      { "size": "143.8", "pn": "3G2-1423E-57-00", "std": true },
-      { "size": "145", "pn": "3G2-14231-29-00" },
+      { "size": "140", "pn": "3G2-14231-28-00", "manual1991": "3G2-14231-28-00" },
+      { "size": "143.8", "pn": "3G2-1423E-57-00", "std": true, "manual1991": "3G2-1423E-57-00" },
+      { "size": "145", "pn": "3G2-14231-29-00", "manual1991": "3G2-14231-29-00" },
       { "size": "147.5", "pn": "3G2-1423A-80-A0" },
-      { "size": "150", "pn": "3G2-14231-30-A0" },
-      { "size": "152.5", "pn": "3G2-1423A-81-00", "alt": ["3G2-14231-81-A0"] }
+      { "size": "150", "pn": "3G2-14231-30-A0", "manual1991": "3G2-14231-30-00" },
+      { "size": "152.5", "pn": "3G2-1423A-81-00", "alt": ["3G2-14231-81-A0"], "manual1991": "3G2-1423A-81-00" }
     ],
-    "altitudeChart": {
-      "baselineConflict": "The two manuals disagree on what the stock #143.8 is jetted for. The 1984-89 manual text says sea level at 32 to -4 °F (0 to -20 °C). Yamaha's 1990 chart puts #143.8 at sea level for 32 to 68 °F (0 to 20 °C) and gives #150 for 32 to -4 °F. The app follows the 1990 chart. Check both manual pages before relying on a cold-weather answer.",
-      "source": "Yamaha LIT-12618-PZ-50, Maintenance Specifications p.8-5, model PZ480P/PZ480EP (1990)",
-      "zones": [
-        { "key": "cold", "label": "-30 to -20 °C", "labelF": "-22 to -4 °F" },
-        { "key": "mid",  "label": "-20 to 0 °C",  "labelF": "-4 to 32 °F" },
-        { "key": "warm", "label": "0 to 20 °C",   "labelF": "32 to 68 °F" }
-      ],
-      "bands": [
-        { "m": "0 - 100",     "ft": "0 - 300",       "ftMin": 0,    "ftMax": 300,   "cold": "152.5", "mid": "150",   "warm": "143.8" },
-        { "m": "100 - 600",   "ft": "300 - 2,000",   "ftMin": 300,  "ftMax": 2000,  "cold": "147.5", "mid": "143.8", "warm": "138.8" },
-        { "m": "600 - 1,200", "ft": "2,000 - 4,000", "ftMin": 2000, "ftMax": 4000,  "cold": "143.8", "mid": "138.8", "warm": "136.3" },
-        { "m": "1,200 - 1,800","ft": "4,000 - 6,000","ftMin": 4000, "ftMax": 6000,  "cold": "138.8", "mid": "136.3", "warm": "131.3" },
-        { "m": "1,800 - 2,400","ft": "6,000 - 8,000","ftMin": 6000, "ftMax": 8000,  "cold": "136.3", "mid": "131.3", "warm": "126.3" },
-        { "m": "2,400 - 3,000","ft": "8,000 - 10,000","ftMin": 8000,"ftMax": 10000, "cold": "131.3", "mid": "126.3", "warm": "121.3" }
-      ]
+    "altitudeCharts": {
+      "pz8489": {
+        "title": "1984-89 Phazer (PZ480)",
+        "source": "Yamaha PZ480 factory service manual (1984-89), Maintenance Specifications 8-5, item 14n High Altitude Tuning",
+        "format": "ranges",
+        "note": "Yamaha drew this chart as arrows that overlap, and it uses round jet sizes. Where two arrows cover the same temperature both are shown; the richer one is the safer start. Arrow ends are read off the scan to about 2 °C. The Clymer manual reproduces the same chart.",
+        "rows": [
+          { "label": "Sea level", "m": "0", "ftMax": 1000, "ranges": [
+            { "jet": "145", "toC": 0 }, { "jet": "143.8", "fromC": -25, "toC": 15 }, { "jet": "140", "fromC": 0 } ] },
+          { "label": "2,000 ft", "m": "600", "ftMax": 3000, "ranges": [
+            { "jet": "143.8", "toC": -4 }, { "jet": "140", "toC": 8 }, { "jet": "135", "fromC": 7 } ] },
+          { "label": "4,000 ft", "m": "1,200", "ftMax": 5000, "ranges": [
+            { "jet": "140", "toC": -24 }, { "jet": "135", "fromC": -25, "toC": 15 }, { "jet": "130", "fromC": 14 } ] },
+          { "label": "6,000 ft", "m": "1,800", "ftMax": 7000, "ranges": [
+            { "jet": "135", "toC": -20 }, { "jet": "130", "fromC": -20 } ] },
+          { "label": "8,000 ft", "m": "2,400", "ftMax": 9000, "ranges": [
+            { "jet": "130", "toC": -12 }, { "jet": "125", "fromC": -12 } ] },
+          { "label": "10,000 ft", "m": "3,000", "ftMax": 11000, "ranges": [
+            { "jet": "125", "toC": -7 }, { "jet": "120", "fromC": -8 } ] }
+        ]
+      },
+      "pz1990": {
+        "title": "1990 Phazer II (PZ480P/EP)",
+        "source": "Yamaha LIT-12618-PZ-50, Maintenance Specifications p.8-5, model PZ480P/PZ480EP (1990)",
+        "format": "zones",
+        "note": "Yamaha recalibrated for 1990: this chart is richer than the 1984-89 one and uses the in-between jet sizes (#138.8, #136.3 and so on).",
+        "zones": [
+          { "key": "cold", "label": "-30 to -20 °C", "labelF": "-22 to -4 °F" },
+          { "key": "mid",  "label": "-20 to 0 °C",  "labelF": "-4 to 32 °F" },
+          { "key": "warm", "label": "0 to 20 °C",   "labelF": "32 to 68 °F" }
+        ],
+        "bands": [
+          { "m": "0 - 100",     "ft": "0 - 300",       "ftMin": 0,    "ftMax": 300,   "cold": "152.5", "mid": "150",   "warm": "143.8" },
+          { "m": "100 - 600",   "ft": "300 - 2,000",   "ftMin": 300,  "ftMax": 2000,  "cold": "147.5", "mid": "143.8", "warm": "138.8" },
+          { "m": "600 - 1,200", "ft": "2,000 - 4,000", "ftMin": 2000, "ftMax": 4000,  "cold": "143.8", "mid": "138.8", "warm": "136.3" },
+          { "m": "1,200 - 1,800","ft": "4,000 - 6,000","ftMin": 4000, "ftMax": 6000,  "cold": "138.8", "mid": "136.3", "warm": "131.3" },
+          { "m": "1,800 - 2,400","ft": "6,000 - 8,000","ftMin": 6000, "ftMax": 8000,  "cold": "136.3", "mid": "131.3", "warm": "126.3" },
+          { "m": "2,400 - 3,000","ft": "8,000 - 10,000","ftMin": 8000,"ftMax": 10000, "cold": "131.3", "mid": "126.3", "warm": "121.3" }
+        ]
+      },
+      "pz1991": {
+        "title": "1991 Phazer II, LE and ST (PZ480R/ER/STR)",
+        "source": "Yamaha PZ480R/ER/STR supplementary service manual (1991), Maintenance Specifications p.23, Carburetor Setting Chart",
+        "format": "zones",
+        "note": "For 1991 Yamaha went back to round jet sizes and printed the part number for each. At 8,000-10,000 ft in the warmest column it also sets the pilot (idle mixture) screw to 2.0 turns. The chart groups the bands into three drive line settings: 0-2,000 ft, 2,000-6,000 ft and above 6,000 ft, which match the clutch tables.",
+        "zones": [
+          { "key": "cold", "label": "-30 to -20 °C", "labelF": "-22 to -4 °F" },
+          { "key": "mid",  "label": "-20 to 0 °C",  "labelF": "-4 to 32 °F" },
+          { "key": "warm", "label": "0 to 20 °C",   "labelF": "32 to 68 °F" }
+        ],
+        "bands": [
+          { "m": "0 - 100",      "ft": "0 - 300",        "ftMin": 0,    "ftMax": 300,   "cold": "152.5", "mid": "150",   "warm": "143.8" },
+          { "m": "100 - 600",    "ft": "300 - 2,000",    "ftMin": 300,  "ftMax": 2000,  "cold": "145",   "mid": "143.8", "warm": "140" },
+          { "m": "600 - 1,200",  "ft": "2,000 - 4,000",  "ftMin": 2000, "ftMax": 4000,  "cold": "143.8", "mid": "140",   "warm": "135" },
+          { "m": "1,200 - 1,800","ft": "4,000 - 6,000",  "ftMin": 4000, "ftMax": 6000,  "cold": "140",   "mid": "135",   "warm": "130" },
+          { "m": "1,800 - 2,400","ft": "6,000 - 8,000",  "ftMin": 6000, "ftMax": 8000,  "cold": "135",   "mid": "130",   "warm": "125" },
+          { "m": "2,400 - 3,000","ft": "8,000 - 10,000", "ftMin": 8000, "ftMax": 10000, "cold": "130",   "mid": "125",   "warm": "120", "warmNote": "PS 2.0" }
+        ]
+      }
     }
   },
 
@@ -142,7 +183,58 @@
     "shiftRpm": "6,600 - 7,000 rpm",
     "beltOutsideCircumference": "1,099 mm (43.3 in)",
     "beltWidthNew": "31.6 mm (1.24 in)",
-    "beltWidthWearLimit": "26 mm (1.02 in)"
+    "beltWidthWearLimit": "26 mm (1.02 in)",
+    "eras": {
+      "pz8489": {
+        "title": "1984-89 Phazer (PZ480)",
+        "source": "Clymer PZ480 tables; Yamaha bulletin S88-007 and the high-altitude Table 3 for the springs",
+        "engagementRpm": "3,000 - 3,400 rpm",
+        "shiftRpm": "6,600 - 7,000 rpm",
+        "primarySpring": "90501-52798, red-blue, 25.8 kg preload",
+        "weights": "8V0-17632 (as printed), 3 pcs",
+        "secondarySpring": "90508-50654, 60° (B-1)",
+        "beltWearLimit": "26 mm (1.02 in)"
+      },
+      "pz1990": {
+        "title": "1990 Phazer II (PZ480P/EP)",
+        "source": "Yamaha LIT-12618-PZ-50, Maintenance Specifications p.8-7",
+        "engagementRpm": "Approx. 3,200 rpm",
+        "shiftRpm": "Approx. 6,850 rpm",
+        "primarySpring": "90501-501G3, yellow-green, 21.5 kg preload, 1.58 kg/mm, 75.1 mm free",
+        "weights": "87F-17632-00, 48.5 g, 3 pcs",
+        "secondarySpring": "90508-50793, yellow-green, 75°",
+        "beltWearLimit": "28.0 mm (1.10 in)",
+        "belt": "8F2-17641-01, 1,099 mm, 31.6 mm wide"
+      },
+      "pz1991": {
+        "title": "1991 Phazer II and LE (PZ480R/ER)",
+        "source": "Yamaha PZ480R/ER/STR supplement (1991), Clutch Setting Data p.3 and Maintenance Specifications p.26",
+        "engagementRpm": "Approx. 3,500 rpm",
+        "shiftRpm": "Approx. 6,850 rpm",
+        "primarySpring": "90501-501G3, yellow-green, 21.5 kg preload, 1.5 kg/mm, 75.1 mm free",
+        "weights": "87F-W176A-00, 48.5 g, 3 pcs",
+        "secondarySpring": "90508-50793, green-yellow, 70° (C-2)",
+        "printNote": "Page 24 of the same supplement prints the weight as 87F-17632-00 and the spring rate as 1.58 kg/mm (the 1990 figures); the clutch tables on pages 3 and 26 agree with each other, so they are used here.",
+        "highAltitude": [
+          { "range": "2,000 - 6,000 ft", "engagementRpm": "Approx. 3,300 rpm", "shiftRpm": "Approx. 6,850 rpm", "weights": "8V0-W176A-00, 46.1 g", "primarySpring": "90501-554E8, gold-pink, 20.0 kg, 2.5 kg/mm", "secondarySpring": "90508-50793 at 80° (A-2)" },
+          { "range": "Above 6,000 ft", "engagementRpm": "Approx. 3,300 rpm", "shiftRpm": "Approx. 6,900 rpm (p.3; p.26 keeps 6,850)", "weights": "8V0-W176A-00, 46.1 g", "primarySpring": "90501-55485, brown-white, 25.0 kg, 2.5 kg/mm", "secondarySpring": "90508-50793 at 80° (A-2)" }
+        ]
+      },
+      "pz1991st": {
+        "title": "1991 Phazer II ST (PZ480STR)",
+        "source": "Yamaha PZ480R/ER/STR supplement (1991), Clutch Setting Data p.3 and Maintenance Specifications p.26",
+        "engagementRpm": "Approx. 3,200 rpm",
+        "shiftRpm": "Approx. 6,850 rpm",
+        "primarySpring": "90501-45534, blue-green, 25.0 kg preload, 1.06 kg/mm, 85.1 mm free",
+        "weights": "87M-W176A-00, 48.0 g, 3 pcs",
+        "secondarySpring": "90508-50746, white, 50° (A-2)",
+        "printNote": "Page 24 of the same supplement prints the weight as 46.1 g and the spring free length as 86.5 mm; the clutch tables on pages 3 and 26 agree with each other, so they are used here.",
+        "highAltitude": [
+          { "range": "2,000 - 6,000 ft", "engagementRpm": "Approx. 3,200 rpm", "shiftRpm": "Approx. 6,850 rpm", "weights": "82M-W176A-90, 45.5 g", "primarySpring": "90501-50396, green-white, 20.0 kg, 2.0 kg/mm", "secondarySpring": "90508-50746, white, 50° (A-2)" },
+          { "range": "Above 6,000 ft", "engagementRpm": "Approx. 3,200 rpm", "shiftRpm": "Approx. 6,850 rpm", "weights": "82M-W176A-90, 45.5 g", "primarySpring": "90501-55485, brown-white, 25.0 kg, 2.5 kg/mm", "secondarySpring": "90508-50746, white, 50° (A-2)" }
+        ]
+      }
+    }
   },
 
   "service": {
@@ -197,7 +289,7 @@
 
   "torque": {
     "appliesTo": "PZ480 1984-1989",
-    "note": "Pairs were read from the scanned tables. On 11 rows the ft-lb figure is about 3% below the exact conversion of the N-m figure (120 N-m is 88.5 ft-lb, not 85). Those rows are marked. Until the manual page is checked, treat N-m as the primary figure.",
+    "note": "Pairs were read from the Clymer tables and checked on 2026-11-19 against Yamaha's own PZ480 table (factory manual p.8-8), which gives every value in N-m, m-kg and ft-lb. Yamaha works in m-kg: its N-m figure is the m-kg value times 10, and its ft-lb figure is m-kg times 7.2. That is why the larger values look about 2% off an exact N-m conversion (60 N-m converts to 44.3 ft-lb, but Yamaha prints 43). The printed figures are correct as Yamaha specifies them; the m-kg column is shown where the factory table gives it.",
     "groups": [
       {
         "name": "Engine",
@@ -221,43 +313,43 @@
       },
       {
         "name": "Clutches / drive",
-        "source": "Table 5 TIGHTENING TORQUES (PZ480), plus the primary sheave procedure text",
+        "source": "Table 5 TIGHTENING TORQUES (PZ480), plus the primary sheave procedure text; m-kg from Yamaha's PZ480 table, factory manual p.8-8, and the 1993 supplement",
         "rows": [
-          { "item": "Primary sheave bolt — step 1, seat", "nm": 120, "ftlb": 85, "flag": "Then loosen completely", "ftlbMismatch": true },
-          { "item": "Primary sheave bolt — step 2, final", "nm": 60, "ftlb": 43, "flag": "Two-stage; do not skip step 1", "ftlbMismatch": true },
-          { "item": "Spider and sheave", "nm": 200, "ftlb": 145, "ftlbMismatch": true },
-          { "item": "Secondary sheave", "nm": 60, "ftlb": 43, "ftlbMismatch": true },
-          { "item": "Cap and sliding sheave", "nm": 14, "ftlb": 10 },
+          { "item": "Primary sheave bolt — step 1, seat", "nm": 120, "mkg": 12, "ftlb": 87, "flag": "Then loosen completely", "printNote": "Clymer prints 85 ft-lb; Yamaha's 1993 supplement prints 120 N-m (12 m-kg, 87 ft-lb)" },
+          { "item": "Primary sheave bolt — step 2, final", "nm": 60, "mkg": 6, "ftlb": 43, "flag": "Two-stage; do not skip step 1" },
+          { "item": "Spider and sheave", "nm": 200, "mkg": 20, "ftlb": 145 },
+          { "item": "Secondary sheave", "nm": 60, "mkg": 6, "ftlb": 43 },
+          { "item": "Cap and sliding sheave", "nm": 14, "mkg": 1.4, "ftlb": 10 },
           { "item": "Primary sheave cap bolts", "nm": 10, "ftlb": 7.2 },
-          { "item": "Roller", "nm": 6, "ftlb": 4.3 }
+          { "item": "Roller", "nm": 6, "mkg": 0.6, "ftlb": 4.3 }
         ]
       },
       {
         "name": "Chaincase, brake & driveshaft",
-        "source": "Table 2 TIGHTENING TORQUES (PZ480)",
+        "source": "Table 2 TIGHTENING TORQUES (PZ480); m-kg from Yamaha's PZ480 table, factory manual p.8-8",
         "rows": [
-          { "item": "Drive shaft nut", "nm": 85, "ftlb": 61, "ftlbMismatch": true },
-          { "item": "Left front axle and bearing", "nm": 85, "ftlb": 61, "ftlbMismatch": true },
-          { "item": "Drive sprocket nut", "nm": 60, "ftlb": 43, "ftlbMismatch": true },
-          { "item": "Chain housing and caliper body", "nm": 48, "ftlb": 35 },
-          { "item": "Driven sprocket bolt", "nm": 48, "ftlb": 35 },
-          { "item": "Bearing holder", "nm": 23, "ftlb": 17 },
-          { "item": "Front frame and chain housing", "nm": 23, "ftlb": 17 },
-          { "item": "Chain housing and housing cap", "nm": 10, "ftlb": 7.2 }
+          { "item": "Drive shaft nut", "nm": 85, "ftlb": 61 },
+          { "item": "Left front axle and bearing", "nm": 85, "mkg": 8.5, "ftlb": 61 },
+          { "item": "Drive sprocket nut", "nm": 60, "mkg": 6, "ftlb": 43 },
+          { "item": "Chain housing and caliper body", "nm": 48, "mkg": 4.8, "ftlb": 35 },
+          { "item": "Driven sprocket bolt", "nm": 48, "mkg": 4.8, "ftlb": 35 },
+          { "item": "Bearing holder", "nm": 23, "mkg": 2.3, "ftlb": 17 },
+          { "item": "Front frame and chain housing", "nm": 23, "mkg": 2.3, "ftlb": 17 },
+          { "item": "Chain housing and housing cap", "nm": 10, "mkg": 1.0, "ftlb": 7.2 }
         ]
       },
       {
         "name": "Track & rear suspension",
-        "source": "Table 3 TIGHTENING TORQUE (PZ480)",
+        "source": "Table 3 TIGHTENING TORQUE (PZ480); m-kg from Yamaha's PZ480 table, factory manual p.8-8",
         "rows": [
-          { "item": "Guide wheel", "nm": 75, "ftlb": 54, "ftlbMismatch": true },
-          { "item": "Rear axle", "nm": 75, "ftlb": 54, "ftlbMismatch": true },
-          { "item": "Slide rail suspension mounting bolts", "nm": 70, "ftlb": 50, "ftlbMismatch": true },
-          { "item": "Slide rail and shaft", "nm": 64, "ftlb": 46, "ftlbMismatch": true },
-          { "item": "Slide rail and bracket", "nm": 23, "ftlb": 17 },
+          { "item": "Guide wheel", "nm": 75, "ftlb": 54 },
+          { "item": "Rear axle", "nm": 75, "mkg": 7.5, "ftlb": 54 },
+          { "item": "Slide rail suspension mounting bolts", "nm": 69, "mkg": 6.9, "ftlb": 50, "printNote": "Clymer prints 70 N-m; Yamaha's table and the 1991 supplement both print 69 N-m (6.9 m-kg, 50 ft-lb)" },
+          { "item": "Slide rail and shaft", "nm": 64, "mkg": 6.4, "ftlb": 46 },
+          { "item": "Slide rail and bracket", "nm": 23, "mkg": 2.3, "ftlb": 17 },
           { "item": "Suspension wheel", "nm": 15, "ftlb": 11 },
-          { "item": "Stopper band", "nm": 4, "ftlb": 2.9 },
-          { "item": "Slide rail and slide runner", "nm": 3, "ftlb": 2.2 }
+          { "item": "Stopper band", "nm": 4, "mkg": 0.4, "ftlb": 2.9 },
+          { "item": "Slide rail and slide runner", "nm": 3, "mkg": 0.3, "ftlb": 2.2 }
         ]
       },
       {
@@ -283,7 +375,7 @@
 
   "springs": {
     "source": "Yamaha Technical Bulletin S88-007, 9 Sept 1988 — 'All Models: Primary and Secondary Clutch Spring Information'",
-    "conflict": "Partzilla lists 90501-45534-00 as the primary spring for the 1986-1989 Phazer. Two independent factory documents disagree with it: bulletin S88-007 and Table 3 of the high-altitude chapter both give the PZ480 primary as 90501-52798, and both put it at 25.8 kg set weight in red-blue. The evidence now runs 2-to-1 against the Partzilla number, which is most likely a supersession. Still measure free length and wire diameter before ordering.",
+    "conflict": "Partzilla lists 90501-45534-00 as the primary spring for the 1986-1989 Phazer. Two independent factory documents disagree with it: bulletin S88-007 and Table 3 of the high-altitude chapter both give the PZ480 primary as 90501-52798, and both put it at 25.8 kg set weight in red-blue. The evidence now runs 2-to-1 against the Partzilla number, which is most likely a supersession. Still measure free length and wire diameter before ordering. The 1991 supplement adds a clue: 90501-45534 is the standard primary for the 1991 Phazer II ST (blue-green, 25.0 kg preload, 1.06 kg/mm, 85.1 mm free length), close in preload to the 25.8 kg PZ480 spring but much softer in rate, so it is not a like-for-like part.",
     "secondaryConflict": "The two sources disagree on the standard secondary spring colour: bulletin S88-007 lists 90508-50654-00 for the PZ480 as yellow-blue, while Table 3 of the high-altitude chapter calls the PZ480 secondary white. The bulletin gives a part number and full dimensions, so it is the more specific source, but check the twist angle — Table 3 specifies 60 degrees (B-1) — rather than going by colour.",
     "primary": [
       { "pn": "90501-52798-00", "rate": "1.88", "preload": "25.8", "color": "Red-Blue", "wire": "5.2", "od": "55", "turns": "5.15", "free": "75.2", "usedOn": "PZ480", "std": true },
@@ -302,7 +394,7 @@
   "altitude": {
     "source": "Chapter Four, High-Altitude and Rear Suspension Adjustment (PZ480), pages 114-134",
     "powerLoss": "About 3% of power per 1,000 ft of elevation gain. The manual's worked example: an engine making 40 hp at sea level makes roughly 38.8 hp at 1,000 ft and about 29.5 hp at 10,000 ft.",
-    "factoryBaseline": "The PZ480 carburettors are jetted at the factory for sea level at 32 to -4 °F (0 to -20 °C). Everything else is a correction away from that.",
+    "factoryBaseline": "The PZ480 carburettors are jetted at the factory for sea level at 32 to -4 °F (0 to -20 °C). Everything else is a correction away from that. This is the 1984-89 calibration: Yamaha's own 1984-89 chart puts the stock #143.8 at sea level from about -13 °F to 59 °F (-25 to 15 °C). From 1990 the factory charts are richer, and the stock #143.8 becomes the 300-2,000 ft jet in cold weather.",
     "clutchThreshold": "Above 6,000 ft (1,800 m) the clutch needs re-specifying. Left alone, it bogs at the point of belt engagement and bogs again in deep snow — both of which kill drive belts.",
     "clutch": {
       "source": "Table 3 HIGH-ALTITUDE CLUTCH SPECIFICATIONS",
@@ -396,9 +488,9 @@
 
     { "id": "1990-pz480p", "year": 1990, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480P", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1990/phazer-ii-pz480p", "specSource": "factory9096" },
     { "id": "1990-pz480ep", "year": 1990, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EP", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1990/phazer-ii-le-elec-start-pz480ep", "specSource": "factory9096" },
-    { "id": "1991-pz480r", "year": 1991, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480R", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-pz480r", "specSource": "assumed" },
-    { "id": "1991-pz480er", "year": 1991, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ER", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-le-elec-start-pz480er", "specSource": "assumed" },
-    { "id": "1991-pz480str", "year": 1991, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STR", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-st-pz480str", "specSource": "assumed" },
+    { "id": "1991-pz480r", "year": 1991, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480R", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-pz480r", "specSource": "factory91" },
+    { "id": "1991-pz480er", "year": 1991, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ER", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-le-elec-start-pz480er", "specSource": "factory91" },
+    { "id": "1991-pz480str", "year": 1991, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STR", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-st-pz480str", "specSource": "factory91" },
     { "id": "1991-vt480r", "year": 1991, "family": "Venture", "variant": "Venture XL", "code": "VT480R", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-50543-00", "belt": "89X-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1991/venture-xl-vt480r", "specSource": "venture" },
 
     { "id": "1992-pz480s", "year": 1992, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480S", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-pz480s", "specSource": "assumed" },
