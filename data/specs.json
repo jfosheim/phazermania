@@ -315,7 +315,7 @@
         "name": "Clutches / drive",
         "source": "Table 5 TIGHTENING TORQUES (PZ480), plus the primary sheave procedure text; m-kg from Yamaha's PZ480 table, factory manual p.8-8, and the 1993 supplement",
         "rows": [
-          { "item": "Primary sheave bolt — step 1, seat", "nm": 120, "mkg": 12, "ftlb": 87, "flag": "Then loosen completely", "printNote": "Clymer prints 85 ft-lb; Yamaha's 1993 supplement prints 120 N-m (12 m-kg, 87 ft-lb)" },
+          { "item": "Primary sheave bolt — step 1, seat", "nm": 120, "mkg": 12, "ftlb": 87, "flag": "Then loosen completely", "printNote": "Yamaha's 1990 manual and the Clymer print 85 ft-lb; the 1993 supplement prints 87 (12 m-kg). Exact is 88.5." },
           { "item": "Primary sheave bolt — step 2, final", "nm": 60, "mkg": 6, "ftlb": 43, "flag": "Two-stage; do not skip step 1" },
           { "item": "Spider and sheave", "nm": 200, "mkg": 20, "ftlb": 145 },
           { "item": "Secondary sheave", "nm": 60, "mkg": 6, "ftlb": 43 },
@@ -476,6 +476,537 @@
       { "condition": "Worn out", "look": "Eroded electrodes", "means": "Needs more voltage to fire under hard acceleration — replace" }
     ],
     "finalWord": "The manual is explicit that these are guidelines only, that they vary with altitude, temperature and snow conditions, and that the condition of the spark plugs is the determining factor when changing jets."
+  },
+
+  "mods": {
+    "researched": "2026-11-19",
+    "note": "Collected from rider forums (mostly TotallYamaha) and period press. Unless a line is tagged official or press, it is one or more riders reporting their own sled, not a Yamaha figure. Measure, read the plugs, and change one thing at a time.",
+    "sections": [
+      {
+        "id": "engine",
+        "title": "Engine power",
+        "items": [
+          {
+            "title": "Aftermarket single pipe",
+            "tag": "forum",
+            "text": "Aaen, DG and PSI pipes are the usual first mod. A pipe moves the power up: PSI pipes are reported to run best at 7,250-7,300 rpm, so the clutch must be raised to match (see Clutching). One rider ran 147.5 mains for years on Aaen-piped 1985-87 Phazers.",
+            "sources": [
+              {
+                "label": "Phazer mods",
+                "url": "https://totallyamaha.net/threads/35203/"
+              },
+              {
+                "label": "Carb update jetting",
+                "url": "https://totallyamaha.net/threads/375/"
+              },
+              {
+                "label": "Phazer clutch set up",
+                "url": "https://totallyamaha.net/threads/108085/"
+              }
+            ]
+          },
+          {
+            "title": "Reed valves",
+            "tag": "forum",
+            "text": "Boyesen reeds are widely reported as a worthwhile gain; FMF reeds are also used. A rider notes the stock reeds open around 5,000 rpm.",
+            "sources": [
+              {
+                "label": "Phazer mods",
+                "url": "https://totallyamaha.net/threads/35203/"
+              },
+              {
+                "label": "Phazer conversion",
+                "url": "https://totallyamaha.net/threads/5389/"
+              }
+            ]
+          },
+          {
+            "title": "Porting and pistons",
+            "tag": "forum",
+            "text": "Piped and ported engines are reported at about 80 hp. One builder dyno claim: 63 hp at 6,750 rpm from piston work alone, 78 hp at 7,750 rpm with an aftermarket pipe. One experienced rider warns against cutting the heads.",
+            "sources": [
+              {
+                "label": "Phazer II deep snow project",
+                "url": "https://totallyamaha.net/threads/48404/"
+              },
+              {
+                "label": "HomebuiltAirplanes thread",
+                "url": "https://www.homebuiltairplanes.com/threads/yamaha-phazer-2-stroke-air-cooled-485cc-engines.52726/"
+              }
+            ]
+          },
+          {
+            "title": "Stock output",
+            "tag": "press",
+            "text": "A 1989 magazine comparison lists the Phazer II at 55+ hp in its table and just under 60 hp in its text; riders commonly quote 53 hp. No Yamaha horsepower figure has been found.",
+            "sources": [
+              {
+                "label": "Snowmobile.com, 1989 Phazer II vs Prowler",
+                "url": "https://www.snowmobile.com/manufacturers/arctic-cat/1989-yamaha-phazer-ii-vs-arctic-cat-prowler-1857.html"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "carbs",
+        "title": "Carburetion",
+        "items": [
+          {
+            "title": "Fix the lean midrange first: Yamaha's nozzles",
+            "tag": "forum",
+            "text": "Riders quote a Yamaha service bulletin from about 1996: primary nozzle 80L-14489-00-00 (two 0.9 mm holes instead of one 1.0 mm) and main nozzles 1A (leaner) or 2A (richest) against the standard 3A. Richest for steady mid to full throttle is the 80L primary with the 2A main. The hole in the standard primary must face the air box. Riders call the 80L 'the fix everyone has done' on piped sleds.",
+            "pns": [
+              "80L-14489-00-00",
+              "8Y2-14941-2A-00",
+              "8Y2-14941-1A-00"
+            ],
+            "sources": [
+              {
+                "label": "Carb update jetting",
+                "url": "https://totallyamaha.net/threads/375/"
+              },
+              {
+                "label": "SnowEst bulletin repost",
+                "url": "https://www.snowest.com/forum/goto/post?id=3901537"
+              }
+            ]
+          },
+          {
+            "title": "Jetting a piped sled",
+            "tag": "forum",
+            "text": "The usual starting point is two main sizes up from the stock jet for your altitude, pilots up from #95 to #100-105, and the 80L / 2A nozzles. Then read the plugs.",
+            "sources": [
+              {
+                "label": "Carb update jetting",
+                "url": "https://totallyamaha.net/threads/375/"
+              }
+            ]
+          },
+          {
+            "title": "Burn-down warnings",
+            "tag": "forum",
+            "warn": true,
+            "text": "One rider burned a piston within six miles on 148 mains with the 80L primary. Another traced melted pistons to belt dust blocking the carburettor vent tubes. Check plugs after every change and keep the vent tubes clear.",
+            "sources": [
+              {
+                "label": "Carb update jetting",
+                "url": "https://totallyamaha.net/threads/375/"
+              }
+            ]
+          },
+          {
+            "title": "Flat slides (disputed)",
+            "tag": "forum",
+            "text": "Reported: Mikuni TM38 and TMX flat slides, racked VMax 600 flat slides, 38 mm Lectrons, and Aaen 42 mm then 38 mm kits. Twin flat slides need a two-cable throttle (an Exciter throttle block is one fix). One dyno claim puts the gain at about 2.7 hp, and only with a gutted airbox, which Yamaha's manual warns against. Some riders say flat slides woke the engine up; others say the nozzle fix is enough. Details on the Carb swap tab.",
+            "sources": [
+              {
+                "label": "Flatslides for Phazer",
+                "url": "https://totallyamaha.net/threads/18794/"
+              },
+              {
+                "label": "Phazer mods",
+                "url": "https://totallyamaha.net/threads/35203/"
+              }
+            ]
+          },
+          {
+            "title": "Cold air intake",
+            "tag": "forum",
+            "warn": true,
+            "text": "The usual approach keeps the airbox. Take out the factory plate that blocks the louvered hood panel and the small reverse cone inside the box, then run a PVC tube with a scoop up to the louvers. One rider had to put foam in the tube as a filter, because otherwise it pulled in enough snow to freeze the carbs. Pulling the airbox off for pod filters on the stock carbs changes the mixture (one owner says it leans out, another found it running fat), and owners call the stock carbs' midrange hard to tune; engine-bay air also swings between cold and very hot. Nobody posted stock-carb jet changes for an intake mod, so read the plugs. A vent cut into the clutch cover was blamed for burning a hole in the PTO piston.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 98234",
+                "url": "https://totallyamaha.net/threads/98234/"
+              },
+              {
+                "label": "TotallYamaha thread 102287",
+                "url": "https://totallyamaha.net/threads/102287/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clutch",
+        "title": "Clutching and gearing",
+        "items": [
+          {
+            "title": "Two versions of the stock primary",
+            "tag": "official",
+            "text": "Yamaha's 1990 manual (p.4-1) shows weights held on pins with bushings. The 1993 supplement (p.9) shows a revised primary: weights riveted in place, collars on the rollers, and a shim under the primary spring, with spring free length 76.8 mm (78.7 mm on the ST). The 1991 supplement already lists the newer W176A weight numbers (87F-W176A-00 against 1990's 87F-17632-00). Identify which style you have before ordering weights or springs.",
+            "sources": [
+              {
+                "label": "Yamaha 1990 manual p.4-1; 1991 supplement p.26; 1993 supplement pp.9-12"
+              }
+            ]
+          },
+          {
+            "title": "YPZ and YXR primaries",
+            "tag": "forum",
+            "text": "Riders and PSI's pipe instructions give separate settings for a YPZ and a YXR primary: silver/silver spring in the YPZ, and 4,300-4,500 engagement / 7,600 shift for PSI's YXR setup. Yamaha's 1984-89 manual calls the Phazer's clutch the Y-PZ. Which 1986-95 sleds, if any, left the factory with a YXR is not confirmed. Springs and weights are tuned per clutch, so a setup for one does not carry over to the other.",
+            "sources": [
+              {
+                "label": "Flatslides for Phazer",
+                "url": "https://totallyamaha.net/threads/18794/"
+              },
+              {
+                "label": "Phazer clutch set up",
+                "url": "https://totallyamaha.net/threads/108085/"
+              }
+            ]
+          },
+          {
+            "title": "Roller secondary",
+            "tag": "forum",
+            "text": "Several builds swap the stock slider secondary for a roller secondary. A 1992-or-newer Exciter or Phazer secondary is named as a fit in one swap thread, which suggests the secondary also changed around 1992 (unconfirmed).",
+            "sources": [
+              {
+                "label": "Phazer mods",
+                "url": "https://totallyamaha.net/threads/35203/"
+              },
+              {
+                "label": "Phazer II wide body",
+                "url": "https://totallyamaha.net/threads/102717/"
+              }
+            ]
+          },
+          {
+            "title": "Raising the shift rpm for a pipe",
+            "tag": "forum",
+            "text": "From a detailed write-up for a 1990 Phazer II with a PSI pipe: aim for 7,250-7,300 rpm shift and at least 4,000-4,500 engagement. Red-green primary spring (about 1.75 kg/mm, 35 kg or more preload, three engagement shims), or red-silver. 82M (Exciter) weights shift higher than the 87F (1990 Phazer) or 8V0 (84-89), which are the weakest. A 45 degree helix from a 570 Exciter or an 80s VMax. One tooth up on the top sprocket, to 18. The owner then reached 7,000 rpm with a blue-white spring and 7,250-7,300 with a red-brown.",
+            "sources": [
+              {
+                "label": "Phazer clutch set up",
+                "url": "https://totallyamaha.net/threads/108085/"
+              }
+            ]
+          },
+          {
+            "title": "Other reported clutch setups",
+            "tag": "forum",
+            "text": "A 1991 with a red-pink spring and 82M-90 weights engaged at about 4,200 and pulled to about 7,300. A silver/silver primary in the YPZ clutch (PSI's recommendation with its pipe) was called fast. PSI's YXR clutch targets 4,300-4,500 engagement and 7,600 shift.",
+            "sources": [
+              {
+                "label": "Flatslides for Phazer",
+                "url": "https://totallyamaha.net/threads/18794/"
+              }
+            ]
+          },
+          {
+            "title": "Gearing down",
+            "tag": "forum",
+            "text": "17/33 is the common gear-down, called 'dang near unstoppable' in flat country; 16/35 has been suggested for deep snow. Going from 8- to 7-tooth drivers is about the same as dropping two teeth on the top gear. One long-tracked piped sled lost about 15 mph of top speed. The sprocket and chain part numbers are on the Clutch, gearing & suspension tab.",
+            "sources": [
+              {
+                "label": "Phazer conversion",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "Phazer II deep snow project",
+                "url": "https://totallyamaha.net/threads/48404/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "track",
+        "title": "Tracks and rear suspension",
+        "items": [
+          {
+            "title": "Factory track sizes",
+            "tag": "official",
+            "text": "Camoplast's chart: Phazer 1984-89 15 x 116, Phazer II 1990-2001 15 x 121, Phazer II ST 1991-94 15 x 136, all 2.52 in pitch. Camoplast gives no lug height for these rows; Sledtrack's copy of the Camso data lists 1 in for the Phazer II and ST.",
+            "sources": [
+              {
+                "label": "Camoplast Yamaha fitment chart (PDF)",
+                "url": "https://mcbperformance.com/files/Application%20Charts/yamaha-camoplast-fitment-guide.pdf"
+              },
+              {
+                "label": "Sledtrack fitment guide",
+                "url": "https://sledtrack.com/snowmobile-track-fitment-guide/yamaha-snowmobile-track-fitment-guide/"
+              }
+            ]
+          },
+          {
+            "title": "Lug height and drivers",
+            "tag": "forum",
+            "text": "Strong agreement across four threads: 1.25 in is the safe choice on the stock 8-tooth drivers. 1.5 in on 8-tooth is at the limit (one rider has about 3/8 in clearance on a 136 x 1.5); others say it slaps the tunnel and bulkhead. 7-tooth drivers allow 1.5-1.75 in, maybe 2 in, though one rider says they bend the track too tightly. Every Phazer before the 1999 Pro Action skid has 8-tooth drivers. The Track fit tab checks this for you.",
+            "sources": [
+              {
+                "label": "Maximum lug height",
+                "url": "https://totallyamaha.net/threads/99027/"
+              },
+              {
+                "label": "Phazer II deep snow project",
+                "url": "https://totallyamaha.net/threads/48404/"
+              },
+              {
+                "label": "Phazer conversion",
+                "url": "https://totallyamaha.net/threads/5389/"
+              }
+            ]
+          },
+          {
+            "title": "Long-tracking a first-generation Phazer",
+            "tag": "forum",
+            "text": "Move the 116 skid back 2.5 in and use WPS rail extensions to reach 121 or 136. A Phazer II skid needs the rear mounts relocated and the upper crossover idlers added.",
+            "sources": [
+              {
+                "label": "Phazer long track conversion",
+                "url": "https://totallyamaha.net/threads/98476/"
+              }
+            ]
+          },
+          {
+            "title": "Skid swaps",
+            "tag": "forum",
+            "text": "Reported: Ski-Doo SC10 II and SC10 III in 1985 and 1989 Phazers (front holes moved back about 2 in; rear stays or moves forward 1/2 in), an Exciter Pro Action in an 1989 Phazer, a Ski-Doo SC4 136, and a 1997 VMax skid. One rider measured the Phazer II skid at 29 3/4 in centre to centre against the SC4's 23 7/16 in.",
+            "sources": [
+              {
+                "label": "'89 Phazer, Xtra 12 skid",
+                "url": "https://totallyamaha.net/threads/79197/"
+              },
+              {
+                "label": "Phazer 2 suspension swap",
+                "url": "https://totallyamaha.net/threads/67661/"
+              }
+            ]
+          },
+          {
+            "title": "Tunnel extensions",
+            "tag": "forum",
+            "text": "No bolt-on extension for these chassis turned up for sale. Riders have one bent from sheet metal at a local shop (one quotes about $75-80; it needs a brake) or cut one from a donor tunnel, and lengthen the rear bumper with tubing. The factory extension from the 136 in Phazer II ST fits but rarely turns up used. Price the skid, rail extensions, track, drivers and gearing together: one rider who priced a 136 x 1.5 in conversion chose a 121 x 1.25 in instead because the extra 15 in \"costs a lot more\".",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 87484",
+                "url": "https://totallyamaha.net/threads/87484/"
+              },
+              {
+                "label": "TotallYamaha thread 5389",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "TotallYamaha thread 37999",
+                "url": "https://totallyamaha.net/threads/37999/"
+              }
+            ]
+          },
+          {
+            "title": "Long-tracking a Phazer II",
+            "tag": "forum",
+            "text": "A 133 in skid from a 1998 Polaris RMK X10 went into a 1990 Phazer II after narrowing it about 1/2 in, mounted further back to run a 136. Another rider estimated about $300 and a few hours to fit a 1999 Polaris Mountain Max skid with a 136 x 1.5 in track. Nobody reports a true bolt-in, and a Phazer II 121 skid needs work to go into a 1984-89 chassis. Hartman once listed a 116-to-121 kit for first-generation sleds (not confirmed current).",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 87484",
+                "url": "https://totallyamaha.net/threads/87484/"
+              },
+              {
+                "label": "TotallYamaha thread 5389",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "TotallYamaha thread 37999",
+                "url": "https://totallyamaha.net/threads/37999/"
+              }
+            ]
+          },
+          {
+            "title": "Track swap experiences",
+            "tag": "forum",
+            "text": "1 in lugs on a 1993 Phazer II: lots of clearance at the drivers. 1.25 in on the stock 8-tooth drivers: fits, but refitting the drivers is \"a workout\". A 136 x 1.75 in Polaris track on a 1991 with 7-tooth drivers: fits but tight, and the owner found 7-tooth drivers almost too low geared once the sled was piped. For 1.5 in, riders recommend 7-tooth drivers with no chaincase change and expect some loss of top speed. Measure your own driver clearance before buying.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 5389",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "TotallYamaha thread 37999",
+                "url": "https://totallyamaha.net/threads/37999/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "front",
+        "title": "Front suspension and skis",
+        "items": [
+          {
+            "title": "TSS front-end interchange",
+            "tag": "forum",
+            "text": "The first-generation TSS on the SRV, VMax 540, Exciter, Ovation and Phazer II uses the same spring length with different rates. One rider believes the Venture 480, VK540 II and Enticer II share it too (unverified). First-generation Phazers (84-89) do not share struts and springs with the VMax and SRV.",
+            "sources": [
+              {
+                "label": "Help with T.S.S.",
+                "url": "https://totallyamaha.net/threads/45766/"
+              }
+            ]
+          },
+          {
+            "title": "Front spring colours",
+            "tag": "forum",
+            "text": "Green for the 1990 Phazer II (two 1990 sleds checked had green-dot springs), red for 83-up VMax, gold for the 87 Exciter, yellow for the 90 Exciter, light blue for the 93 Ovation. Bender Racing once sold ten TSS rates from black (softest) to no-colour (hardest); out of production.",
+            "sources": [
+              {
+                "label": "Help with T.S.S.",
+                "url": "https://totallyamaha.net/threads/45766/"
+              }
+            ]
+          },
+          {
+            "title": "Struts, skis and stance",
+            "tag": "forum",
+            "text": "Fox gas struts and shocks are a common upgrade. Struts from the 1994-96 500, 600 and 700 raise the belly for deep snow. Plastic skis (Camoplast lightweights, or factory skis shimmed) and 6 in carbides are common. Ski stance is 36.2 in for 1990-95 and was widened to 38.6 in for 1996; CB Performance and others sold TSS widening kits. The Exciter bulkhead differs from the Phazer's.",
+            "sources": [
+              {
+                "label": "Phazer II deep snow project",
+                "url": "https://totallyamaha.net/threads/48404/"
+              },
+              {
+                "label": "Phazer II wide body",
+                "url": "https://totallyamaha.net/threads/102717/"
+              },
+              {
+                "label": "Phazer mods",
+                "url": "https://totallyamaha.net/threads/35203/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "rider",
+        "title": "Bars, boards and rider fit",
+        "items": [
+          {
+            "title": "Handlebar risers for standing",
+            "tag": "forum",
+            "warn": true,
+            "text": "On a 1986 Phazer the stock cables allow about 2 in of rise; any higher and the brake applies when the bars are turned. Taller risers (3.5-5 in) need longer brake, throttle and oil-pump cables, and nobody posted Phazer part numbers for longer ones. A rider raising the bars on a 1992 Phazer II also went to new cables. Another suggests moving the steering post forward instead, which means giving up the airbox. After any change, check at full lock both ways that the brake releases fully and the throttle snaps closed.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 96754",
+                "url": "https://totallyamaha.net/threads/96754/"
+              },
+              {
+                "label": "TotallYamaha thread 103673 (SX Viper, a different sled; same cable limit)",
+                "url": "https://totallyamaha.net/threads/103673/"
+              }
+            ]
+          },
+          {
+            "title": "Running boards",
+            "tag": "forum",
+            "text": "Wider custom running boards come up in build lists, along with a shortened seat, removable rear rack, short windshield, handlebar hooks and LED bulbs, but nobody posted dimensions, materials or a finished install for these chassis. Treat it as your own fabrication project.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 96754",
+                "url": "https://totallyamaha.net/threads/96754/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "problems",
+        "title": "Known problems",
+        "items": [
+          {
+            "title": "Motor mounts and belts",
+            "tag": "forum",
+            "warn": true,
+            "text": "Worn motor mounts let the engine move, which misaligns the clutches and eats belts. One rider's mounts went at 10,000 km. Check them whenever belts keep failing, and check sheave distance and offset after replacing them.",
+            "sources": [
+              {
+                "label": "Engine failure on my Phazer",
+                "url": "https://totallyamaha.net/threads/2425/"
+              }
+            ]
+          },
+          {
+            "title": "Water in the bottom end",
+            "tag": "forum",
+            "warn": true,
+            "text": "The 485 is widely called very reliable, but connecting rod and crank bearing failures happen, often after water or condensation pits the bearing surfaces. One family lost four engines from a 1993 Phazer II, the first after it went under water. Keep water out and fog the engine for storage.",
+            "sources": [
+              {
+                "label": "Engine failure on my Phazer",
+                "url": "https://totallyamaha.net/threads/2425/"
+              }
+            ]
+          },
+          {
+            "title": "Oil pump setting",
+            "tag": "forum",
+            "text": "One rider calls the stock oil pump 'pretty lean' and sets it to the rich side. Check the pump cable free play against the manual's 21-23 mm first.",
+            "sources": [
+              {
+                "label": "Engine failure on my Phazer",
+                "url": "https://totallyamaha.net/threads/2425/"
+              }
+            ]
+          },
+          {
+            "title": "Burned pistons on piped sleds",
+            "tag": "forum",
+            "warn": true,
+            "text": "Lean midrange with a pipe is the reported cause. See Carburetion above.",
+            "sources": [
+              {
+                "label": "Carb update jetting",
+                "url": "https://totallyamaha.net/threads/375/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "refs",
+        "title": "Where to look",
+        "items": [
+          {
+            "title": "Factory manuals",
+            "tag": "official",
+            "text": "Yamaha LIT-12618-PZ-50 covers the 1990-96 Phazer II, with supplements for the 1991, 1993 and 1996 models; the 1984-89 PZ480 manual and Clymer's 1984-89 manual cover the first generation. The Venture manual is LIT-12618-01-41 with supplement LIT-12618-01-69. The figures in this app come from these; SOURCES.md lists which page each one is read from.",
+            "sources": [
+              {
+                "label": "SOURCES.md",
+                "url": "https://github.com/jfosheim/phazermania/blob/main/SOURCES.md"
+              }
+            ]
+          },
+          {
+            "title": "Parts and track fitment",
+            "tag": "official",
+            "text": "OEM parts diagrams are linked from the Parts tab (Partzilla). Track sizes by year come from Camoplast's Yamaha chart.",
+            "sources": [
+              {
+                "label": "Camoplast Yamaha fitment chart (PDF)",
+                "url": "https://mcbperformance.com/files/Application%20Charts/yamaha-camoplast-fitment-guide.pdf"
+              },
+              {
+                "label": "Sledtrack fitment guide",
+                "url": "https://sledtrack.com/snowmobile-track-fitment-guide/yamaha-snowmobile-track-fitment-guide/"
+              }
+            ]
+          },
+          {
+            "title": "Forums",
+            "tag": "forum",
+            "text": "TotallYamaha is where most of this tab comes from and has the deepest Phazer archive. Snowest, Hardcore Sledder, Snowmobile Forum and Vintage Sleds also have Phazer threads but block automated reading, so they are not covered here. Most search results for \"Phazer\" now concern the 2007+ four-stroke, which shares nothing with these sleds.",
+            "sources": [
+              {
+                "label": "TotallYamaha",
+                "url": "https://totallyamaha.net/"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
 
   "models": [
