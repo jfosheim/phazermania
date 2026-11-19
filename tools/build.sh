@@ -105,12 +105,25 @@ mkdir -p dist
   echo '<meta charset="utf-8">'
   echo '<meta name="viewport" content="width=device-width,initial-scale=1">'
   echo '<meta name="description" content="Specs, parts and tuning reference for 1986-1995 Yamaha Phazer, Phazer II and Venture snowmobiles.">'
+  echo '<meta name="theme-color" content="#0B4DA2">'
+  echo '<link rel="manifest" href="manifest.webmanifest">'
+  echo '<link rel="icon" href="icon.svg" type="image/svg+xml">'
+  echo '<link rel="apple-touch-icon" href="apple-touch-icon.png">'
   echo '</head>'
   echo '<body>'
   cat phazermania.html
   echo '</body>'
   echo '</html>'
 } > dist/index.html
+
+# Offline support for the website only: a manifest makes it installable, and
+# sw.js caches the page so it opens with no signal. The cache name carries a
+# hash of the page, so each deploy replaces the old copy. The page registers
+# sw.js only when it finds the manifest link, i.e. never in the Artifact or
+# the file:// build.
+cp tools/pwa/manifest.webmanifest tools/pwa/icon.svg tools/pwa/icon-192.png tools/pwa/icon-512.png tools/pwa/apple-touch-icon.png dist/
+ver=$(cksum < dist/index.html | cut -d' ' -f1)
+sed "s/__VERSION__/$ver/" tools/pwa/sw.js > dist/sw.js
 
 echo "index.html       $(wc -c < index.html) bytes  (+ $(ls data/diagrams 2>/dev/null | wc -l) partzilla, $(ls data/diagrams-richs 2>/dev/null | wc -l) richs diagrams)"
 echo "phazermania.html $(wc -c < phazermania.html) bytes"
