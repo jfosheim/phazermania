@@ -147,6 +147,8 @@ The **Mods & upgrades** tab is built from `specs.json` → `mods`. Each item car
 
 Found in the manuals while checking clutches: the stock primary changed. The 1990 manual (p.4-1) shows pinned weights; the 1993 supplement (p.9) shows riveted weights, roller collars and a spring shim, and the 1991 supplement already lists the newer W176A weight numbers.
 
+Second pass (same day): cold air intake, handlebar risers, running boards, tunnel extensions, long-track skid swaps and track-swap reports, plus a "Where to look" section. All forum-tagged except the manual and fitment references. snowmobileforum.com, dootalk.com and vintagesleds.com (JavaScript wall) could not be read either. Running boards and riser cable part numbers remain undocumented for these chassis.
+
 ## Still open
 
 - **Venture VT480 manual** — the one real gap. Nothing in the local set covers it, so the Venture's clutching, gearing and suspension remain unverified.

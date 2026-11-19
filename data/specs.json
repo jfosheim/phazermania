@@ -609,6 +609,22 @@
                 "url": "https://totallyamaha.net/threads/35203/"
               }
             ]
+          },
+          {
+            "title": "Cold air intake",
+            "tag": "forum",
+            "warn": true,
+            "text": "The usual approach keeps the airbox. Take out the factory plate that blocks the louvered hood panel and the small reverse cone inside the box, then run a PVC tube with a scoop up to the louvers. One rider had to put foam in the tube as a filter, because otherwise it pulled in enough snow to freeze the carbs. Pulling the airbox off for pod filters on the stock carbs changes the mixture (one owner says it leans out, another found it running fat), and owners call the stock carbs' midrange hard to tune; engine-bay air also swings between cold and very hot. Nobody posted stock-carb jet changes for an intake mod, so read the plugs. A vent cut into the clutch cover was blamed for burning a hole in the PTO piston.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 98234",
+                "url": "https://totallyamaha.net/threads/98234/"
+              },
+              {
+                "label": "TotallYamaha thread 102287",
+                "url": "https://totallyamaha.net/threads/102287/"
+              }
+            ]
           }
         ]
       },
@@ -758,6 +774,59 @@
                 "url": "https://totallyamaha.net/threads/67661/"
               }
             ]
+          },
+          {
+            "title": "Tunnel extensions",
+            "tag": "forum",
+            "text": "No bolt-on extension for these chassis turned up for sale. Riders have one bent from sheet metal at a local shop (one quotes about $75-80; it needs a brake) or cut one from a donor tunnel, and lengthen the rear bumper with tubing. The factory extension from the 136 in Phazer II ST fits but rarely turns up used. Price the skid, rail extensions, track, drivers and gearing together: one rider who priced a 136 x 1.5 in conversion chose a 121 x 1.25 in instead because the extra 15 in \"costs a lot more\".",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 87484",
+                "url": "https://totallyamaha.net/threads/87484/"
+              },
+              {
+                "label": "TotallYamaha thread 5389",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "TotallYamaha thread 37999",
+                "url": "https://totallyamaha.net/threads/37999/"
+              }
+            ]
+          },
+          {
+            "title": "Long-tracking a Phazer II",
+            "tag": "forum",
+            "text": "A 133 in skid from a 1998 Polaris RMK X10 went into a 1990 Phazer II after narrowing it about 1/2 in, mounted further back to run a 136. Another rider estimated about $300 and a few hours to fit a 1999 Polaris Mountain Max skid with a 136 x 1.5 in track. Nobody reports a true bolt-in, and a Phazer II 121 skid needs work to go into a 1984-89 chassis. Hartman once listed a 116-to-121 kit for first-generation sleds (not confirmed current).",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 87484",
+                "url": "https://totallyamaha.net/threads/87484/"
+              },
+              {
+                "label": "TotallYamaha thread 5389",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "TotallYamaha thread 37999",
+                "url": "https://totallyamaha.net/threads/37999/"
+              }
+            ]
+          },
+          {
+            "title": "Track swap experiences",
+            "tag": "forum",
+            "text": "1 in lugs on a 1993 Phazer II: lots of clearance at the drivers. 1.25 in on the stock 8-tooth drivers: fits, but refitting the drivers is \"a workout\". A 136 x 1.75 in Polaris track on a 1991 with 7-tooth drivers: fits but tight, and the owner found 7-tooth drivers almost too low geared once the sled was piped. For 1.5 in, riders recommend 7-tooth drivers with no chaincase change and expect some loss of top speed. Measure your own driver clearance before buying.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 5389",
+                "url": "https://totallyamaha.net/threads/5389/"
+              },
+              {
+                "label": "TotallYamaha thread 37999",
+                "url": "https://totallyamaha.net/threads/37999/"
+              }
+            ]
           }
         ]
       },
@@ -803,6 +872,39 @@
               {
                 "label": "Phazer mods",
                 "url": "https://totallyamaha.net/threads/35203/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "rider",
+        "title": "Bars, boards and rider fit",
+        "items": [
+          {
+            "title": "Handlebar risers for standing",
+            "tag": "forum",
+            "warn": true,
+            "text": "On a 1986 Phazer the stock cables allow about 2 in of rise; any higher and the brake applies when the bars are turned. Taller risers (3.5-5 in) need longer brake, throttle and oil-pump cables, and nobody posted Phazer part numbers for longer ones. A rider raising the bars on a 1992 Phazer II also went to new cables. Another suggests moving the steering post forward instead, which means giving up the airbox. After any change, check at full lock both ways that the brake releases fully and the throttle snaps closed.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 96754",
+                "url": "https://totallyamaha.net/threads/96754/"
+              },
+              {
+                "label": "TotallYamaha thread 103673 (SX Viper, a different sled; same cable limit)",
+                "url": "https://totallyamaha.net/threads/103673/"
+              }
+            ]
+          },
+          {
+            "title": "Running boards",
+            "tag": "forum",
+            "text": "Wider custom running boards come up in build lists, along with a shortened seat, removable rear rack, short windshield, handlebar hooks and LED bulbs, but nobody posted dimensions, materials or a finished install for these chassis. Treat it as your own fabrication project.",
+            "sources": [
+              {
+                "label": "TotallYamaha thread 96754",
+                "url": "https://totallyamaha.net/threads/96754/"
               }
             ]
           }
@@ -856,6 +958,49 @@
               {
                 "label": "Carb update jetting",
                 "url": "https://totallyamaha.net/threads/375/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "refs",
+        "title": "Where to look",
+        "items": [
+          {
+            "title": "Factory manuals",
+            "tag": "official",
+            "text": "Yamaha LIT-12618-PZ-50 covers the 1990-96 Phazer II, with supplements for the 1991, 1993 and 1996 models; the 1984-89 PZ480 manual and Clymer's 1984-89 manual cover the first generation. The Venture manual is LIT-12618-01-41 with supplement LIT-12618-01-69. The figures in this app come from these; SOURCES.md lists which page each one is read from.",
+            "sources": [
+              {
+                "label": "SOURCES.md",
+                "url": "https://github.com/jfosheim/phazermania/blob/main/SOURCES.md"
+              }
+            ]
+          },
+          {
+            "title": "Parts and track fitment",
+            "tag": "official",
+            "text": "OEM parts diagrams are linked from the Parts tab (Partzilla). Track sizes by year come from Camoplast's Yamaha chart.",
+            "sources": [
+              {
+                "label": "Camoplast Yamaha fitment chart (PDF)",
+                "url": "https://mcbperformance.com/files/Application%20Charts/yamaha-camoplast-fitment-guide.pdf"
+              },
+              {
+                "label": "Sledtrack fitment guide",
+                "url": "https://sledtrack.com/snowmobile-track-fitment-guide/yamaha-snowmobile-track-fitment-guide/"
+              }
+            ]
+          },
+          {
+            "title": "Forums",
+            "tag": "forum",
+            "text": "TotallYamaha is where most of this tab comes from and has the deepest Phazer archive. Snowest, Hardcore Sledder, Snowmobile Forum and Vintage Sleds also have Phazer threads but block automated reading, so they are not covered here. Most search results for \"Phazer\" now concern the 2007+ four-stroke, which shares nothing with these sleds.",
+            "sources": [
+              {
+                "label": "TotallYamaha",
+                "url": "https://totallyamaha.net/"
               }
             ]
           }
