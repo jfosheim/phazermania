@@ -155,6 +155,13 @@ The **Maintenance** tab uses Yamaha's own Periodic Maintenance Table and Lubrica
 
 The **Calculators** tab's clutch default (1:1 top ratio) is the top of Clymer's "ratio range 3.5:1 to 1:1" (Quick Reference Data, Transmission specifications, PZ480). Top speed is the no-slip track speed, for comparing setups only.
 
+## Troubleshooting, interchange and identification (2026-11-19)
+
+- **Troubleshooting** is Clymer 1984-89 Chapter Two, symptom by symptom in Clymer's order, including Figure 45 (fuel system chart, read from the page image) and Table 1 (PZ480 electrical resistances). Three cross-links are labelled forum-reported (motor mounts, lug height). The T.O.R.S. entry combines Clymer's Figure 15 wiring with Yamaha's "redo T.O.R.S. after changing idle" note.
+- **Interchange** compares the scraped parts index between two models. A shared part number is Yamaha's own interchange; a different one is not proof of non-fit. The belt changed from 89X-17641-01-00 (1986-91) to 89L-17641-01-00 (1992-95); retailer listings for Dayco HPX5000, Ultimax MAX1118M3 and Gates 43G4340 match that split and are tagged as retailer listings.
+- **Which sled is this?** uses the starting serial numbers printed in the 1990 manual (p.1-1, PDF p.205), the 1991 supplement (p.1 and General specifications p.22, PDF pp.491 and 512), the 1993 supplement (p.1, PDF p.521) and the 1996 supplement (PDF p.539, outside this app's range). No starting numbers were found for 1986-89, 1992, 1994-95 or the Venture.
+- Found on the 1991 General specifications page: the PZ480STR has 1,054 mm of track on the ground (865 mm standard) and 17/33 gearing (17/29 standard). The parts data lists the 121 in track number for the 1991 ST; the identifier treats it as a long track, and the model's track part number still needs checking.
+
 ## Still open
 
 - **Venture VT480 manual** — the one real gap. Nothing in the local set covers it, so the Venture's clutching, gearing and suspension remain unverified.

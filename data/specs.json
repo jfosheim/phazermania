@@ -478,6 +478,548 @@
     "finalWord": "The manual is explicit that these are guidelines only, that they vary with altitude, temperature and snow conditions, and that the condition of the spark plugs is the determining factor when changing jets."
   },
 
+  "identify": {
+    "trackLenOverride": { "1991-pz480str": 136 },
+    "trackLenNote": "The 1991 Phazer II ST is a long-track sled: Yamaha gives 1,054 mm (41.5 in) on the ground against 865 mm (34.1 in) for the standard Phazer II (1991 supplement, General specifications), although the parts data in this app lists the 121 in track part number for it.",
+    "where": "Frame number: stamped on the right-hand side of the frame (tunnel), just below the front of the seat. Engine number: right-hand side of the crankcase. The first three characters identify the model; the rest is the production number.",
+    "source": "Yamaha 1990 PZ480P/EP manual p.1-1; 1991 PZ480R/ER/STR supplement p.1; 1993 PZ480T/ET/STT supplement p.1; 1996 supplement p.1; Clymer 1984-89 Chapter One.",
+    "prefixes": [
+      {
+        "prefix": "87F",
+        "start": "87F-000101",
+        "modelId": "1990-pz480p"
+      },
+      {
+        "prefix": "87H",
+        "start": "87H-000101",
+        "modelId": "1990-pz480ep"
+      },
+      {
+        "prefix": "88F",
+        "start": "88F-000101",
+        "modelId": "1991-pz480r"
+      },
+      {
+        "prefix": "88H",
+        "start": "88H-000101",
+        "modelId": "1991-pz480er"
+      },
+      {
+        "prefix": "88X",
+        "start": "88X-000101",
+        "modelId": "1991-pz480str"
+      },
+      {
+        "prefix": "8AK",
+        "start": "8AK-000101",
+        "modelId": "1993-pz480t"
+      },
+      {
+        "prefix": "8AL",
+        "start": "8AL-000101",
+        "modelId": "1993-pz480et"
+      },
+      {
+        "prefix": "8AM",
+        "start": "8AM-000101",
+        "modelId": "1993-pz480stt"
+      },
+      {
+        "prefix": "8BF",
+        "start": "8BF-007101",
+        "label": "1996 Phazer II (PZ480)",
+        "outOfRange": true
+      },
+      {
+        "prefix": "8BG",
+        "start": "8BG-009101",
+        "label": "1996 Phazer II LE (PZ480E)",
+        "outOfRange": true
+      },
+      {
+        "prefix": "8BH",
+        "start": "8BH-006101",
+        "label": "1996 Phazer II ST (PZ480ST)",
+        "outOfRange": true
+      }
+    ],
+    "gaps": "The manuals checked give no starting numbers for 1986-89, 1992, 1994-95 or any Venture. For those, use the features below and the Year changes tab.",
+    "note": "Starting serial numbers are the first unit of that model. A frame number matches only when the sled still has its original frame; an engine may have been swapped from another year."
+  },
+  "interchange": {
+    "note": "Same part number means a direct swap by Yamaha's own catalogue. A different number does not prove it will not fit, only that Yamaha listed something else; check the dimensions before buying.",
+    "facts": [
+      {
+        "title": "Drive belt changed for 1992",
+        "tag": "official",
+        "text": "Every 1986-91 Phazer, Phazer II and the 1991 Venture list belt 89X-17641-01-00; every 1992-95 model lists 89L-17641-01-00. Aftermarket listings agree on the split: the 1986-91 belt is about 43.3 in outside circumference by 1.25 in wide (Clymer gives 1,099 mm / 43.3 in, 31.6 mm new), the 1992-on belt about 44.2 in by 1.38 in. They do not cross over.",
+        "sources": [
+          {
+            "label": "Parts data in this app (model belt part numbers)"
+          },
+          {
+            "label": "Clymer 1984-89, Chapter Twelve, Table 1"
+          }
+        ]
+      },
+      {
+        "title": "Aftermarket belts",
+        "tag": "retailer",
+        "text": "1986-91: Dayco HPX5000 (43.313 x 1.25 in), listed for Phazer 1984-89, Phazer II 1990-91, Phazer II ST 1991 and Venture XL 1991. 1992-95: Ultimax MAX1118M3 (44 3/16 x 1 3/8 in), listed for Phazer II, LE, ST and Venture GT/XL 1992-93 and Venture XL 1994-98; Gates G-Force 43G4340, which replaces 89L-17641-00-00 and lists Phazer II and Venture 1992-96. Retailer fitment lists, not Yamaha's; check the year against your sled.",
+        "sources": [
+          {
+            "label": "Driven Powersports: Dayco HPX5000",
+            "url": "https://www.drivenpowersports.ca/products/dayco-hpx-snowmobile-belt-hpx5000"
+          },
+          {
+            "label": "Driven Powersports: Ultimax MAX1118M3",
+            "url": "https://www.drivenpowersports.ca/products/ultimax-snowmobile-max-3-belt-yam-max1118m3"
+          },
+          {
+            "label": "MFG Supply: Gates 43G4340",
+            "url": "https://www.mfgsupply.com/43g4340-89-17641.html"
+          }
+        ]
+      },
+      {
+        "title": "Spark plug",
+        "tag": "official",
+        "text": "NGK BR9ES, gapped 0.7-0.8 mm (0.028-0.031 in). That is the 1984-89 manual figure; the 1990-95 engines carry the same engine part numbers. The R means resistor type; keep it.",
+        "sources": [
+          {
+            "label": "Clymer 1984-89 specifications; Yamaha 1990 manual"
+          }
+        ]
+      },
+      {
+        "title": "Front end and struts",
+        "tag": "forum",
+        "text": "The first-generation TSS front end is shared across the SRV, VMax 540, Exciter, Ovation and Phazer II with different spring rates; 1984-89 Phazers do not share struts and springs with the VMax and SRV. Detail on the Mods & upgrades tab.",
+        "sources": [
+          {
+            "label": "TotallYamaha thread 45766",
+            "url": "https://totallyamaha.net/threads/45766/"
+          }
+        ]
+      }
+    ]
+  },
+  "troubleshooting": {
+    "source": "Clymer 1984-89 Yamaha snowmobile manual, Chapter Two (Troubleshooting): Operating requirements, Ignition system, Fuel system (Figure 45), Engine, Two-stroke pressure testing, Power train, Skis and steering, Track assembly, Table 1. Checks are listed in Clymer's order. Written for the 1984-89 PZ480; the 1990-95 sleds use the same engine and drive family, so the checks carry over, but use the figures for your model.",
+    "groups": [
+      {
+        "id": "start",
+        "title": "Starting and stopping",
+        "items": [
+          {
+            "symptom": "Won't start",
+            "checks": [
+              "Check the obvious first: engine stop switch in RUN, tether switch fitted (1984), not flooded from too much choke, fuel in the tank, plug wires on.",
+              "If it has sat a while: clean or replace the plugs, check the battery (electric start), then work along the fuel supply from the tank. Drain stale fuel and try a fresh tank.",
+              "Spark test: plug in its cap, base grounded on the head, crank it. You want a fat blue spark. Hold the lead with insulated pliers.",
+              "No or weak spark: check connections at the coil and battery, then test the main, engine stop and tether switches, and the throttle override switches (1985-on).",
+              "Then test the ignition coil, pickup coil and source coil against the resistance table below."
+            ],
+            "note": "The ignition is the weakest of fuel, compression and spark. Clymer: more problems come from ignition than anything else, so check it before touching the carburettors."
+          },
+          {
+            "symptom": "No fuel at the carburettor",
+            "checks": [
+              "No gas in tank",
+              "Air vent in gas cap closed",
+              "Defective fuel pump",
+              "Clogged fuel filter screen",
+              "Clogged or leaking pulse line",
+              "Clogged or damaged fuel line"
+            ]
+          },
+          {
+            "symptom": "Flooding at the carburettor",
+            "checks": [
+              "Choke out of adjustment",
+              "Excessive fuel pump pressure"
+            ],
+            "note": "A choke stuck closed floods it; one stuck open makes it hard to start."
+          },
+          {
+            "symptom": "Starts, then stops immediately",
+            "checks": [
+              "Incorrect choke adjustment or use",
+              "Clogged fuel filter screen",
+              "Clogged or damaged fuel line",
+              "Clogged or leaking pulse line",
+              "Clogged check valve",
+              "Clogged vent line",
+              "Damaged fuel pump",
+              "Dirt or water in fuel",
+              "Incorrect carburettor adjustment"
+            ]
+          },
+          {
+            "symptom": "Cuts out or will not run after throttle, cable or idle work (1985-on)",
+            "checks": [
+              "Throttle Over Ride System (T.O.R.S.): a switch at the carburettor and one at the throttle lever are wired into the ignition (Clymer Figure 15). If they disagree, the engine is cut. Check throttle cable free play (1.0-2.0 mm) and that the throttle snaps shut at full lock.",
+              "Redo the T.O.R.S. adjustment whenever idle speed is changed (Yamaha), then test the switches as Clymer describes in Chapter Eight before replacing the CDI."
+            ],
+            "note": "Riser and cable changes are the usual way to upset it."
+          }
+        ]
+      },
+      {
+        "id": "run",
+        "title": "Running and power",
+        "items": [
+          {
+            "symptom": "Rough running",
+            "checks": [
+              "Dirt or water in fuel",
+              "Inlet control arm (float arm) set incorrectly",
+              "Reed valve open or broken"
+            ]
+          },
+          {
+            "symptom": "Poor idle",
+            "checks": [
+              "Carburettor adjustment",
+              "Ignition timing",
+              "Ignition fault",
+              "Obstructed carburettor pulse or vent lines",
+              "Loose carburettor mounting or a faulty flange gasket"
+            ]
+          },
+          {
+            "symptom": "Misfires",
+            "checks": [
+              "Weak spark or dirty plug",
+              "Fuel contamination",
+              "Only under heavy load (accelerating): usually a defective plug",
+              "Dirty carburettor, dirty or worn inlet seat and needle",
+              "Choke out of adjustment",
+              "Incorrect carburettor adjustment"
+            ]
+          },
+          {
+            "symptom": "Flat spot: dies for a moment when the throttle opens, then recovers",
+            "checks": [
+              "Dirty or contaminated carburettor",
+              "Water in the fuel",
+              "Low-speed mixture too lean or too rich"
+            ]
+          },
+          {
+            "symptom": "Loss of power",
+            "checks": [
+              "Air leaks in the fuel line or fuel pump",
+              "Clogged fuel filter",
+              "Choke or throttle valve not working fully",
+              "Ignition timing at full advance, checked running (Chapter Three). Right on the dial gauge but wrong running points to an ignition part",
+              "Galling piston, wrong piston clearance, worn or sticky rings",
+              "Loose bolts or leaking gaskets at head, cylinder or crankcase; crankcase and crank seals (pressure test)",
+              "Exhaust leaking inside the hood"
+            ],
+            "note": "A noticeable drop in speed can be the first sign of a seizure."
+          },
+          {
+            "symptom": "Backfires",
+            "checks": [
+              "Poor quality fuel",
+              "Mixture too rich or too lean",
+              "Incorrect carburettor adjustment"
+            ]
+          },
+          {
+            "symptom": "High fuel consumption",
+            "checks": [
+              "Carburettor adjustment",
+              "Clogged exhaust",
+              "Loose, worn or leaking inlet seat and needle, or a bad seat gasket",
+              "Dirt in the inlet seat",
+              "Leaks at fuel line connections"
+            ]
+          },
+          {
+            "symptom": "Hard starting and poor running, but compression is good",
+            "checks": [
+              "Crankcase leak. A two-stroke needs the crankcase sealed, and a compression test does not show it.",
+              "Pressure test: block the intakes and exhaust ports, pump to about 9 psi through a plug hole. A good engine loses no more than 1.5-2 psi over several minutes; losing 1 psi in a minute means a serious leak. The labyrinth seal links both cylinders, so test them together.",
+              "Find leaks with soapy water: crankshaft seals, plugs, head joint, base joint, carburettor base, crankcase joint."
+            ]
+          },
+          {
+            "symptom": "Excessive vibration",
+            "checks": [
+              "Loose engine, suspension or steering mounting bolts",
+              "Worn motor mounts (forum-reported; see Known problems on the Mods tab)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "heat",
+        "title": "Heat, detonation and seizure",
+        "items": [
+          {
+            "symptom": "Overheating",
+            "checks": [
+              "Fan belt: check tension and damage every 20 hours (Yamaha's table). This is the cooling system on a fan-cooled engine.",
+              "Spark plug of the wrong heat range (stock NGK BR9ES)",
+              "Incorrect ignition timing",
+              "Excessively lean mixture"
+            ],
+            "note": "Overheating and lack of lubrication cause most engine mechanical failures."
+          },
+          {
+            "symptom": "Pinging, detonation or preignition",
+            "checks": [
+              "Low-octane fuel (87 pump octane minimum)",
+              "Over-advanced ignition timing",
+              "Lean mixture at or near full throttle",
+              "Inadequate cooling",
+              "Plug of the wrong heat range, or overheated plugs",
+              "Carbon deposits on piston and head (decarbonize once a season)",
+              "Excessive oil in fuel, poor fuel, lean mixture (preignition)"
+            ],
+            "note": "Under the hood at high rpm you will not hear it. Clymer says this inaudible detonation is usually behind engine damage with no apparent cause."
+          },
+          {
+            "symptom": "Plugs burn or foul",
+            "checks": [
+              "Wrong heat range",
+              "Mixture too rich",
+              "Incorrect carburettor adjustment",
+              "Poor quality fuel"
+            ],
+            "note": "Read the plugs: the Clutch, gearing & suspension tab has a plug-reading table."
+          },
+          {
+            "symptom": "Seizure, or a rattle from the top end",
+            "checks": [
+              "Treat a top-end rattle as an early sign of seizure.",
+              "Scuffing above the rings usually means too much heat; below the rings usually means lack of oil.",
+              "Causes: wrong piston clearance or ring gap, compression leak, wrong oil, wrong plug heat range, wrong timing, oil pump not set or not bled, any overheating.",
+              "Bleed the oil pump after the tank runs dry, a hose is disconnected, or the sled is laid on its side."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "drive",
+        "title": "Clutch, belt and chaincase",
+        "items": [
+          {
+            "symptom": "Belt not running smoothly in the primary",
+            "checks": [
+              "Drive sheave face rough, grooved, pitted or scored",
+              "Defective belt"
+            ]
+          },
+          {
+            "symptom": "Uneven belt wear, or edge cord failure",
+            "checks": [
+              "Primary and secondary out of alignment (check sheave offset)",
+              "Loose engine mounts"
+            ]
+          },
+          {
+            "symptom": "Glazed belt",
+            "checks": [
+              "Slipping from a stuck or frozen track",
+              "Idle speed too high"
+            ]
+          },
+          {
+            "symptom": "Belt too tight at idle (sled creeps)",
+            "checks": [
+              "Idle speed too high",
+              "Wrong sheave distance",
+              "Wrong belt length"
+            ]
+          },
+          {
+            "symptom": "Engages below the engagement rpm",
+            "checks": [
+              "Worn primary spring",
+              "Wrong weights"
+            ]
+          },
+          {
+            "symptom": "Engages above the engagement rpm",
+            "checks": [
+              "Wrong primary spring",
+              "Worn or damaged secondary sheave buttons"
+            ]
+          },
+          {
+            "symptom": "Erratic shifting",
+            "checks": [
+              "Worn rollers and bushings",
+              "Scuffed or damaged weights",
+              "Dirty primary",
+              "Worn or damaged secondary buttons"
+            ]
+          },
+          {
+            "symptom": "Bogs during engagement",
+            "checks": [
+              "Secondary sheave width set wrong",
+              "Belt worn too thin",
+              "Wrong sheave distance"
+            ]
+          },
+          {
+            "symptom": "Primary or secondary sticks",
+            "checks": [
+              "Damaged sheave assembly",
+              "Damaged moveable sheave",
+              "Dirty sheave"
+            ]
+          },
+          {
+            "symptom": "Brake will not hold",
+            "checks": [
+              "Brake cable adjustment",
+              "Worn pads or disc",
+              "Oil-soaked pads",
+              "Sheared key on the brake disc"
+            ]
+          },
+          {
+            "symptom": "Brake will not release",
+            "checks": [
+              "Weak or broken return spring",
+              "Bent brake lever",
+              "Brake adjustment"
+            ]
+          },
+          {
+            "symptom": "Chaincase noisy, chain slipping, or fast chain and sprocket wear",
+            "checks": [
+              "Chain tension",
+              "Chain stretch",
+              "Worn or damaged sprockets",
+              "Low chaincase oil level",
+              "Broken chain tensioner",
+              "Misaligned sprockets"
+            ]
+          },
+          {
+            "symptom": "Chaincase leaking",
+            "checks": [
+              "Loose cover bolts",
+              "Damaged cover gasket",
+              "Damaged oil seals",
+              "Cracked chaincase"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "chassis",
+        "title": "Track, skis and steering",
+        "items": [
+          {
+            "symptom": "Frayed track edge",
+            "checks": [
+              "Track alignment",
+              "Track touching rivets in the tunnel (wrong rivets fitted before)"
+            ]
+          },
+          {
+            "symptom": "Track grooved on the inside",
+            "checks": [
+              "Track too tight",
+              "Frozen rear idler shaft bearing"
+            ]
+          },
+          {
+            "symptom": "Track ratchets on the drivers",
+            "checks": [
+              "Track too loose",
+              "Drive sprockets misaligned or damaged",
+              "Lugs too tall for the drivers (forum-reported; see Track fit)"
+            ]
+          },
+          {
+            "symptom": "Rear idlers turning on the shaft",
+            "checks": [
+              "Frozen rear idler shaft bearings"
+            ]
+          },
+          {
+            "symptom": "Loose steering",
+            "checks": [
+              "Steering post bushing",
+              "Steering post or column fasteners",
+              "Tie rod ends",
+              "Worn spindle bushings",
+              "Stripped spindle splines"
+            ]
+          },
+          {
+            "symptom": "Steers unevenly",
+            "checks": [
+              "Tie rod adjustment",
+              "Steering arms installed wrong",
+              "Damaged steering parts"
+            ]
+          },
+          {
+            "symptom": "Skis wearing fast",
+            "checks": [
+              "Skis misaligned (toe-out 0 mm)",
+              "Worn wear rods (skags)"
+            ]
+          }
+        ]
+      }
+    ],
+    "electrical": {
+      "title": "Ignition and charging resistance (PZ480, Clymer Table 2-1)",
+      "note": "Test at room temperature, 68 F (20 C). Lighting output is measured with the engine at operating temperature.",
+      "rows": [
+        [
+          "Charge coil, white to black",
+          "0.20-0.24 ohm"
+        ],
+        [
+          "Pickup coil, white/red to black",
+          "15.3-18.7 ohm"
+        ],
+        [
+          "Source coil, brown to black",
+          "1.16-1.42 ohm"
+        ],
+        [
+          "Lighting coil, yellow to black",
+          "0.17-0.21 ohm"
+        ],
+        [
+          "Grip warmer lighting coil, yellow/black to black",
+          "0.59-0.73 ohm"
+        ],
+        [
+          "Ignition coil (Hitachi), primary / secondary",
+          "0.14-0.17 ohm / 2.8-4.2 k ohm"
+        ],
+        [
+          "Ignition coil (Toyo Denso), primary / secondary",
+          "0.11-0.13 ohm / 3.2-4.8 k ohm"
+        ],
+        [
+          "Lighting current, non-electric start",
+          "0.6 A at 3,000 rpm"
+        ],
+        [
+          "Lighting output voltage",
+          "11.8 V at 3,000 rpm"
+        ],
+        [
+          "Battery (electric start)",
+          "YB14L-A2, 12 V 14 Ah"
+        ]
+      ]
+    }
+  },
   "maintenance": {
     "source": "Yamaha LIT-12618-PZ-50 (1990 PZ480P/EP), Periodic maintenance table and Lubrication intervals, pp.2-1 to 2-3. The 1984-89 schedule in the Clymer manual (Chapter Three, Tables 1 and 2) uses the same 20/40/80-hour intervals and the same items.",
     "intervals": {
@@ -1000,6 +1542,7 @@
   "calc": {
     "clutchRange": { "low": 3.5, "high": 1.0, "source": "Clymer 1984-89 Yamaha snowmobile manual, Quick Reference Data, Transmission specifications: V-belt automatic, ratio range 3.5:1 to 1:1 (PZ480)." },
     "driverPitchIn": 2.52,
+    "stGearing": "Factory gearing differs on the long-track sled: the 1991 Phazer II ST (PZ480STR) left the factory on 17/33 (1.941), the standard and LE on 17/29 (1.706). Yamaha 1991 supplement, General specifications.",
     "autolube": "Every PZ480 has Yamaha Autolube oil injection, and Yamaha calls for no premix (Clymer, General Information: Lubricant). Gasoline: 87 pump octane minimum (Clymer, Chapter Three).",
     "premixNote": "Premix is for sleds with the oil injection removed or disconnected, or a safety mix on top of working injection. Riders who removed injection on piped sleds report 32:1 (forum-reported). Use one brand of two-stroke oil and mix in a clean can, not the sled's tank."
   },
