@@ -478,6 +478,12 @@
     "finalWord": "The manual is explicit that these are guidelines only, that they vary with altitude, temperature and snow conditions, and that the condition of the spark plugs is the determining factor when changing jets."
   },
 
+  "calc": {
+    "clutchRange": { "low": 3.5, "high": 1.0, "source": "Clymer 1984-89 Yamaha snowmobile manual, Quick Reference Data, Transmission specifications: V-belt automatic, ratio range 3.5:1 to 1:1 (PZ480)." },
+    "driverPitchIn": 2.52,
+    "autolube": "Every PZ480 has Yamaha Autolube oil injection, and Yamaha calls for no premix (Clymer, General Information: Lubricant). Gasoline: 87 pump octane minimum (Clymer, Chapter Three).",
+    "premixNote": "Premix is for sleds with the oil injection removed or disconnected, or a safety mix on top of working injection. Riders who removed injection on piped sleds report 32:1 (forum-reported). Use one brand of two-stroke oil and mix in a clean can, not the sled's tank."
+  },
   "mods": {
     "researched": "2026-11-19",
     "note": "Collected from rider forums (mostly TotallYamaha) and period press. Unless a line is tagged official or press, it is one or more riders reporting their own sled, not a Yamaha figure. Measure, read the plugs, and change one thing at a time.",

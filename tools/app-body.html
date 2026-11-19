@@ -534,6 +534,7 @@
     { id: "setup",   label: "Clutch, gearing & suspension" },
     { id: "changes", label: "Year changes" },
     { id: "mods",    label: "Mods & upgrades" },
+    { id: "calc",    label: "Calculators" },
     { id: "order",   label: "Order list" },
     { id: "log",     label: "Tuning log" }
   ];
@@ -821,6 +822,7 @@
     if (state.view === "setup")   return renderSetup(main);
     if (state.view === "changes") return renderChanges(main);
     if (state.view === "mods")    return renderMods(main);
+    if (state.view === "calc")    return renderCalc(main);
   }
 
   /* unconfirmed: the part number is on the spec sheet but not on this model's own
@@ -1379,6 +1381,93 @@
     });
   }
 
+
+  /* ---------------- calculators ---------------- */
+  function opts(list, sel, fmt) {
+    return list.map(function (v) {
+      return '<option value="' + v + '"' + (String(v) === String(sel) ? " selected" : "") + ">" + (fmt ? fmt(v) : v) + "</option>";
+    }).join("");
+  }
+  function renderCalc(main) {
+    var C = S.calc, G = S.gearRatios, cs = store.get("calc", {});
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Calculators</h2>' +
+      '<div class="sheet-sub"><span>Gearing and top speed, premix and oil</span></div></div>';
+
+    html += '<section class="group" id="gearCalc"><h2>Gearing and top speed</h2>' +
+      '<div class="calc">' +
+      '<div class="field"><label for="gDrive">Top sprocket</label><select id="gDrive">' + opts(G.drive, cs.drive || G.stdDrive, function (v) { return v + "T" + (v === G.stdDrive ? " (std)" : ""); }) + "</select></div>" +
+      '<div class="field"><label for="gDriven">Bottom sprocket</label><select id="gDriven">' + opts(G.driven.map(function (r) { return r.teeth; }), cs.driven || G.stdDriven, function (v) { return v + "T" + (v === G.stdDriven ? " (std)" : ""); }) + "</select></div>" +
+      '<div class="field"><label for="gTeeth">Drivers</label><select id="gTeeth">' + opts([8, 7], cs.teeth || 8, function (v) { return v + "-tooth" + (v === 8 ? " (stock)" : ""); }) + "</select></div>" +
+      '<div class="field"><label for="gRpm">Engine rpm</label><input id="gRpm" type="number" inputmode="numeric" step="100" min="3000" max="10000" value="' + esc(cs.rpm || 7000) + '"></div>' +
+      '<div class="field"><label for="gClutch">Clutch top ratio</label><input id="gClutch" type="number" inputmode="decimal" step="0.05" min="0.8" max="2" value="' + esc(cs.clutch || C.clutchRange.high) + '"></div>' +
+      '</div><div id="gResult"></div>' +
+      '<p class="note">Speed = engine rpm &divide; clutch ratio &divide; chaincase ratio &times; driver circumference (teeth &times; ' + C.driverPitchIn + '&quot; pitch). ' +
+      "It is the track speed with no belt slip and the clutch fully shifted out. " + esc(C.clutchRange.source) +
+      " Real top speed is lower; use this to compare one setup with another.</p></section>";
+
+    html += '<section class="group" id="mixCalc"><h2>Premix and oil</h2>' +
+      '<div class="prov">' + esc(C.autolube) + "</div>" +
+      '<div class="calc">' +
+      '<div class="field"><label for="pFuel">Fuel</label><input id="pFuel" type="number" inputmode="decimal" step="0.1" min="0" value="' + esc(cs.fuel || 8.4) + '"></div>' +
+      '<div class="field"><label for="pUnit">Units</label><select id="pUnit">' + opts(["gal", "L"], cs.unit || "gal", function (v) { return v === "gal" ? "US gallons" : "Litres"; }) + "</select></div>" +
+      '<div class="field"><label for="pRatio">Ratio</label><select id="pRatio">' + opts([24, 32, 40, 50, 100], cs.ratio || 32, function (v) { return v + ":1"; }) + "</select></div>" +
+      '</div><div id="pResult"></div>' +
+      '<p class="note">' + esc(C.premixNote) + " A full tank is " + esc(S.capacities.fuelTank) + " (1984&ndash;89 manual).</p></section>";
+
+    main.innerHTML = html;
+    ["gDrive", "gDriven", "gTeeth", "gRpm", "gClutch", "pFuel", "pUnit", "pRatio"].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener("input", updateCalc);
+      el.addEventListener("change", updateCalc);
+    });
+    updateCalc();
+  }
+  function mphFor(rpm, clutch, drive, driven, teeth) {
+    var inPerMin = rpm / clutch / (driven / drive) * teeth * S.calc.driverPitchIn;
+    return inPerMin * 60 / 63360;
+  }
+  function updateCalc() {
+    var G = S.gearRatios, v = function (id) { return document.getElementById(id).value; };
+    var drive = parseInt(v("gDrive"), 10), driven = parseInt(v("gDriven"), 10), teeth = parseInt(v("gTeeth"), 10);
+    var rpm = parseFloat(v("gRpm")), clutch = parseFloat(v("gClutch"));
+    var fuel = parseFloat(v("pFuel")), unit = v("pUnit"), ratio = parseInt(v("pRatio"), 10);
+    store.set("calc", { drive: drive, driven: driven, teeth: teeth, rpm: rpm, clutch: clutch, fuel: fuel, unit: unit, ratio: ratio });
+
+    var h;
+    if (!(rpm > 0) || !(clutch > 0)) {
+      h = '<div class="verdict warn"><span class="vlabel">Check inputs</span><span>Enter an engine rpm and a clutch ratio above zero.</span></div>';
+    } else {
+      var mph = mphFor(rpm, clutch, drive, driven, teeth);
+      var std = mphFor(rpm, clutch, G.stdDrive, G.stdDriven, 8);
+      var diff = (mph / std - 1) * 100;
+      var row = G.driven.filter(function (r) { return r.teeth === driven; })[0];
+      var links = row ? row.links[G.drive.indexOf(drive)] : null;
+      h = '<div class="result"><div class="result-top">' +
+        '<div><span class="biglabel">Theoretical top speed</span><span class="big">' + mph.toFixed(0) + ' mph</span></div>' +
+        '<div><span class="biglabel">Kilometres</span><span class="big">' + (mph * 1.609344).toFixed(0) + " km/h</span></div></div>" +
+        '<div class="readout"><span>Chaincase ratio <b>' + (driven / drive).toFixed(3) + "</b></span>" +
+        "<span>Overall at top <b>" + (driven / drive * clutch).toFixed(2) + ":1</b></span>" +
+        "<span>Chain <b>" + (links ? links + " links (Table 4)" : "no length in the chart; measure") + "</b></span>" +
+        "<span>vs stock 17/29, 8T <b>" + (Math.abs(diff) < 0.05 ? "same" : (diff > 0 ? "+" : "") + diff.toFixed(1) + "%") + "</b></span></div></div>";
+      if (diff < -0.05) h += '<div class="verdict ok"><span class="vlabel">Geared down</span><span>More pull for deep snow, taller lugs or a longer track; less top speed. This is the direction Yamaha gives for poor snow and rough terrain.</span></div>';
+      else if (diff > 0.05) h += '<div class="verdict warn"><span class="vlabel">Geared up</span><span>More top speed only if the engine can still pull its peak rpm. If rpm drops on the lake, it is overgeared.</span></div>';
+    }
+    document.getElementById("gResult").innerHTML = h;
+
+    var p;
+    if (!(fuel > 0)) {
+      p = '<div class="verdict warn"><span class="vlabel">Check inputs</span><span>Enter the amount of fuel.</span></div>';
+    } else {
+      var ml = (unit === "gal" ? fuel * 3785.41 : fuel * 1000) / ratio;
+      p = '<div class="result"><div class="result-top">' +
+        '<div><span class="biglabel">Oil to add</span><span class="big">' + (ml / 29.5735).toFixed(1) + " oz</span></div>" +
+        '<div><span class="biglabel">Millilitres</span><span class="big">' + Math.round(ml) + " ml</span></div></div>" +
+        '<div class="readout"><span>' + fuel + " " + (unit === "gal" ? "US gal" : "L") + " at <b>" + ratio + ":1</b></span>" +
+        "<span>Per US gallon <b>" + (128 / ratio).toFixed(1) + " oz</b></span><span>Per litre <b>" + Math.round(1000 / ratio) + " ml</b></span></div></div>";
+    }
+    document.getElementById("pResult").innerHTML = p;
+  }
+
   /* ---------------- carb swap ---------------- */
   function renderCarbs(main) {
     var carb = S.carburetor;
@@ -1782,5 +1871,10 @@
   orderSave();
   syncChrome();
   renderList();
+
+  /* Offline: only the GitHub Pages build links a manifest and ships sw.js. */
+  if ("serviceWorker" in navigator && window.isSecureContext && document.querySelector('link[rel="manifest"]')) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () { /* offline mode unavailable */ }); });
+  }
 })();
 </script>
