@@ -1,0 +1,18 @@
+# Built by tools/build.sh - never edit or commit these.
+/index.html
+/phazermania.html
+/data/specs.js
+/dist/
+
+# Watermarked Yamaha illustrations. Local shop reference only: they are
+# copyrighted and too large for the repo. Fetch with tools/fetch-*.sh.
+/data/diagrams/
+/data/diagrams-richs/
+
+# Service manuals stay in Google Drive.
+/Manual/
+*.pdf
+*.zip
+*.rar
+
+.DS_Store

@@ -1,0 +1,426 @@
+{
+  "meta": {
+    "version": "0.3",
+    "generated": "2026-11-17",
+    "coverage": "1986-1995 Yamaha Phazer / Phazer II / Venture (485cc twin)",
+    "notPresent": "1984-1985 Phazer - Partzilla's catalog begins at 1986",
+    "sources": {
+      "clymer8489": "Clymer-style sectioned manual covering PZ480 + EX570, 1984-1989. Local copy. Chapter tables are the source for the Phazer (84-89) column below.",
+      "factory9096": "Yamaha factory service manual LIT-12618-PZ-50, 1990-1996 Phazer II. Maintenance Specifications page 8-5 for PZ480P/PZ480EP is the source for the 1990 column and the altitude jetting chart.",
+      "partzilla": "Current OEM replacement part numbers."
+    },
+    "partNumberNote": "Partzilla shows current replacement numbers. Where a number looks unchanged across many years, that is often genuinely correct rather than a supersession artifact - the carburettor and its jetting are confirmed identical between the 1984-89 and 1990 manuals.",
+    "verifiedFor": "Engine, carburettor and jetting figures are manual-verified for the Phazer (PZ480, 1984-89) and the 1990 Phazer II (PZ480P/PZ480EP). 1991-1995 carry the same Partzilla part numbers but no manual page was checked for those years.",
+    "todo": [
+      "Venture VT480 - no manual in the local set. Engine and carburettor part numbers match the Phazer, but clutching, gearing and suspension are a touring setup and are NOT verified.",
+      "Phazer II 1991-1995 - assumed same as 1990 on matching part numbers, not read off a manual page",
+      "Phazer II engagement / shift RPM - the 3,000-3,400 / 6,600-7,000 figures are the 84-89 PZ480 spec",
+      "lug height on the 136 in ST tracks",
+      "Torque - 11 rows have ft-lb about 3% below the exact conversion of their N-m; check them against the 1984-89 manual tables",
+      "Main jets #121.3 and #152.5 each have two part numbers (older and newer); confirm which is current",
+      "Factory baseline - the 1984-89 manual text (32 to -4 F) disagrees with the 1990 chart (32 to 68 F) for the stock #143.8",
+      "1991 Phazer II ST lists primary spring 90501-45534-00 while the other 1991 sleds list 90501-501G3-00; confirm",
+      "1993 Venture GT - no track-suspension-1 rows were scraped, so its track and slide are unconfirmed"
+    ]
+  },
+
+  "engine": {
+    "appliesTo": "PZ480 1984-1989 (manual-verified); Phazer II and Venture share the same engine part numbers",
+    "type": "2-stroke, axial fan cooled, parallel twin, reed intake",
+    "displacementCc": 485,
+    "displacementCuIn": 29.59,
+    "boreMm": 72.0,
+    "strokeMm": 59.6,
+    "compressionRatio": "7.0:1",
+    "cylinderHeadVolumeCc": "26.6 - 27.2",
+    "cylinderBoreMaterial": "Cast iron sleeve",
+    "note": "72.0 x 59.6 mm over two cylinders computes to 485.2 cc, matching the published 485 cc.",
+    "hpStock": "53 hp @ 6750 rpm",
+    "hpNote": "Output is a secondary-source figure; the manuals consulted do not state horsepower.",
+    "sparkPlug": "NGK BR9ES",
+    "sparkPlugGap": "0.7 - 0.8 mm (0.028 - 0.031 in)",
+    "ignitionTiming": "1.5 mm (0.059 in) BTDC, measured with a dial indicator",
+    "idleSpeed": "1,600 rpm (PZ480 84-89) / 1,500 - 1,700 rpm (PZ480P 1990)",
+    "parts": {
+      "pistonStd": "8V0-11631-00-96",
+      "pistonOs025": "8V0-11635-00-00",
+      "pistonOs050": "8V0-11636-00-00",
+      "ringSetStd": "8V0-11601-00-00",
+      "ringSet1st": "8V0-11601-10-00",
+      "ringSet2nd": "8V0-11601-20-00",
+      "pistonPin": "818-11633-00-00",
+      "headGasket": "87F-11181-00-00",
+      "baseGasket": "88F-11351-01-00",
+      "crankshaftAssy": "89F-11400-00-00",
+      "oilPumpAssy": "8V0-13101-01-00"
+    }
+  },
+
+  "carburetor": {
+    "appliesTo": "Verified identical for PZ480 1984-1989 and PZ480P/EP 1990",
+    "manufacturer": "Mikuni",
+    "type": "B38-32, 2 pcs",
+    "idMark8489": "8V000",
+    "idMark1990": "LH 8VO-02 / RH 8OL-01",
+    "assembly": "80L-14100-04-00",
+    "count": 2,
+    "mainJetStd": { "size": "143.8", "pn": "3G2-1423E-57-00" },
+    "pilotJetStd": { "size": "95", "pn": "193-14142-95-00" },
+    "mainAirJet": "1.5 mm",
+    "pilotAirJet": "0.5 mm",
+    "pilotOutlet": "1.0 mm",
+    "pilotScrew": "1-1/2 turns out",
+    "throttleValve": "#120",
+    "valveSeatSize": "1.5 mm",
+    "starterJet": "2.0 mm",
+    "floatHeight8489": "11 - 13 mm (0.43 - 0.51 in)",
+    "floatHeight1990": "9.5 - 13.5 mm (0.37 - 0.53 in)",
+    "mainNozzleStd": { "id": "3A", "pn": "8Y2-14941-3A-00" },
+    "mainNozzleAlternates": [
+      { "id": "1A", "pn": "8Y2-14941-1A-00", "note": "OD 5.5mm / ID 2.2mm / 10 x 0.7mm bleeds - richer midrange" },
+      { "id": "2A", "pn": "8Y2-14941-2A-00", "note": "OD 5.5mm / ID 2.4mm / 10 x 0.8mm bleeds - richest" }
+    ],
+    "meteringNozzleAlt": { "pn": "80L-14489-00-00", "note": "two 0.9mm holes vs stock one 1.0mm; part of the 1996 Yamaha service-bulletin jet kit for the midrange lean condition" },
+    "needleValveAssy": "168-14190-15-00",
+    "float": "8M6-14185-00-00",
+    "floatPin": "8M6-14186-00-00",
+    "pilotAirScrew": "620-14211-00-00",
+    "starterPlunger": "8G8-14171-00-00",
+    "fuelPump": "Mikuni DF52",
+    "mainJetLadder": [
+      { "size": "120", "pn": "3G2-14231-24-00" },
+      { "size": "121.3", "pn": "3G2-1423E-48-00", "alt": ["8V0-1423E-48-00"] },
+      { "size": "122.5", "pn": "3G2-1423A-75-A1" },
+      { "size": "125", "pn": "3G2-14231-25-00" },
+      { "size": "126.3", "pn": "3G2-1423E-50-00" },
+      { "size": "127.5", "pn": "3G2-1423A-76-00" },
+      { "size": "130", "pn": "3G2-14231-26-A0" },
+      { "size": "131.3", "pn": "3G2-1423E-52-00" },
+      { "size": "132.5", "pn": "3G2-1423A-77-00" },
+      { "size": "135", "pn": "3G2-14231-27-00" },
+      { "size": "136.3", "pn": "3G2-1423E-54-00" },
+      { "size": "137.5", "pn": "3G2-1423A-78-00" },
+      { "size": "138.8", "pn": "3G2-1423E-55-00" },
+      { "size": "140", "pn": "3G2-14231-28-00" },
+      { "size": "143.8", "pn": "3G2-1423E-57-00", "std": true },
+      { "size": "145", "pn": "3G2-14231-29-00" },
+      { "size": "147.5", "pn": "3G2-1423A-80-A0" },
+      { "size": "150", "pn": "3G2-14231-30-A0" },
+      { "size": "152.5", "pn": "3G2-1423A-81-00", "alt": ["3G2-14231-81-A0"] }
+    ],
+    "altitudeChart": {
+      "baselineConflict": "The two manuals disagree on what the stock #143.8 is jetted for. The 1984-89 manual text says sea level at 32 to -4 °F (0 to -20 °C). Yamaha's 1990 chart puts #143.8 at sea level for 32 to 68 °F (0 to 20 °C) and gives #150 for 32 to -4 °F. The app follows the 1990 chart. Check both manual pages before relying on a cold-weather answer.",
+      "source": "Yamaha LIT-12618-PZ-50, Maintenance Specifications p.8-5, model PZ480P/PZ480EP (1990)",
+      "zones": [
+        { "key": "cold", "label": "-30 to -20 °C", "labelF": "-22 to -4 °F" },
+        { "key": "mid",  "label": "-20 to 0 °C",  "labelF": "-4 to 32 °F" },
+        { "key": "warm", "label": "0 to 20 °C",   "labelF": "32 to 68 °F" }
+      ],
+      "bands": [
+        { "m": "0 - 100",     "ft": "0 - 300",       "ftMin": 0,    "ftMax": 300,   "cold": "152.5", "mid": "150",   "warm": "143.8" },
+        { "m": "100 - 600",   "ft": "300 - 2,000",   "ftMin": 300,  "ftMax": 2000,  "cold": "147.5", "mid": "143.8", "warm": "138.8" },
+        { "m": "600 - 1,200", "ft": "2,000 - 4,000", "ftMin": 2000, "ftMax": 4000,  "cold": "143.8", "mid": "138.8", "warm": "136.3" },
+        { "m": "1,200 - 1,800","ft": "4,000 - 6,000","ftMin": 4000, "ftMax": 6000,  "cold": "138.8", "mid": "136.3", "warm": "131.3" },
+        { "m": "1,800 - 2,400","ft": "6,000 - 8,000","ftMin": 6000, "ftMax": 8000,  "cold": "136.3", "mid": "131.3", "warm": "126.3" },
+        { "m": "2,400 - 3,000","ft": "8,000 - 10,000","ftMin": 8000,"ftMax": 10000, "cold": "131.3", "mid": "126.3", "warm": "121.3" }
+      ]
+    }
+  },
+
+  "capacities": {
+    "appliesTo": "PZ480 1984-1989",
+    "fuelTank": "31.8 L (8.4 US gal)",
+    "oilTank": "2.5 L (2.6 qt)",
+    "chaincase": "0.25 L (0.26 qt)"
+  },
+
+  "clutch": {
+    "appliesTo": "PZ480 1984-1989",
+    "type": "V-belt automatic",
+    "ratioRange": "3.5:1 to 1:1",
+    "engagementRpm": "3,000 - 3,400 rpm",
+    "shiftRpm": "6,600 - 7,000 rpm",
+    "beltOutsideCircumference": "1,099 mm (43.3 in)",
+    "beltWidthNew": "31.6 mm (1.24 in)",
+    "beltWidthWearLimit": "26 mm (1.02 in)"
+  },
+
+  "service": {
+    "appliesTo": "PZ480 1984-1989",
+    "trackDeflection": "20 - 25 mm (0.79 - 0.98 in)",
+    "toeOut": "0 mm",
+    "throttleCableFreePlay": "1.0 - 2.0 mm",
+    "oilPumpCableFreePlay": "21 - 23 mm (0.83 - 0.91 in)",
+    "starterCableFreePlay": "0.5 - 1.0 mm",
+    "brakeDiscOuterDiameter": "155 mm (6.10 in)",
+    "brakeDiscThickness": "4 mm (0.16 in)",
+    "padToDiscClearance": "0.15 - 0.30 mm (0.006 - 0.012 in)",
+    "oilPumpPlungerDiameter": "4.0 mm (0.16 in)",
+    "oilPumpWormGearRatio": "1/25"
+  },
+
+  "tracks": {
+    "8V0-47110-00-00": { "widthIn": 15, "lengthIn": 116, "lengthExact": "2,944 mm (115.9 in)", "lugIn": 0.50, "pitchIn": 2.52, "pitchMm": 64, "windows": 46, "usedBy": "Phazer 1986-1989", "verified": "manual" },
+    "87F-47110-01-00": { "widthIn": 15, "lengthIn": 121, "lugIn": 0.625, "pitchIn": 2.52, "usedBy": "Phazer II 1990-1995 std/LE, Phazer II ST 1991, Venture XL/GT 1991-1993" },
+    "8BH-47110-00-00": { "widthIn": 15, "lengthIn": 136, "lugIn": null, "pitchIn": 2.52, "usedBy": "Phazer II ST 1992-1994 (long track)" },
+    "8CC-47110-11-00": { "widthIn": 15, "lengthIn": 136, "lugIn": null, "pitchIn": 2.52, "usedBy": "Phazer II ST 1995 (long track)" },
+    "82M-47110-00-00": { "widthIn": 15, "lengthIn": 121, "lugIn": 0.625, "pitchIn": 2.52, "usedBy": "Venture GT 1993, Venture XL 1994-1995" }
+  },
+
+  "chaincase": {
+    "confirmedFor": "1992 PZ480S (the only model-year whose diagram lists sprockets as separate SKUs)",
+    "driveStd": { "teeth": 17, "pn": "88F-17682-70-00" },
+    "drivenStd": { "teeth": 29, "pn": "88F-47548-90-00" },
+    "chainStd": { "links": 64, "pn": "94860-01064-00" },
+    "options": [
+      { "part": "drive sprocket", "teeth": 16, "pn": "88F-17682-60-00" },
+      { "part": "drive sprocket", "teeth": 18, "pn": "88F-17682-80-00" },
+      { "part": "driven sprocket", "teeth": 33, "pn": "88F-47587-00-00" },
+      { "part": "chain", "links": 66, "pn": "94860-01066-00" }
+    ],
+    "oilCapacity": "0.25 L (0.26 qt)"
+  },
+
+  "crankshaft": {
+    "appliesTo": "PZ480 1984-1989",
+    "source": "Table 3 CRANKSHAFT SPECIFICATIONS (PZ480)",
+    "rows": [
+      { "item": "Assembly width (A)", "mm": "173.85 - 174.15", "in": "6.845 - 6.856" },
+      { "item": "Crank wheel width (B)", "mm": "56.00 - 56.05", "in": "2.201 - 2.207" },
+      { "item": "Connecting rod small end free play (C)", "mm": "2.0", "in": "0.080" },
+      { "item": "Connecting rod big end side clearance (D)", "mm": "0.25 - 0.75", "in": "0.010 - 0.030" },
+      { "item": "Crankshaft runout, point E", "mm": "0.03", "in": "0.0012" },
+      { "item": "Crankshaft runout, point F", "mm": "0.04", "in": "0.0016" },
+      { "item": "Crankshaft runout, point G", "mm": "0.05", "in": "0.0020" }
+    ]
+  },
+
+  "torque": {
+    "appliesTo": "PZ480 1984-1989",
+    "note": "Pairs were read from the scanned tables. On 11 rows the ft-lb figure is about 3% below the exact conversion of the N-m figure (120 N-m is 88.5 ft-lb, not 85). Those rows are marked. Until the manual page is checked, treat N-m as the primary figure.",
+    "groups": [
+      {
+        "name": "Engine",
+        "source": "Table 4 ENGINE TIGHTENING TORQUES (PZ480)",
+        "rows": [
+          { "item": "Cylinder head flange nut", "nm": 25, "ftlb": 18 },
+          { "item": "Cylinder head nut", "nm": 25, "ftlb": 18 },
+          { "item": "Cylinder head bolt", "nm": 15, "ftlb": 11 },
+          { "item": "Crankcase M8 x 1.25", "nm": 21, "ftlb": 15 },
+          { "item": "Crankcase M6 x 1.0", "nm": 11, "ftlb": 8 },
+          { "item": "Fan shaft and pulley nut", "nm": 43, "ftlb": 31 },
+          { "item": "Fan housing", "nm": 15, "ftlb": 11 },
+          { "item": "Starter pulley bolts", "nm": 15, "ftlb": 11 },
+          { "item": "Crankcase and engine bracket", "nm": 21, "ftlb": 15 },
+          { "item": "Engine bracket at front damper", "nm": 40, "ftlb": 29 },
+          { "item": "Engine bracket at rear damper", "nm": 40, "ftlb": 29 },
+          { "item": "Engine bracket at frame", "nm": 21, "ftlb": 15 },
+          { "item": "Rear damper at frame nut", "nm": 21, "ftlb": 15 },
+          { "item": "Fuel pump", "nm": 11, "ftlb": 8 }
+        ]
+      },
+      {
+        "name": "Clutches / drive",
+        "source": "Table 5 TIGHTENING TORQUES (PZ480), plus the primary sheave procedure text",
+        "rows": [
+          { "item": "Primary sheave bolt — step 1, seat", "nm": 120, "ftlb": 85, "flag": "Then loosen completely", "ftlbMismatch": true },
+          { "item": "Primary sheave bolt — step 2, final", "nm": 60, "ftlb": 43, "flag": "Two-stage; do not skip step 1", "ftlbMismatch": true },
+          { "item": "Spider and sheave", "nm": 200, "ftlb": 145, "ftlbMismatch": true },
+          { "item": "Secondary sheave", "nm": 60, "ftlb": 43, "ftlbMismatch": true },
+          { "item": "Cap and sliding sheave", "nm": 14, "ftlb": 10 },
+          { "item": "Primary sheave cap bolts", "nm": 10, "ftlb": 7.2 },
+          { "item": "Roller", "nm": 6, "ftlb": 4.3 }
+        ]
+      },
+      {
+        "name": "Chaincase, brake & driveshaft",
+        "source": "Table 2 TIGHTENING TORQUES (PZ480)",
+        "rows": [
+          { "item": "Drive shaft nut", "nm": 85, "ftlb": 61, "ftlbMismatch": true },
+          { "item": "Left front axle and bearing", "nm": 85, "ftlb": 61, "ftlbMismatch": true },
+          { "item": "Drive sprocket nut", "nm": 60, "ftlb": 43, "ftlbMismatch": true },
+          { "item": "Chain housing and caliper body", "nm": 48, "ftlb": 35 },
+          { "item": "Driven sprocket bolt", "nm": 48, "ftlb": 35 },
+          { "item": "Bearing holder", "nm": 23, "ftlb": 17 },
+          { "item": "Front frame and chain housing", "nm": 23, "ftlb": 17 },
+          { "item": "Chain housing and housing cap", "nm": 10, "ftlb": 7.2 }
+        ]
+      },
+      {
+        "name": "Track & rear suspension",
+        "source": "Table 3 TIGHTENING TORQUE (PZ480)",
+        "rows": [
+          { "item": "Guide wheel", "nm": 75, "ftlb": 54, "ftlbMismatch": true },
+          { "item": "Rear axle", "nm": 75, "ftlb": 54, "ftlbMismatch": true },
+          { "item": "Slide rail suspension mounting bolts", "nm": 70, "ftlb": 50, "ftlbMismatch": true },
+          { "item": "Slide rail and shaft", "nm": 64, "ftlb": 46, "ftlbMismatch": true },
+          { "item": "Slide rail and bracket", "nm": 23, "ftlb": 17 },
+          { "item": "Suspension wheel", "nm": 15, "ftlb": 11 },
+          { "item": "Stopper band", "nm": 4, "ftlb": 2.9 },
+          { "item": "Slide rail and slide runner", "nm": 3, "ftlb": 2.2 }
+        ]
+      },
+      {
+        "name": "Steering & front suspension",
+        "source": "Table 5 TIGHTENING TORQUES (PZ480)",
+        "rows": [
+          { "item": "Ski", "nm": 43, "ftlb": 31 },
+          { "item": "Front arm", "nm": 43, "ftlb": 31, "flag": "Loctite 242 (blue)" },
+          { "item": "Tie-rod nuts and bolts", "nm": 25, "ftlb": 18 },
+          { "item": "Universal joint and outside arm", "nm": 23, "ftlb": 17 },
+          { "item": "Suspension bracket and damper", "nm": 23, "ftlb": 17, "flag": "Loctite 242 (blue)" },
+          { "item": "Steering column bearing halves", "nm": 20, "ftlb": 14 },
+          { "item": "Handlebar holder", "nm": 16, "ftlb": 11 },
+          { "item": "Damper upper nut", "nm": 16, "ftlb": 11 },
+          { "item": "Ski runner", "nm": 16, "ftlb": 11 },
+          { "item": "Stabilizer arm, 8 mm bolts", "nm": 16, "ftlb": 11 },
+          { "item": "Stabilizer arm, 6 mm pinch bolt", "nm": 10, "ftlb": 7.2 },
+          { "item": "Damper lower nut", "nm": 5, "ftlb": 3.6 }
+        ]
+      }
+    ]
+  },
+
+  "springs": {
+    "source": "Yamaha Technical Bulletin S88-007, 9 Sept 1988 — 'All Models: Primary and Secondary Clutch Spring Information'",
+    "conflict": "Partzilla lists 90501-45534-00 as the primary spring for the 1986-1989 Phazer. Two independent factory documents disagree with it: bulletin S88-007 and Table 3 of the high-altitude chapter both give the PZ480 primary as 90501-52798, and both put it at 25.8 kg set weight in red-blue. The evidence now runs 2-to-1 against the Partzilla number, which is most likely a supersession. Still measure free length and wire diameter before ordering.",
+    "secondaryConflict": "The two sources disagree on the standard secondary spring colour: bulletin S88-007 lists 90508-50654-00 for the PZ480 as yellow-blue, while Table 3 of the high-altitude chapter calls the PZ480 secondary white. The bulletin gives a part number and full dimensions, so it is the more specific source, but check the twist angle — Table 3 specifies 60 degrees (B-1) — rather than going by colour.",
+    "primary": [
+      { "pn": "90501-52798-00", "rate": "1.88", "preload": "25.8", "color": "Red-Blue", "wire": "5.2", "od": "55", "turns": "5.15", "free": "75.2", "usedOn": "PZ480", "std": true },
+      { "pn": "90501-520A2-00", "rate": "1.91", "preload": "35.5", "color": "Yellow-Orange", "wire": "5.2", "od": "55", "turns": "5.10", "free": "80.1", "usedOn": "SS440, PZ480H high altitude" },
+      { "pn": "90501-555A0-00", "rate": "2.85", "preload": "26", "color": "White-Lt Green", "wire": "5.5", "od": "55", "turns": "4.65", "free": "70.6", "usedOn": "PZ480J high altitude" },
+      { "pn": "90501-50543-00", "rate": "1.40", "preload": "20", "color": "Green-Green", "wire": "5.0", "od": "55", "turns": "5.57", "free": "75.8", "usedOn": "EC540 — the number Partzilla lists for the 1991 Venture XL" }
+    ],
+    "secondary": [
+      { "pn": "90508-50654-00", "rate": "11.2", "turns": "5.33", "od": "65", "wire": "5.0", "free": "85", "color": "Yellow-Blue", "usedOn": "PZ480", "std": true },
+      { "pn": "90508-50571-00", "rate": "13.8", "turns": "4.7", "od": "65", "wire": "5.0", "free": "85", "color": "Pink", "usedOn": "VMX540, SR540, XL540" },
+      { "pn": "90508-50746-00", "rate": "*721", "turns": "4.74", "od": "65", "wire": "5.0", "free": "93.5", "color": "White", "usedOn": "EX570, VK540" }
+    ],
+    "secondaryNote": "Rates marked * are in kg·mm/rad (torsional), not kg/mm — the bulletin says torsional force matters more for a secondary than compression force, so those two columns are not directly comparable."
+  },
+
+  "altitude": {
+    "source": "Chapter Four, High-Altitude and Rear Suspension Adjustment (PZ480), pages 114-134",
+    "powerLoss": "About 3% of power per 1,000 ft of elevation gain. The manual's worked example: an engine making 40 hp at sea level makes roughly 38.8 hp at 1,000 ft and about 29.5 hp at 10,000 ft.",
+    "factoryBaseline": "The PZ480 carburettors are jetted at the factory for sea level at 32 to -4 °F (0 to -20 °C). Everything else is a correction away from that.",
+    "clutchThreshold": "Above 6,000 ft (1,800 m) the clutch needs re-specifying. Left alone, it bogs at the point of belt engagement and bogs again in deep snow — both of which kill drive belts.",
+    "clutch": {
+      "source": "Table 3 HIGH-ALTITUDE CLUTCH SPECIFICATIONS",
+      "rows": [
+        { "item": "Engagement rpm", "std": "3,000 - 3,400 rpm", "hi": "Same as standard" },
+        { "item": "Shifting speed rpm", "std": "6,600 - 7,000 rpm", "hi": "Same as standard" },
+        { "item": "Weight part number", "std": "8V0-17632 (as printed, suffix missing)", "hi": "Same as standard" },
+        { "item": "Primary spring", "std": "90501-52798", "hi": "90501-520A2", "change": true },
+        { "item": "Primary spring set weight", "std": "56.9 lb (25.8 kg)", "hi": "77.8 lb (35.5 kg)", "change": true },
+        { "item": "Primary spring colour", "std": "Red-blue", "hi": "Yellow-orange", "change": true },
+        { "item": "Secondary spring twist angle", "std": "60 degrees (B-1)", "hi": "Same as standard" },
+        { "item": "Secondary spring colour", "std": "White", "hi": "Same as standard" }
+      ],
+      "verdict": "For the Phazer the entire high-altitude clutch change is one part: the primary spring. Weights, engagement and shift rpm, and the secondary all stay standard."
+    },
+    "gearing": {
+      "source": "Table 6 HIGH-ALTITUDE GEARING SPECIFICATIONS",
+      "rows": [
+        { "item": "Secondary gear ratio", "std": "29/17 (1.706)", "hi": "29/17 (1.706)" },
+        { "item": "Drive gear teeth", "std": "17", "hi": "17" },
+        { "item": "Driven gear teeth", "std": "29", "hi": "29" },
+        { "item": "Chain links", "std": "64", "hi": "64" }
+      ],
+      "verdict": "The PZ480 gearing does not change for altitude. The chapter text says a gear change may be needed above 6,000 ft, but Table 6 lists the Phazer's high-altitude gearing as identical to standard — only the EX570 actually changes. Re-gear for terrain and snow, not for elevation."
+    }
+  },
+
+  "gearRatios": {
+    "source": "Table 4 GEAR RATIO CHART (PZ480)",
+    "note": "Upper figure is the ratio, lower is the chain links required. Ratios are driven ÷ drive and are exact. X marks a combination the chart gives no chain length for.",
+    "caution": "Chain-link counts come off a low-resolution scan. The standard 17/29 with a 64-link chain is independently confirmed by Table 6 and by the Partzilla chaincase listing; treat the others as a starting point and measure.",
+    "drive": [15, 16, 17, 18, 19, 20, 21, 22],
+    "driven": [
+      { "teeth": 29, "links": [null, 64, 64, 64, null, 66, 66, 66] },
+      { "teeth": 31, "links": [64, 64, null, 66, 66, 68, null, 68] },
+      { "teeth": 33, "links": [null, 66, 66, 66, null, 68, 68, 68] },
+      { "teeth": 35, "links": [66, 66, null, 68, 68, 68, 70, 70] }
+    ],
+    "stdDrive": 17,
+    "stdDriven": 29,
+    "guidance": "Smooth snow with few rough sections suits a smaller (numerically lower) ratio. Poorer snow or rugged terrain suits a higher one."
+  },
+
+  "suspension": {
+    "appliesTo": "PZ480",
+    "source": "Chapter Four, Tuning Adjustment (PZ480), pages 125-128",
+    "principle": "Ski pressure — the load on the skis relative to the load on the track — is the primary factor controlling handling. Too little and the front floats, steering goes vague and the sled wanders under steady throttle. Too much and it plows in corners and the skis knife in on the straight. Hard surfaces want more ski pressure so the skis bite; soft tacky snow wants less so they do not sink.",
+    "levers": "Ski pressure goes up by softening the front springs or pulling the front end down with the stopper band; it goes down by stiffening the front springs or extending the band.",
+    "adjustments": [
+      { "item": "Front stopper band", "positions": "Holes 1-5", "std": "Hole 3", "effect": "Hole 1 is longest, hole 5 shortest. A longer setting gives less ski pressure and more speed but poorer manoeuvrability and straight running. A shorter setting gives more ski pressure and steering stability, at the cost of starting acceleration." },
+      { "item": "Rear stopper band", "positions": "Holes 1-5", "std": "Hole 1", "effect": "Hole 1 allows maximum suspension travel. Shortening the strap reduces ski pressure for higher speeds and cuts suspension travel for more traction, but costs steering stability." },
+      { "item": "Front spring preload", "positions": "Cam positions 1-3", "std": "Position 2", "effect": "1 is soft — works well over small bumps and gives more positive steering. 3 is hard — reduces bottoming over large bumps but reduces steering. Rotate the cams at the end of the spring." },
+      { "item": "Rear spring preload", "positions": "Cam positions 1-3", "std": "Position 2", "effect": "1 is softer, giving better traction over small bumps at the cost of positive steering. 3 is for large bumps, at the cost of traction." },
+      { "item": "Main arm", "positions": "Upper / lower hole", "std": "Upper hole", "effect": "Sets weight transfer to the track. Upper suits most trail riding. Lower is for deep snow, and is the drag-racing setting where traction matters more than steering — at full throttle on the lower hole the skis will lift off the ground." },
+      { "item": "Rear linkage arm", "positions": "Holes 1-3", "std": "Hole 3", "effect": "Varies how fast spring rate rises. Hole 3 gives the fastest rise and the firmest ride; hole 1 the slowest." }
+    ]
+  },
+
+  "carbTuning": {
+    "source": "Chapter Four, Carburetor Adjustment (PZ480 and 1987 EX570), pages 118-124",
+    "circuits": [
+      { "range": "Closed to 1/4 throttle", "controls": "Pilot jet and pilot air screw" },
+      { "range": "1/8 to 3/4 throttle", "controls": "Mid-range — main nozzle and needle jet" },
+      { "range": "3/4 to full throttle", "controls": "Main jet" }
+    ],
+    "airScrewWarning": "It is a pilot AIR screw, not a fuel screw, so the directions are the opposite of what people usually assume: clockwise LEANS the mixture, counter-clockwise RICHENS it. Warm weather or higher altitude — turn it clockwise. Very cold — counter-clockwise.",
+    "jetNumbers": "For both pilot and main, a larger number is a richer mixture.",
+    "idleProcedure": "Seat both pilot air screws lightly, back them out 1-1/2 turns, warm the engine, set the throttle stop to 2,000-2,500 rpm, then turn the air screws counter-clockwise until peak rpm is reached and reset the throttle stop to the 1,600 rpm idle spec. If off-idle pickup is poor, or performance is off at altitude or in extreme cold, fit larger pilot jets.",
+    "torsNote": "Whenever idle speed is changed, redo the Throttle Over Ride System (T.O.R.S.) adjustment.",
+    "airboxWarning": "Do not run the engine without the air silencer or air box fitted — the manual warns this can cause engine seizure. Worth weighing against the common advice to gut the airbox for a carburettor swap.",
+    "mainJetAccess": "Mains can be changed without pulling the float bowl: remove the drain plug and washer at the bottom of the bowl and the main jet is behind it. The engine will be hot and fuel will spill, so have an extinguisher and a helper.",
+    "plugReading": [
+      { "condition": "Normal", "look": "Light tan or grey deposit, no gap wear or erosion", "means": "Carburetion, ignition and heat range all correct" },
+      { "condition": "Carbon fouled", "look": "Soft, dry, sooty black deposit over the firing end", "means": "Too rich, plug heat range too cold, over-retarded timing, ignition failure, or low compression" },
+      { "condition": "Oil fouled", "look": "Black insulator tip, damp oily film, carbon layer over the nose, electrodes not worn", "means": "Too much oil in the fuel (jetting or oil pump adjustment), wrong oil type, ignition failure, heat range too cold, or still breaking in" },
+      { "condition": "Overheated", "look": "Badly worn electrodes, premature gap wear, grey or white blistered insulator", "means": "Heat range too hot, or: lean mixture (main jet or oil pump), timing too advanced, cooling fault, air leak, overtightened plug, or missing plug gasket" },
+      { "condition": "Gap bridged", "look": "Gap shorted by combustion deposits", "means": "Wrong oil type, excess carbon in the chamber, or a clogged exhaust port and pipe" },
+      { "condition": "Preignition", "look": "Melted electrodes", "means": "Almost certainly preignition — check for carburettor mounting or intake manifold leaks and over-advanced timing; a too-hot heat range is also possible" },
+      { "condition": "Worn out", "look": "Eroded electrodes", "means": "Needs more voltage to fire under hard acceleration — replace" }
+    ],
+    "finalWord": "The manual is explicit that these are guidelines only, that they vary with altitude, temperature and snow conditions, and that the condition of the spark plugs is the determining factor when changing jets."
+  },
+
+  "models": [
+    { "id": "1986-pz480k", "year": 1986, "family": "Phazer", "variant": "Phazer", "code": "PZ480K", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1986/phazer-pz480k", "specSource": "clymer8489" },
+    { "id": "1987-pz480l", "year": 1987, "family": "Phazer", "variant": "Phazer", "code": "PZ480L", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1987/phazer-pz480l", "specSource": "clymer8489" },
+    { "id": "1987-pz480el", "year": 1987, "family": "Phazer", "variant": "Phazer Deluxe", "code": "PZ480EL", "start": "electric", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1987/phazer-deluxe-elec-start-pz480el", "specSource": "clymer8489" },
+    { "id": "1988-pz480m", "year": 1988, "family": "Phazer", "variant": "Phazer", "code": "PZ480M", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1988/phazer-pz480m", "specSource": "clymer8489" },
+    { "id": "1988-pz480em", "year": 1988, "family": "Phazer", "variant": "Phazer Deluxe", "code": "PZ480EM", "start": "electric", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1988/phazer-deluxe-elec-start-pz480em", "specSource": "clymer8489" },
+    { "id": "1989-pz480n", "year": 1989, "family": "Phazer", "variant": "Phazer", "code": "PZ480N", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1989/phazer-pz480n", "specSource": "clymer8489" },
+
+    { "id": "1990-pz480p", "year": 1990, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480P", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1990/phazer-ii-pz480p", "specSource": "factory9096" },
+    { "id": "1990-pz480ep", "year": 1990, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EP", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1990/phazer-ii-le-elec-start-pz480ep", "specSource": "factory9096" },
+    { "id": "1991-pz480r", "year": 1991, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480R", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-pz480r", "specSource": "assumed" },
+    { "id": "1991-pz480er", "year": 1991, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ER", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-le-elec-start-pz480er", "specSource": "assumed" },
+    { "id": "1991-pz480str", "year": 1991, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STR", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-st-pz480str", "specSource": "assumed" },
+    { "id": "1991-vt480r", "year": 1991, "family": "Venture", "variant": "Venture XL", "code": "VT480R", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-50543-00", "belt": "89X-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1991/venture-xl-vt480r", "specSource": "venture" },
+
+    { "id": "1992-pz480s", "year": 1992, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480S", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-pz480s", "specSource": "assumed" },
+    { "id": "1992-pz480es", "year": 1992, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ES", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-le-elec-start-pz480es", "specSource": "assumed" },
+    { "id": "1992-pz480sts", "year": 1992, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STS", "start": "recoil", "track": "8BH-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-st-pz480sts", "specSource": "assumed" },
+    { "id": "1992-vt480gts", "year": 1992, "family": "Venture", "variant": "Venture GT", "code": "VT480GTS", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1992/venture-gt-vt480gts", "specSource": "venture" },
+    { "id": "1992-vt480s", "year": 1992, "family": "Venture", "variant": "Venture XL", "code": "VT480S", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1992/vt480s", "specSource": "venture" },
+
+    { "id": "1993-pz480t", "year": 1993, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480T", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1993/phazer-ii-pz480t", "specSource": "assumed" },
+    { "id": "1993-pz480et", "year": 1993, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ET", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1993/phazer-ii-le-elec-start-pz480et", "specSource": "assumed" },
+    { "id": "1993-pz480stt", "year": 1993, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STT", "start": "recoil", "track": "8BH-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1993/phazer-ii-st-pz480stt", "specSource": "assumed" },
+    { "id": "1993-vt480gtt", "year": 1993, "family": "Venture", "variant": "Venture GT", "code": "VT480GTT", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1993/venture-gt-vt480gtt", "specSource": "venture" },
+    { "id": "1993-vt480t", "year": 1993, "family": "Venture", "variant": "Venture XL", "code": "VT480T", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1993/venture-xl-vt480t", "specSource": "venture" },
+
+    { "id": "1994-pz480u", "year": 1994, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480U", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1994/phazer-ii-pz480u", "specSource": "assumed" },
+    { "id": "1994-pz480eu", "year": 1994, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EU", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1994/phazer-ii-le-elec-start-pz480eu", "specSource": "assumed" },
+    { "id": "1994-pz480stu", "year": 1994, "family": "Phazer II", "variant": "Phazer II ST (LT)", "code": "PZ480STU", "start": "recoil", "track": "8BH-47110-00-00", "slide": "89A-47115-01-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1994/phazer-ii-st-long-track-pz480stu", "specSource": "assumed" },
+    { "id": "1994-vt480u", "year": 1994, "family": "Venture", "variant": "Venture XL", "code": "VT480U", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BK-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1994/venture-xl-vt480u", "specSource": "venture" },
+
+    { "id": "1995-pz480v", "year": 1995, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480V", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1995/phazer-ii-pz480v", "specSource": "assumed" },
+    { "id": "1995-pz480ev", "year": 1995, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EV", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1995/phazer-ii-le-elec-start-pz480ev", "specSource": "assumed" },
+    { "id": "1995-pz480stv", "year": 1995, "family": "Phazer II", "variant": "Phazer II ST (LT)", "code": "PZ480STV", "start": "recoil", "track": "8CC-47110-11-00", "slide": "89A-47115-01-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1995/phazer-ii-st-long-track-pz480stv", "specSource": "assumed" },
+    { "id": "1995-vt480v", "year": 1995, "family": "Venture", "variant": "Venture XL", "code": "VT480V", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BK-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1995/venture-xl-vt480v", "specSource": "venture" }
+  ]
+}

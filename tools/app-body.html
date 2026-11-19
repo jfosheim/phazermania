@@ -1,0 +1,1280 @@
+<title>PhazerMania</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Cold instrument-panel palette: overcast snow, Yamaha racing blue.
+     Red is reserved for the factory-STD flag and hard warnings - never decoration. */
+  :root {
+    --ground:      #E8ECEF;
+    --surface:     #FFFFFF;
+    --surface-2:   #F2F5F7;
+    --line:        #CBD4DB;
+    --line-soft:   #DEE5EA;
+    --ink:         #0F161C;
+    --muted:       #5B6874;
+    --accent:      #0B4DA2;
+    --accent-soft: #E3ECF8;
+    --flag:        #B72B26;
+    --flag-soft:   #FAE6E5;
+    --alt:         #6B5A16;
+    --alt-soft:    #F5EFD8;
+    --ok:          #1F6B45;
+    --ok-soft:     #E0F0E7;
+    --chipfg:      #FFFFFF;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+      --line:#2C3942; --line-soft:#222D35; --ink:#E3EAF0; --muted:#94A3B0;
+      --accent:#6BA8F0; --accent-soft:#16283F;
+      --flag:#F08A85; --flag-soft:#34191A;
+      --alt:#D9C377; --alt-soft:#2E2814;
+      --ok:#7FD3A5; --ok-soft:#14291F;
+      --chipfg:#08121C;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --line:#2C3942; --line-soft:#222D35; --ink:#E3EAF0; --muted:#94A3B0;
+    --accent:#6BA8F0; --accent-soft:#16283F;
+    --flag:#F08A85; --flag-soft:#34191A;
+    --alt:#D9C377; --alt-soft:#2E2814;
+    --ok:#7FD3A5; --ok-soft:#14291F;
+    --chipfg:#08121C;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+  .shell { max-width: 1240px; margin: 0 auto; padding: 0 20px 64px; }
+
+  .masthead {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 24px;
+    padding: 26px 0 16px; border-bottom: 2px solid var(--ink);
+  }
+  .wordmark {
+    font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 600;
+    font-size: clamp(28px, 4.2vw, 42px); letter-spacing: .04em;
+    text-transform: uppercase; line-height: 1; margin: 0;
+  }
+  .wordmark em { font-style: normal; color: var(--accent); }
+  .masthead-meta { margin-left: auto; text-align: right; font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .masthead-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* Scrolls sideways on a phone instead of pushing the whole page wider. */
+  .viewnav { display: flex; gap: 0; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: thin; }
+  .viewtab {
+    flex: none; white-space: nowrap;
+    font-family: Oswald, "Arial Narrow", sans-serif; font-size: 14px; font-weight: 500;
+    letter-spacing: .07em; text-transform: uppercase;
+    background: none; border: 0; border-bottom: 3px solid transparent;
+    color: var(--muted); padding: 12px 18px 9px; cursor: pointer; margin-bottom: -1px;
+  }
+  .viewtab:hover { color: var(--ink); }
+  .viewtab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .chipset { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font: 500 12px/1 "IBM Plex Sans", sans-serif; letter-spacing: .04em; text-transform: uppercase;
+    padding: 7px 11px; border: 1px solid var(--line); background: var(--surface);
+    color: var(--muted); border-radius: 2px; cursor: pointer;
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--chipfg); }
+
+  .search {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 2px;
+    padding: 0 10px; min-width: 0; flex: 1 1 220px; max-width: 320px;
+  }
+  @media (max-width: 560px) { .search { max-width: none; margin-left: 0; } }
+
+  /* On narrow screens the model rail becomes a dropdown above the sheet. */
+  #rail .modelselect { display: none; width: 100%; margin-bottom: 4px; }
+  @media (max-width: 860px) {
+    #rail .modelselect { display: flex; }
+    #modelList, #rail .rail-head { display: none; }
+  }
+  .search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .search input {
+    flex: 1; border: 0; background: none; color: var(--ink);
+    font: 400 14px/1 "IBM Plex Mono", monospace; padding: 10px 0; outline: none; min-width: 0;
+  }
+  .search input::placeholder { color: var(--muted); font-family: "IBM Plex Sans", sans-serif; }
+  .search-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  .split { display: grid; grid-template-columns: 258px minmax(0, 1fr); gap: 28px; padding-top: 22px; }
+  .split.wide { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); gap: 12px; padding-top: 14px; } }
+
+  .rail-head { font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-bottom: 8px; }
+  .yeargroup > h3 {
+    font-family: Oswald, sans-serif; font-size: 15px; font-weight: 500; letter-spacing: .06em;
+    margin: 12px 0 4px; padding-bottom: 3px; border-bottom: 1px solid var(--line-soft); color: var(--muted);
+  }
+  .modelbtn {
+    display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; cursor: pointer;
+    background: none; border: 0; border-left: 3px solid transparent; padding: 6px 8px;
+    color: var(--ink); font: 400 14px/1.3 "IBM Plex Sans", sans-serif;
+  }
+  .modelbtn:hover { background: var(--surface-2); }
+  .modelbtn[aria-current="true"] { background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
+  .modelbtn .code { margin-left: auto; font-size: 11px; color: var(--muted); font-family: "IBM Plex Mono", monospace; }
+  .es-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; align-self: center; }
+
+  .sheet-head { padding-bottom: 14px; border-bottom: 2px solid var(--ink); margin-bottom: 22px; }
+  .sheet-title {
+    font-family: Oswald, sans-serif; font-size: clamp(24px, 3.4vw, 34px); font-weight: 500;
+    letter-spacing: .03em; text-transform: uppercase; margin: 0; line-height: 1.05; text-wrap: balance;
+  }
+  .sheet-sub { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .sheet-sub .mono { color: var(--ink); }
+
+  .group { margin-bottom: 28px; }
+  .group > h2 {
+    font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 10px; padding-bottom: 7px; border-bottom: 1px solid var(--line);
+  }
+
+  .specgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 0 24px; }
+  .spec { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line-soft); }
+  .spec dt { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); flex: none; }
+  .spec dd { margin: 0 0 0 auto; text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; min-width: 0; overflow-wrap: anywhere; }
+  .spec dd .pn { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+  .gap { color: var(--muted); font-weight: 400; font-style: italic; }
+
+  .trackfig {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    padding: 14px 16px; margin-bottom: 12px;
+  }
+  .trackfig .dim { font-family: Oswald, sans-serif; font-size: 30px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1; }
+  .trackfig .dimnote { font-size: 13px; color: var(--muted); }
+  .trackfig .pn { margin-left: auto; }
+
+  .ladder { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 8px; }
+  .rung { flex: none; text-align: center; min-width: 62px; border: 1px solid var(--line); background: var(--surface); padding: 6px 4px; cursor: pointer; }
+  .rung:hover { border-color: var(--accent); }
+  .rung .sz { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-weight: 500; }
+  .rung .rpn { font-size: 9px; color: var(--muted); font-family: "IBM Plex Mono", monospace; }
+  .rung.is-std { background: var(--flag-soft); border-color: var(--flag); }
+  .rung.is-std .sz { color: var(--flag); }
+  .rung.is-target { background: var(--accent); border-color: var(--accent); }
+  .rung.is-target .sz, .rung.is-target .rpn { color: var(--chipfg); }
+
+  /* Highlighted cell in the factory altitude chart. */
+  td.jcell { font-variant-numeric: tabular-nums; }
+  td.jcell.is-hit {
+    background: var(--accent); color: var(--chipfg); font-weight: 600;
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+  td.jcell.is-hit .tag { background: rgba(255,255,255,.22); color: var(--chipfg); }
+
+  /* Fiche link grid. */
+  .fiches { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+  .fiche {
+    display: block; padding: 8px 10px; border: 1px solid var(--line);
+    border-radius: 6px; text-decoration: none; color: var(--ink);
+    font-size: 12.5px; text-transform: capitalize; background: var(--surface);
+  }
+  .fiche:hover { border-color: var(--accent); color: var(--accent); }
+  #jChart tbody tr:hover { background: transparent; }
+  #jChart td { border-right: 1px solid var(--line-soft); }
+
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line-soft); }
+  thead th {
+    font: 500 10.5px/1 "IBM Plex Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); background: var(--surface-2); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 1;
+  }
+  tbody tr:hover { background: var(--surface-2); }
+  td.ref { color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: 12px; width: 42px; }
+  td.pncell { width: 1%; white-space: nowrap; }
+  .sectionrow td {
+    background: var(--surface-2); font: 500 10.5px/1 "IBM Plex Sans", sans-serif;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--line);
+  }
+  .sectionrow a { color: var(--accent); text-decoration: none; font-size: 10.5px; letter-spacing: .06em; }
+  .sectionrow a:hover { text-decoration: underline; }
+
+  .pn { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; background: none; border: 0; padding: 0;
+        cursor: pointer; color: var(--ink); border-bottom: 1px dotted var(--line); }
+  .pn:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tag { display: inline-block; font: 500 9.5px/1 "IBM Plex Sans", sans-serif; letter-spacing: .09em;
+         text-transform: uppercase; padding: 3px 5px; border-radius: 2px; margin-left: 6px; vertical-align: 1px; }
+  .tag-std { background: var(--flag-soft); color: var(--flag); }
+  .tag-alt { background: var(--alt-soft); color: var(--alt); }
+  .tag-warn { background: var(--alt-soft); color: var(--alt); }
+  .tag-unconf { background: var(--surface-2); color: var(--muted); border: 1px dashed var(--line); }
+
+  .hit { border: 1px solid var(--line); background: var(--surface); padding: 12px 14px; margin-bottom: 8px; }
+  .hit-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+  .hit-desc { font-weight: 500; }
+  .hit-fits { margin-top: 6px; font-size: 12px; color: var(--muted); }
+  .hit-fits b { color: var(--ink); font-weight: 500; }
+  .empty { color: var(--muted); padding: 30px 0; }
+
+  .note { font-size: 12px; color: var(--muted); line-height: 1.55; border-left: 2px solid var(--line); padding-left: 12px; margin: 10px 0 0; }
+  .note strong { color: var(--ink); }
+  a.diagram { color: var(--accent); font-size: 12px; text-decoration: none; }
+  a.diagram:hover { text-decoration: underline; }
+
+  /* ---- provenance banner: separates factory data from computed/community ---- */
+  /* Block, not flex: inline <b> inside a flex container becomes a flex item and
+     breaks the sentence into columns. */
+  .prov { display: block; padding: 11px 14px; margin-bottom: 22px; max-width: 78ch;
+          border: 1px solid var(--line); border-left: 3px solid var(--alt); background: var(--alt-soft); font-size: 12.5px; line-height: 1.55; }
+  .prov b { color: var(--ink); }
+
+  /* ---- calculator ---- */
+  .calc { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .field input, .field select {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 2px; color: var(--ink);
+    font: 400 15px/1 "IBM Plex Mono", monospace; padding: 9px 10px; outline: none; width: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+  .field select { font-family: "IBM Plex Sans", sans-serif; }
+  .field input:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .result { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); padding: 16px 18px; }
+  .result-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; }
+  .result .big { font-family: Oswald, sans-serif; font-size: 38px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
+  .result .biglabel { font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+  .result .pnbig { font-family: "IBM Plex Mono", monospace; font-size: 15px; }
+  .readout { display: flex; flex-wrap: wrap; gap: 4px 22px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: 12.5px; color: var(--muted); }
+  .readout b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  .verdict { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; margin-top: 10px; border: 1px solid var(--line); border-left: 3px solid var(--muted); background: var(--surface); font-size: 13.5px; line-height: 1.5; }
+  .verdict.ok   { border-left-color: var(--ok);   background: var(--ok-soft); }
+  .verdict.warn { border-left-color: var(--alt);  background: var(--alt-soft); }
+  .verdict.stop { border-left-color: var(--flag); background: var(--flag-soft); }
+  .verdict .vlabel { font: 500 10px/1.4 "IBM Plex Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase; flex: none; padding-top: 2px; }
+  .verdict.ok .vlabel { color: var(--ok); }
+  .verdict.warn .vlabel { color: var(--alt); }
+  .verdict.stop .vlabel { color: var(--flag); }
+
+  .checklist { margin: 10px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .checklist li::marker { color: var(--accent); }
+  .checklist b { color: var(--ink); font-weight: 500; }
+
+  /* ---- change timeline ---- */
+  .runs { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+  .run { border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; min-width: 168px; }
+  .run .years { font-family: Oswald, sans-serif; font-size: 15px; letter-spacing: .04em; }
+  .run .val { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); display: block; margin-top: 2px; }
+  .run.changed { border-left: 3px solid var(--accent); }
+  .arrow { align-self: center; color: var(--muted); font-size: 15px; }
+
+  .diagimg { display: block; width: 100%; max-width: 560px; border: 1px solid var(--line); background: #fff; margin-top: 10px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%);
+    background: var(--ink); color: var(--ground); font: 500 13px/1 "IBM Plex Mono", monospace;
+    padding: 11px 16px; border-radius: 2px; opacity: 0; pointer-events: none; transition: opacity .18s;
+  }
+  .toast.show { opacity: 1; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="shell">
+  <header class="masthead">
+    <h1 class="wordmark">Phazer<em>Mania</em></h1>
+    <div class="masthead-meta">
+      <strong>Phazer &middot; Phazer&nbsp;II &middot; Venture</strong> &nbsp;1986&ndash;1995<br>
+      485&nbsp;cc fan-cooled twin &middot; <span id="statline"></span>
+    </div>
+  </header>
+
+  <nav class="viewnav" id="viewnav" role="tablist"></nav>
+
+  <div class="controls" id="controls">
+    <div class="chipset" id="familyChips"></div>
+    <div class="search">
+      <span class="search-label">Find</span>
+      <input id="q" type="search" placeholder="part number or name&hellip;" autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+
+  <div class="split" id="split">
+    <aside id="rail">
+      <div class="rail-head">Model &middot; year</div>
+      <div class="field modelselect"><label for="modelSelect">Model &middot; year</label><select id="modelSelect"></select></div>
+      <div class="modellist" id="modelList"></div>
+    </aside>
+    <main id="main" role="tabpanel" tabindex="-1"></main>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var S = window.SPECS, P = window.PARTS, DIA = window.DIAGRAMS || null;
+  var RICHS = window.RICHS || null;
+  var MODELS = S.models, byId = {};
+  MODELS.forEach(function (m) { byId[m.id] = m; });
+
+  function flagOf(d) { return /\bSTD\b/.test(d) ? "std" : (/\bAP\b|ALT\. PART/.test(d) ? "alt" : ""); }
+  function cleanName(d) { return d.split(" | ")[0].trim(); }
+  function diagramUrl(m, s) { return "https://www.partzilla.com/catalog/yamaha/snowmobile/" + m.partzilla + "/" + s; }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+  }
+
+  var fits = {};
+  Object.keys(P.m).forEach(function (key) {
+    var id = null;
+    MODELS.forEach(function (m) { if (m.partzilla === key) id = m.id; });
+    if (!id) return;
+    P.m[key].forEach(function (row) {
+      var pn = row.split("|")[2];
+      (fits[pn] = fits[pn] || []).push(id);
+    });
+  });
+  Object.keys(fits).forEach(function (pn) {
+    fits[pn] = fits[pn].filter(function (v, i, a) { return a.indexOf(v) === i; });
+  });
+
+  document.getElementById("statline").textContent =
+    MODELS.length + " models · " + Object.keys(P.d).length + " parts" + (DIA ? " · diagrams offline" : "");
+
+  var state = {
+    view: "specs", family: "All", modelId: "1992-pz480s", q: "",
+    /* Jetting inputs live here, so picking another model does not reset them. */
+    jet: { alt: "1000", temp: "20", pipe: "stock", refAlt: "0", refTemp: "32" }
+  };
+
+  /* Which parts this model's own diagrams list, for "unconfirmed" flags. */
+  function modelPns(m) {
+    var set = {};
+    (P.m[m.partzilla] || []).forEach(function (r) { set[r.split("|")[2]] = 1; });
+    return set;
+  }
+  /* The main jet number listed for this model at a given size. Two sizes have
+     an older and a newer number; prefer the one this model's diagram shows. */
+  function jetPnFor(m, j) {
+    var mine = m ? modelPns(m) : {};
+    var all = [j.pn].concat(j.alt || []);
+    for (var i = 0; i < all.length; i++) if (mine[all[i]]) return { pn: all[i], listed: true };
+    return { pn: j.pn, listed: false };
+  }
+  var SUPERSEDED_SPRING = "90501-45534-00";
+
+  var toastEl = document.getElementById("toast"), toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 1600);
+  }
+  function copyPn(pn) {
+    var done = function () { toast(pn + "  copied"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pn).then(done, function () { fallback(pn, done); });
+    } else { fallback(pn, done); }
+  }
+  function fallback(pn, done) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = pn; ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy");
+      document.body.removeChild(ta); done();
+    } catch (e) { toast(pn); }
+  }
+  function wirePnButtons(scope) {
+    Array.prototype.forEach.call(scope.querySelectorAll("[data-pn]"), function (b) {
+      b.addEventListener("click", function () { copyPn(b.getAttribute("data-pn")); });
+      b.title = "Copy " + b.getAttribute("data-pn");
+    });
+  }
+
+  /* ================= view tabs ================= */
+  var VIEWS = [
+    { id: "specs",   label: "Spec sheet" },
+    { id: "jetting", label: "Jetting" },
+    { id: "track",   label: "Track fit" },
+    { id: "carbs",   label: "Carb swap" },
+    { id: "torque",  label: "Torque & springs" },
+    { id: "setup",   label: "Clutch, gearing & suspension" },
+    { id: "changes", label: "Year changes" }
+  ];
+  var nav = document.getElementById("viewnav");
+  function selectView(id, focus) {
+    state.view = id;
+    Array.prototype.forEach.call(nav.children, function (x, i) {
+      var on = VIEWS[i].id === state.view;
+      x.setAttribute("aria-selected", String(on));
+      x.tabIndex = on ? 0 : -1;
+      if (on && focus) { x.focus(); x.scrollIntoView({ block: "nearest", inline: "nearest" }); }
+    });
+    syncChrome(); render();
+  }
+  VIEWS.forEach(function (v, i) {
+    var b = document.createElement("button");
+    b.className = "viewtab"; b.type = "button"; b.textContent = v.label;
+    b.id = "tab-" + v.id;
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-controls", "main");
+    b.setAttribute("aria-selected", String(v.id === state.view));
+    b.tabIndex = v.id === state.view ? 0 : -1;
+    b.addEventListener("click", function () { selectView(v.id); });
+    /* Arrow keys move between tabs, as the tab pattern expects. */
+    b.addEventListener("keydown", function (e) {
+      var n = VIEWS.length, j = null;
+      if (e.key === "ArrowRight") j = (i + 1) % n;
+      else if (e.key === "ArrowLeft") j = (i - 1 + n) % n;
+      else if (e.key === "Home") j = 0;
+      else if (e.key === "End") j = n - 1;
+      if (j === null) return;
+      e.preventDefault(); selectView(VIEWS[j].id, true);
+    });
+    nav.appendChild(b);
+  });
+
+  /* The model rail and part search only apply to the spec sheet and the two
+     mod views that key off the selected sled. */
+  function syncChrome() {
+    var needsRail = state.view === "specs" || state.view === "jetting" || state.view === "track";
+    document.getElementById("rail").style.display = needsRail ? "" : "none";
+    document.getElementById("split").classList.toggle("wide", !needsRail);
+    document.getElementById("controls").style.display = state.view === "specs" ? "" : "none";
+    document.getElementById("main").setAttribute("aria-labelledby", "tab-" + state.view);
+    if (state.view !== "specs") { state.q = ""; document.getElementById("q").value = ""; }
+  }
+
+  /* ================= family chips + rail ================= */
+  var chipBox = document.getElementById("familyChips");
+  ["All", "Phazer", "Phazer II", "Venture"].forEach(function (f) {
+    var b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.textContent = f;
+    b.setAttribute("aria-pressed", String(f === state.family));
+    b.addEventListener("click", function () {
+      state.family = f;
+      Array.prototype.forEach.call(chipBox.children, function (x) {
+        x.setAttribute("aria-pressed", String(x.textContent === state.family));
+      });
+      renderList();
+    });
+    chipBox.appendChild(b);
+  });
+
+  function visibleModels() {
+    return MODELS.filter(function (m) { return state.family === "All" || m.family === state.family; });
+  }
+  function pickModel(id) {
+    state.modelId = id;
+    document.getElementById("q").value = ""; state.q = "";
+    renderList();
+  }
+  var modelSelect = document.getElementById("modelSelect");
+  modelSelect.addEventListener("change", function () { pickModel(modelSelect.value); });
+
+  function renderList() {
+    var list = document.getElementById("modelList");
+    list.innerHTML = "";
+    var vis = visibleModels();
+    if (vis.length && !vis.some(function (m) { return m.id === state.modelId; })) state.modelId = vis[0].id;
+    var years = [];
+    vis.forEach(function (m) { if (years.indexOf(m.year) < 0) years.push(m.year); });
+    /* The same list as a dropdown, for phones. */
+    modelSelect.innerHTML = years.map(function (y) {
+      return '<optgroup label="' + y + '">' + vis.filter(function (m) { return m.year === y; }).map(function (m) {
+        return '<option value="' + esc(m.id) + '"' + (m.id === state.modelId ? " selected" : "") + ">" +
+          y + " " + esc(m.variant) + " (" + esc(m.code) + ")</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+    years.forEach(function (y) {
+      var g = document.createElement("div");
+      g.className = "yeargroup";
+      var h = document.createElement("h3"); h.textContent = y; g.appendChild(h);
+      vis.filter(function (m) { return m.year === y; }).forEach(function (m) {
+        var b = document.createElement("button");
+        b.className = "modelbtn"; b.type = "button";
+        b.setAttribute("aria-current", String(m.id === state.modelId));
+        b.innerHTML = (m.start === "electric" ? '<span class="es-dot" title="Electric start"></span>' : "") +
+          "<span>" + esc(m.variant) + '</span><span class="code">' + esc(m.code) + "</span>";
+        b.addEventListener("click", function () { pickModel(m.id); });
+        g.appendChild(b);
+      });
+      list.appendChild(g);
+    });
+    render();
+  }
+
+  /* ================= atmosphere + jetting math =================
+     Mikuni's correction factor is a straight air-density ratio:
+       CF = sqrt( (P/P0) x (T0/T) ),  T absolute
+     Pressure from the ISA troposphere model. Jet number scales with CF.
+     Sanity checks that match the shop rules of thumb:
+       +2000 ft, same temp -> CF 0.964 -> 143.8 becomes 138.6 (one rung down)
+       32F -> 0F at sea level -> CF 1.034 -> 143.8 becomes 148.7 (one to two up) */
+  function pressureRatio(ft) {
+    var m = ft * 0.3048;
+    return Math.pow(1 - 2.25577e-5 * m, 5.25588);
+  }
+  function densityIndex(ft, degF) {
+    return pressureRatio(ft) / (degF + 459.67);   // proportional to air density
+  }
+  function correctionFactor(ft, degF, refFt, refF) {
+    return Math.sqrt(densityIndex(ft, degF) / densityIndex(refFt, refF));
+  }
+  function nearestJet(target) {
+    var best = null, bd = Infinity;
+    S.carburetor.mainJetLadder.forEach(function (j) {
+      var d = Math.abs(parseFloat(j.size) - target);
+      if (d < bd) { bd = d; best = j; }
+    });
+    return best;
+  }
+  function ladderIndex(size) {
+    for (var i = 0; i < S.carburetor.mainJetLadder.length; i++) {
+      if (S.carburetor.mainJetLadder[i].size === size) return i;
+    }
+    return -1;
+  }
+
+  /* Locate the cell in Yamaha's altitude x temperature chart. The chart's three
+     temperature columns are bands, not points: cold below -20 C, mid -20 to 0,
+     warm 0 and up. Altitude and temperature are clamped to the chart's edges. */
+  function factoryPick(altFt, degF) {
+    var chart = S.carburetor.altitudeChart;
+    var degC = (degF - 32) * 5 / 9;
+    var zoneKey = degC < -20 ? "cold" : (degC < 0 ? "mid" : "warm");
+    var zone = chart.zones.filter(function (z) { return z.key === zoneKey; })[0];
+    var band = null, clamped = false;
+    for (var i = 0; i < chart.bands.length; i++) {
+      if (altFt < chart.bands[i].ftMax) { band = chart.bands[i]; break; }
+    }
+    if (!band) band = chart.bands[chart.bands.length - 1];
+    /* Name only the edges actually crossed, so the warning never cites a limit the rider is inside. */
+    var edges = [];
+    if (altFt > chart.bands[chart.bands.length - 1].ftMax) edges.push("above 10,000 ft");
+    if (altFt < 0) edges.push("below sea level");
+    if (degC > 20) edges.push("warmer than 20 °C (68 °F)");
+    if (degC < -30) edges.push("colder than −30 °C (−22 °F)");
+    if (edges.length) clamped = true;
+    return { band: band, zone: zone, clamped: clamped, edges: edges, bandIndex: chart.bands.indexOf(band) };
+  }
+
+  function highlightChart(fc) {
+    var t = document.getElementById("jChart");
+    if (!t) return;
+    Array.prototype.forEach.call(t.querySelectorAll(".jcell"), function (c) { c.classList.remove("is-hit"); });
+    var cell = t.querySelector('[data-cell="' + fc.bandIndex + "-" + fc.zone.key + '"]');
+    if (cell) cell.classList.add("is-hit");
+  }
+
+  var PIPES = {
+    stock: { label: "Stock exhaust", steps: 0, pilot: 95, note: "" },
+    aaen:  { label: "Aaen pipe", steps: 2, pilot: 105,
+             note: "Forum consensus and Aaen's own guidance: up 2 main sizes and up on the pilot. Aaen will give you a jetting recommendation for your elevation for free — worth a phone call before you buy jets." },
+    dg:    { label: "DG pipe", steps: 2, pilot: 105,
+             note: "Reported the same as the Aaen: at least 2 sizes up on the main, and don't skip the pilot. Read the plugs — you want a tan/coffee colour, not white." },
+    other: { label: "Other aftermarket pipe", steps: 2, pilot: 105,
+             note: "Treated as a generic +2 starting point. Any pipe changes the whole curve, not just peak, so the midrange needs checking too." }
+  };
+
+  /* ================= renderers ================= */
+  function render() {
+    var main = document.getElementById("main");
+    if (state.view === "specs")   return renderSpecs(main);
+    if (state.view === "jetting") return renderJetting(main);
+    if (state.view === "track")   return renderTrack(main);
+    if (state.view === "carbs")   return renderCarbs(main);
+    if (state.view === "torque")  return renderTorque(main);
+    if (state.view === "setup")   return renderSetup(main);
+    if (state.view === "changes") return renderChanges(main);
+  }
+
+  /* unconfirmed: the part number is on the spec sheet but not on this model's own
+     scraped diagram, so it is carried over rather than read for this year. */
+  var UNCONF_TAG = '<span class="tag tag-unconf" title="Not on this model\u2019s scraped parts list, so not confirmed for this year">unconfirmed</span>';
+  function row(label, value, pn, unconfirmed) {
+    var v = value == null || value === "" ? '<span class="gap">needs manual</span>' : esc(value);
+    return '<div class="spec"><dt>' + esc(label) + "</dt><dd>" + v + (unconfirmed ? UNCONF_TAG : "") +
+           (pn ? '<span class="pn">' + esc(pn) + "</span>" : "") + "</dd></div>";
+  }
+  function partsFor(m) { return P.m[m.partzilla] || []; }
+
+  /* Says plainly which sled the engine and carburettor figures were actually
+     read for, so an assumed year is never mistaken for a verified one. */
+  var SOURCE_NOTE = {
+    clymer8489: "<b>Manual-verified for this sled.</b> Engine, carburettor and service figures come from the 1984&ndash;1989 PZ480 manual tables, which cover this model directly.",
+    factory9096: "<b>Manual-verified for this sled.</b> Carburettor and jetting come from Yamaha LIT-12618-PZ-50, Maintenance Specifications p.8-5, which is the page for PZ480P/PZ480EP.",
+    assumed: "<b>Carried forward, not verified.</b> No manual page for this exact year was checked. It carries the same carburettor and jetting part numbers as the 1990 Phazer II, and the carburettor is confirmed unchanged from 1984 to 1990 &mdash; so these figures are very likely right, but they are inherited rather than read.",
+    venture: "<b>Engine shared, chassis not verified.</b> The Venture uses the same 485 cc twin and the same carburettor part numbers as the Phazer, so the engine and jetting figures should hold. There is <b>no VT480 manual</b> in the local set, and the Venture is a touring sled &mdash; its clutching, gearing and suspension figures are NOT verified."
+  };
+  function provenance(m) {
+    var note = SOURCE_NOTE[m.specSource];
+    return note ? '<div class="prov">' + note + "</div>" : "";
+  }
+
+  /* ---------------- spec sheet ---------------- */
+  function renderSpecs(main) {
+    if (state.q.trim()) return renderSearch(main);
+    var m = byId[state.modelId];
+    if (!m) { main.innerHTML = '<p class="empty">No model selected.</p>'; return; }
+    var t = S.tracks[m.track] || {}, eng = S.engine, carb = S.carburetor, html = "";
+    var mine = modelPns(m);
+    var unc = function (f) { return !mine[m[f]]; };
+
+    html += '<div class="sheet-head"><h2 class="sheet-title">' + m.year + " Yamaha " + esc(m.variant) + "</h2>";
+    html += '<div class="sheet-sub"><span>Model code <span class="mono">' + esc(m.code) + "</span></span>";
+    html += "<span>" + (m.start === "electric" ? "Electric start" : "Recoil start") + "</span>";
+    html += '<span><a class="diagram" href="' + diagramUrl(m, "carburetor") + '" target="_blank" rel="noopener">Partzilla diagrams &rarr;</a></span></div></div>';
+    html += provenance(m);
+
+    html += '<section class="group"><h2>Track</h2><div class="trackfig"><span class="dim">' +
+            (t.widthIn ? t.widthIn + " × " + t.lengthIn : "—") + '</span><span class="dimnote">in.' +
+            (t.lugIn ? " &middot; " + t.lugIn + '" lug' : "") + (t.pitchIn ? " &middot; " + t.pitchIn + '" pitch' : "") +
+            (t.windows ? " &middot; " + t.windows + " windows" : "") + "</span>" +
+            (unc("track") ? UNCONF_TAG : "") +
+            '<button class="pn" data-pn="' + esc(m.track) + '">' + esc(m.track) + "</button></div>";
+    html += '<dl class="specgrid">' + row("Lug height", t.lugIn ? t.lugIn + " in" : null) +
+            row("Slide rail", "Hyfax", m.slide, unc("slide")) + "</dl>";
+    if (t.usedBy) html += '<p class="note">Same track fits: ' + esc(t.usedBy) + "</p>";
+    html += "</section>";
+
+    html += '<section class="group"><h2>Engine</h2><dl class="specgrid">';
+    html += row("Displacement", eng.displacementCc + " cc") + row("Bore × stroke", eng.boreMm + " × " + eng.strokeMm + " mm");
+    html += row("Type", "2-stroke fan-cooled twin") + row("Compression", eng.compressionRatio);
+    html += row("Head volume", eng.cylinderHeadVolumeCc + " cc") + row("Bore material", eng.cylinderBoreMaterial);
+    html += row("Output", eng.hpStock) + row("Spark plug", eng.sparkPlug) + row("Plug gap", eng.sparkPlugGap);
+    html += row("Ignition timing", eng.ignitionTiming) + row("Idle speed", eng.idleSpeed);
+    html += row("Piston STD", "standard bore", eng.parts.pistonStd) + row("Piston +0.25", "1st oversize", eng.parts.pistonOs025);
+    html += row("Piston +0.50", "2nd oversize", eng.parts.pistonOs050) + row("Ring set STD", "standard", eng.parts.ringSetStd);
+    html += row("Head gasket", "—", eng.parts.headGasket) + row("Base gasket", "—", eng.parts.baseGasket);
+    html += "</dl><p class=\"note\">Bore and stroke self-check: 72 × 59.6 mm over two cylinders computes to 485.2 cc. " +
+            esc(eng.hpNote) + "</p></section>";
+
+    html += '<section class="group"><h2>Carburetion &mdash; ' + esc(carb.manufacturer) + " " + esc(carb.type) + '</h2><dl class="specgrid">';
+    html += row("Main jet (M.J.)", "#" + carb.mainJetStd.size, carb.mainJetStd.pn);
+    html += row("Pilot jet (P.J.)", "#" + carb.pilotJetStd.size, carb.pilotJetStd.pn);
+    html += row("Main air jet (M.A.J.)", carb.mainAirJet) + row("Pilot air jet (P.A.J.)", carb.pilotAirJet);
+    html += row("Pilot outlet (P.O.)", carb.pilotOutlet) + row("Pilot screw (P.S.)", carb.pilotScrew);
+    html += row("Throttle valve (Th.V.)", carb.throttleValve) + row("Valve seat (V.S.)", carb.valveSeatSize);
+    html += row("Starter jet (G.S.)", carb.starterJet);
+    html += row("Float height (F.H.)", m.family === "Phazer" ? carb.floatHeight8489 : carb.floatHeight1990);
+    html += row("Main nozzle", carb.mainNozzleStd.id + " (standard)", carb.mainNozzleStd.pn);
+    html += row("Carburettor assy", "—", carb.assembly) + row("Fuel pump", carb.fuelPump);
+    html += "</dl><p class=\"note\">These are the factory figures. The carburettor and its jetting are <strong>confirmed unchanged</strong> between the 1984&ndash;89 PZ480 manual and the 1990 PZ480P/EP manual &mdash; so the identical part numbers across years are real, not a supersession artifact. Altitude jetting is on the <strong>Jetting</strong> tab.</p></section>";
+
+    html += '<section class="group"><h2>Capacities, clutching &amp; service limits</h2><dl class="specgrid">';
+    html += row("Fuel tank", S.capacities.fuelTank) + row("Oil tank", S.capacities.oilTank);
+    html += row("Chaincase oil", S.capacities.chaincase) + row("Engagement RPM", S.clutch.engagementRpm);
+    html += row("Shift RPM", S.clutch.shiftRpm) + row("Ratio range", S.clutch.ratioRange);
+    html += row("Belt circumference", S.clutch.beltOutsideCircumference) + row("Belt width, new", S.clutch.beltWidthNew);
+    html += row("Belt wear limit", S.clutch.beltWidthWearLimit) + row("Track deflection", S.service.trackDeflection);
+    html += row("Toe-out", S.service.toeOut) + row("Throttle free play", S.service.throttleCableFreePlay);
+    html += row("Oil pump cable", S.service.oilPumpCableFreePlay) + row("Brake disc OD", S.service.brakeDiscOuterDiameter);
+    html += row("Brake disc thickness", S.service.brakeDiscThickness) + row("Pad-to-disc clearance", S.service.padToDiscClearance);
+    html += '</dl><p class="note">Read off the <strong>PZ480 1984&ndash;89</strong> tables. The Phazer II shares the engine and carburettor, but its clutching and suspension were revised, and the Venture is a touring setup &mdash; treat the RPM and deflection figures as the Phazer baseline unless you have the matching manual page.</p></section>';
+
+    html += '<section class="group"><h2>Drive &amp; clutching</h2><dl class="specgrid">';
+    html += row("Drive belt", "—", m.belt, unc("belt")) + row("Primary spring", "—", m.primarySpring, unc("primarySpring"));
+    var g = partsFor(m).filter(function (r) {
+      var p = r.split("|");
+      return P.s[+p[0]] === "track-drive-1" && /SPROCKET, CHAIN|^CHAIN \(/.test(P.d[p[2]] || "");
+    });
+    if (g.length) {
+      g.forEach(function (r) {
+        var p = r.split("|"), d = P.d[p[2]] || p[2];
+        html += row(cleanName(d).replace(/^SPROCKET, /, "").replace(/^CHAIN/, "Chain"),
+                    flagOf(d) === "std" ? "standard" : "option", p[2]);
+      });
+    } else { html += row("Chaincase gearing", "see note"); }
+    html += "</dl>";
+    if (m.primarySpring === SUPERSEDED_SPRING) {
+      html += '<div class="verdict warn"><span class="vlabel">Spring conflict</span><span>Partzilla lists ' + SUPERSEDED_SPRING +
+        " for this sled, but Yamaha bulletin S88-007 and the high-altitude table both give 90501-52798 (red-blue, 25.8 kg) for the PZ480. " +
+        "Measure free length and wire diameter before ordering. Details on the <b>Torque &amp; springs</b> tab.</span></div>";
+    }
+    if (!g.length) {
+      html += '<p class="note"><strong>Gearing not itemised on this year’s diagram.</strong> Confirmed on ' +
+              esc(S.chaincase.confirmedFor) + ": " + S.chaincase.driveStd.teeth + "T drive / " +
+              S.chaincase.drivenStd.teeth + "T driven, " + S.chaincase.chainStd.links +
+              "-link chain. Options ran 16T and 18T drive, 33T driven, 66-link chain.</p>";
+    }
+    html += "</section>";
+
+    html += '<section class="group"><h2>Ignition &amp; brake</h2><dl class="specgrid">';
+    html += row("CDI unit", "—", m.cdi, unc("cdi")) + row("Ignition coil", "—", m.coil, unc("coil")) + row("Brake disc", "—", m.brakeDisc, unc("brakeDisc"));
+    html += "</dl>";
+    if (["track", "slide", "primarySpring", "belt", "cdi", "coil", "brakeDisc"].some(unc)) {
+      html += '<p class="note">Parts marked <span class="tag tag-unconf">unconfirmed</span> are not on this model\u2019s scraped diagrams, usually because that diagram section was not scraped. They are carried over from related years.</p>';
+    }
+    html += "</section>";
+
+    var rows = partsFor(m), bySection = {};
+    rows.forEach(function (r) { var p = r.split("|"); (bySection[+p[0]] = bySection[+p[0]] || []).push({ ref: p[1], pn: p[2] }); });
+
+    html += '<section class="group"><h2>Full parts index &mdash; ' + rows.length + " entries</h2>";
+    html += '<div class="tablewrap"><table><thead><tr><th>Ref</th><th>Part</th><th>Number</th></tr></thead><tbody>';
+    P.s.forEach(function (sec, si) {
+      var items = bySection[si];
+      if (!items) return;
+      var dfile = DIA && DIA[m.partzilla] ? DIA[m.partzilla][sec] : null;
+      html += '<tr class="sectionrow"><td colspan="3">' + esc(sec.replace(/-/g, " ")) +
+              ' &nbsp;<a href="' + diagramUrl(m, sec) + '" target="_blank" rel="noopener">diagram &rarr;</a>' +
+              (dfile ? ' &nbsp;<a href="data/diagrams/' + esc(dfile) + '" target="_blank" rel="noopener">offline copy &rarr;</a>' : "") +
+              "</td></tr>";
+      items.forEach(function (it) {
+        var d = P.d[it.pn] || it.pn, f = flagOf(d);
+        var tag = f === "std" ? '<span class="tag tag-std">Std</span>' : f === "alt" ? '<span class="tag tag-alt">Alt</span>' : "";
+        html += '<tr><td class="ref">' + esc(it.ref) + "</td><td>" + esc(cleanName(d)) + tag +
+                '</td><td class="pncell"><button class="pn" data-pn="' + esc(it.pn) + '">' + esc(it.pn) + "</button></td></tr>";
+      });
+    });
+    html += "</tbody></table></div>";
+    var unscraped = P.s.filter(function (sec, si) { return !bySection[si]; });
+    if (unscraped.length) {
+      html += '<p class="note"><strong>No parts scraped for:</strong> ' + unscraped.map(function (s) {
+          return '<a class="diagram" href="' + diagramUrl(m, s) + '" target="_blank" rel="noopener">' + esc(s.replace(/-/g, " ")) + "</a>";
+        }).join(", ") +
+        ". An empty section means the scraper kept nothing there, not that the sled has no such parts. Each link opens that Partzilla diagram.</p>";
+    }
+    html += '<p class="note">Part numbers are Partzilla’s <strong>current replacement</strong> numbers. Yamaha supersedes parts, so these are what to order today — not proof of what left the factory. Click any number to copy it.</p></section>';
+
+    /* Every fiche the model has, not just the sections the parts scraper kept.
+       Local build only: the published artifact ships no diagrams. */
+    var fiches = RICHS && RICHS[m.partzilla];
+    if (fiches) {
+      var names = Object.keys(fiches).sort();
+      var covered = {};
+      P.s.forEach(function (sec, si) { if (bySection[si]) covered[sec] = 1; });
+      html += '<section class="group"><h2>Exploded diagrams &mdash; ' + names.length + " sections</h2>";
+      html += '<div class="fiches">' + names.map(function (sec) {
+        return '<a class="fiche" href="data/diagrams-richs/' + esc(fiches[sec]) + '.gif" target="_blank" rel="noopener">' +
+          esc(sec.replace(/-/g, " ")) +
+          (covered[sec] ? "" : ' <span class="tag tag-alt">no parts data</span>') + "</a>";
+      }).join("") + "</div>";
+      html += '<p class="note">Offline copies of every section fiche. Sections marked <span class="tag tag-alt">no parts data</span> have a diagram but no scraped parts list &mdash; the parts index above only covers the ' +
+        P.s.length + " mechanical sections the scraper was told to keep.</p></section>";
+    }
+
+    main.innerHTML = html;
+    wirePnButtons(main);
+  }
+
+  function renderSearch(main) {
+    var q = state.q.trim().toUpperCase();
+    var hits = Object.keys(P.d).filter(function (pn) {
+      return pn.toUpperCase().indexOf(q) >= 0 || (P.d[pn] || "").toUpperCase().indexOf(q) >= 0;
+    }).sort();
+    var html = '<div class="sheet-head"><h2 class="sheet-title">' + hits.length + (hits.length === 1 ? " part" : " parts") +
+               " matching &ldquo;" + esc(state.q.trim()) + "&rdquo;</h2><div class=\"sheet-sub\"><span>Searching all " +
+               MODELS.length + " models, 1986&ndash;1995</span></div></div>";
+    if (!hits.length) {
+      main.innerHTML = html + '<p class="empty">Nothing matched. Try a partial number like <span class="mono">47110</span>, or a name like <span class="mono">jet</span>.</p>';
+      return;
+    }
+    hits.slice(0, 80).forEach(function (pn) {
+      var d = P.d[pn] || pn, f = flagOf(d);
+      var tag = f === "std" ? '<span class="tag tag-std">Std</span>' : f === "alt" ? '<span class="tag tag-alt">Alt</span>' : "";
+      var ids = fits[pn] || [];
+      var names = ids.map(function (id) { var mm = byId[id]; return mm ? mm.year + " " + mm.variant : id; });
+      html += '<div class="hit"><div class="hit-top"><span class="hit-desc">' + esc(cleanName(d)) + "</span>" + tag +
+              '<span style="margin-left:auto"><button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + '</button></span></div>' +
+              '<div class="hit-fits"><b>Fits ' + ids.length + (ids.length === 1 ? " model:</b> " : " models:</b> ") +
+              esc(names.join(", ")) + "</div></div>";
+    });
+    if (hits.length > 80) html += '<p class="note">Showing the first 80 of ' + hits.length + ". Narrow the search to see the rest.</p>";
+    main.innerHTML = html;
+    wirePnButtons(main);
+  }
+
+  /* ---------------- jetting calculator ---------------- */
+  function renderJetting(main) {
+    var carb = S.carburetor;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Altitude &amp; temperature jetting</h2>' +
+      '<div class="sheet-sub"><span>Mikuni density correction, snapped to a real Yamaha part number</span><span>Part numbers for the ' + byId[state.modelId].year + " " + esc(byId[state.modelId].variant) + '</span></div></div>';
+
+    html += '<div class="prov"><b>This is Yamaha’s own table.</b> ' + esc(carb.altitudeChart.source) +
+      '. Pick your altitude and temperature and the matching cell is highlighted below. ' +
+      'The density calculation underneath is only a cross-check for conditions that fall between bands — the table wins.</div>';
+    if (carb.altitudeChart.baselineConflict) {
+      html += '<div class="verdict warn" style="margin:-10px 0 22px"><span class="vlabel">Manuals disagree</span><span>' +
+        esc(carb.altitudeChart.baselineConflict) + "</span></div>";
+    }
+
+    html += '<section class="group"><h2>Factory altitude &amp; temperature chart</h2><div class="tablewrap"><table id="jChart">' +
+      "<thead><tr><th>Altitude</th>" +
+      carb.altitudeChart.zones.map(function (z) { return "<th>" + esc(z.label) + "<br><span style=\"font-weight:400;text-transform:none;letter-spacing:0\">" + esc(z.labelF) + "</span></th>"; }).join("") +
+      "</tr></thead><tbody>" +
+      carb.altitudeChart.bands.map(function (b, bi) {
+        return '<tr data-band="' + bi + '"><td><b>' + esc(b.ft) + ' ft</b><br><span style="color:var(--muted);font-size:11.5px">' + esc(b.m) + " m</span></td>" +
+          carb.altitudeChart.zones.map(function (z) {
+            return '<td data-cell="' + bi + "-" + z.key + '" class="jcell mono">#' + esc(b[z.key]) +
+              (b[z.key] === carb.mainJetStd.size ? ' <span class="tag tag-std">Std</span>' : "") + "</td>";
+          }).join("") + "</tr>";
+      }).join("") +
+      "</tbody></table></div></section>";
+
+    html += '<section class="group"><h2>Conditions</h2><div class="calc">' +
+      '<div class="field"><label for="jAlt">Riding altitude (ft)</label><input id="jAlt" type="number" inputmode="numeric" value="' + esc(state.jet.alt) + '" step="500" min="-500" max="14000"></div>' +
+      '<div class="field"><label for="jTemp">Temperature (&deg;F)</label><input id="jTemp" type="number" inputmode="numeric" value="' + esc(state.jet.temp) + '" step="5" min="-50" max="70"></div>' +
+      '<div class="field"><label for="jPipe">Exhaust</label><select id="jPipe">' +
+        Object.keys(PIPES).map(function (k) { return '<option value="' + k + '"' + (k === state.jet.pipe ? " selected" : "") + ">" + esc(PIPES[k].label) + "</option>"; }).join("") +
+      '</select></div>' +
+      '<div class="field"><label for="jRefAlt">Baseline altitude (ft)</label><input id="jRefAlt" type="number" inputmode="numeric" value="' + esc(state.jet.refAlt) + '" step="500" min="-500" max="14000"></div>' +
+      '<div class="field"><label for="jRefTemp">Baseline temp (&deg;F)</label><input id="jRefTemp" type="number" inputmode="numeric" value="' + esc(state.jet.refTemp) + '" step="5" min="-50" max="70"></div>' +
+      "</div>" +
+      '<p class="note">Riding altitude and temperature pick the cell in Yamaha’s chart above. The two <strong>baseline</strong> fields only feed the density cross-check underneath &mdash; they do not change the table answer.</p></section>';
+
+    html += '<section class="group"><h2>Result</h2><div id="jResult"></div></section>';
+    html += '<section class="group"><h2>Main jet ladder</h2><div class="ladder" id="jLadder"></div>' +
+      '<p class="note">Every main jet Yamaha catalogued for this carburettor. <span style="color:var(--flag)">Red</span> is the factory #' +
+      esc(carb.mainJetStd.size) + '. <span style="color:var(--accent)">Blue</span> is the calculated target. Click any rung to copy its part number.</p></section>';
+
+    html += '<section class="group"><h2>Reading the plugs</h2><ul class="checklist">' +
+      '<li>Run it hard in top gear, then <b>kill the engine and coast to a stop</b> — don’t idle back, or you’ll read the idle circuit.</li>' +
+      '<li><b>Tan to light coffee</b> on the porcelain is right. Chalky white means lean, back to a bigger main.</li>' +
+      '<li>Wet, sooty black means rich — come down one rung at a time.</li>' +
+      '<li>The main jet only owns the top third of the throttle. Midrange lean spots are the <b>nozzle and needle</b>, which is exactly what Yamaha’s 1996 bulletin addressed.</li>' +
+      "</ul></section>";
+
+    main.innerHTML = html;
+
+    var KEYS = { jAlt: "alt", jTemp: "temp", jPipe: "pipe", jRefAlt: "refAlt", jRefTemp: "refTemp" };
+    Object.keys(KEYS).forEach(function (id) {
+      var el = document.getElementById(id);
+      var save = function () { state.jet[KEYS[id]] = el.value; updateJetting(); };
+      el.addEventListener("input", save); el.addEventListener("change", save);
+    });
+    updateJetting();
+  }
+
+  function updateJetting() {
+    var carb = S.carburetor;
+    var alt = parseFloat(state.jet.alt) || 0;
+    var tmp = parseFloat(state.jet.temp);
+    var refA = parseFloat(state.jet.refAlt) || 0;
+    var refT = parseFloat(state.jet.refTemp);
+    if (isNaN(tmp)) tmp = 20;
+    if (isNaN(refT)) refT = 32;
+    var pipe = PIPES[state.jet.pipe] || PIPES.stock;
+    var m = byId[state.modelId];
+
+    /* Yamaha's table is the answer. The density maths is only a cross-check. */
+    var fc = factoryPick(alt, tmp);
+    var factorySize = fc.band[fc.zone.key];
+    var factoryJet = carb.mainJetLadder[ladderIndex(factorySize)] || nearestJet(parseFloat(factorySize));
+
+    /* A pipe shifts the factory answer up the ladder. */
+    var pickIdx = Math.min(carb.mainJetLadder.length - 1, ladderIndex(factoryJet.size) + pipe.steps);
+    var pick = carb.mainJetLadder[pickIdx];
+    var pickPn = jetPnFor(m, pick);
+
+    var cf = correctionFactor(alt, tmp, refA, refT);
+    var target = parseFloat(carb.mainJetStd.size) * cf;
+    var dens = densityIndex(alt, tmp) / densityIndex(refA, refT);
+    var computedPick = nearestJet(target);
+    var pilot = Math.round((pipe.pilot * cf) / 5) * 5;
+    var agrees = computedPick.size === factoryJet.size;
+
+    highlightChart(fc);
+
+    var h = '<div class="result"><div class="result-top">' +
+      '<div><span class="biglabel">Main jet — Yamaha table</span><span class="big">' + pick.size + "</span></div>" +
+      '<div><span class="biglabel">Order</span><button class="pn pnbig" data-pn="' + esc(pickPn.pn) + '">' + esc(pickPn.pn) + "</button>" +
+        '<span class="biglabel" style="margin:6px 0 0;text-transform:none;letter-spacing:0">' +
+        (pickPn.listed ? "As listed for the " + m.year + " " + esc(m.variant) : "Catalogue number; not on this model\u2019s diagram") +
+        (pick.alt ? " &middot; also sold as " + esc([pick.pn].concat(pick.alt).filter(function (x) { return x !== pickPn.pn; }).join(", ")) : "") +
+        "</span></div>" +
+      "</div>";
+    h += '<div class="readout">' +
+      "<span>Band <b>" + esc(fc.band.ft) + " ft</b></span>" +
+      "<span>Zone <b>" + esc(fc.zone.label) + "</b></span>" +
+      "<span>Table value <b>#" + esc(factorySize) + "</b>" + (pipe.steps ? " → pipe +" + pipe.steps : "") + "</span>" +
+      "<span>Pilot estimate <b>~" + pilot + "</b></span>" +
+      "</div></div>";
+
+    h += '<div class="verdict ' + (agrees ? "ok" : "warn") + '"><span class="vlabel">Cross-check</span><span>' +
+      "Air-density maths gives ×" + cf.toFixed(3) + " on the #" + carb.mainJetStd.size + " standard, i.e. <b>" +
+      target.toFixed(1) + "</b> → nearest #" + computedPick.size + ". " +
+      (agrees ? "That agrees with the table." :
+       "That differs from the table’s #" + factorySize + " — you are near a band edge, so <b>follow the table</b> and let a plug chop settle it.") +
+      "</span></div>";
+
+    if (fc.clamped) {
+      h += '<div class="verdict warn"><span class="vlabel">Past the table</span><span>These conditions are ' +
+        esc(fc.edges.join(" and ")) + ", outside Yamaha’s chart. The nearest cell is shown — beyond it you are into plug-chop-only territory.</span></div>";
+    }
+    if (pick.size === carb.mainJetStd.size && !pipe.steps) {
+      h += '<div class="verdict ok"><span class="vlabel">Stock is right</span><span>These conditions land on the factory #' +
+        carb.mainJetStd.size + ". Leave the mains alone.</span></div>";
+    } else {
+      var dir = parseFloat(pick.size) > parseFloat(carb.mainJetStd.size) ? "richer than" :
+                parseFloat(pick.size) < parseFloat(carb.mainJetStd.size) ? "leaner than" : "the same as";
+      h += '<div class="verdict warn"><span class="vlabel">Change from stock</span><span>#' + pick.size + " is " + dir +
+        " the factory #" + carb.mainJetStd.size + ". Buy two — it is a twin.</span></div>";
+    }
+
+    /* The pilot number is guidance only: Yamaha's catalogue carries one pilot for this carb. */
+    h += '<div class="verdict"><span class="vlabel">Pilot jet</span><span>Only the <b>#' + carb.pilotJetStd.size +
+      "</b> pilot (" + esc(carb.pilotJetStd.pn) + ") appears in Yamaha’s catalogue for this carburettor, so there are no other pilot part numbers in this data. " +
+      "The ~" + pilot + " figure above is the same density correction applied to the pilot, for reference against jets you source elsewhere.</span></div>";
+
+    if (pipe.note) h += '<div class="verdict"><span class="vlabel">' + esc(pipe.label) + "</span><span>" + esc(pipe.note) + "</span></div>";
+
+    if (pipe.steps) {
+      h += '<div class="verdict"><span class="vlabel">Nozzle</span><span>A pipe leans the midrange, which the main jet does not reach. ' +
+        "Yamaha’s richer nozzles are <b>1A</b> " + esc(carb.mainNozzleAlternates[0].pn) + " and <b>2A</b> " +
+        esc(carb.mainNozzleAlternates[1].pn) + ", with metering nozzle " + esc(carb.meteringNozzleAlt.pn) +
+        " — the 1996 service-bulletin kit. Stock is 3A " + esc(carb.mainNozzleStd.pn) + ".</span></div>";
+    }
+
+    document.getElementById("jResult").innerHTML = h;
+
+    var lad = document.getElementById("jLadder");
+    lad.innerHTML = S.carburetor.mainJetLadder.map(function (j) {
+      var cls = "rung" + (j.std ? " is-std" : "") + (j.size === pick.size ? " is-target" : "");
+      var jp = jetPnFor(m, j).pn;
+      return '<button class="' + cls + '" data-pn="' + esc(jp) + '"><span class="sz">' + esc(j.size) +
+        '</span><br><span class="rpn">' + esc(jp.slice(0, 3)) + "…" + esc(jp.slice(-5)) + "</span></button>";
+    }).join("");
+
+    wirePnButtons(document.getElementById("jResult"));
+    wirePnButtons(lad);
+  }
+
+  /* ---------------- track fitment ---------------- */
+  function renderTrack(main) {
+    var m = byId[state.modelId], t = S.tracks[m.track] || {};
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Track fitment</h2><div class="sheet-sub">' +
+      "<span>Against your " + m.year + " " + esc(m.variant) + " — stock " +
+      (t.widthIn ? t.widthIn + " × " + t.lengthIn + (t.lugIn ? ' × ' + t.lugIn + '"' : "") : "?") + "</span></div></div>";
+
+    html += '<div class="prov"><b>How much to trust this:</b> lug clearances come from builders who have done the swap on this chassis, ' +
+      'not from a factory figure. Yamaha never published a maximum. Treat the verdicts as what to expect, then measure your own sled.</div>';
+
+    html += '<section class="group"><h2>What you want to fit</h2><div class="calc">' +
+      '<div class="field"><label for="tLen">Track length (in)</label><select id="tLen">' +
+        [116, 121, 133, 136, 141, 144].map(function (v) {
+          return '<option value="' + v + '"' + (v === t.lengthIn ? " selected" : "") + ">" + v + '"</option>';
+        }).join("") + "</select></div>" +
+      '<div class="field"><label for="tLug">Lug height (in)</label><select id="tLug">' +
+        [0.5, 0.625, 0.75, 1.0, 1.125, 1.25, 1.5, 1.75].map(function (v) {
+          return '<option value="' + v + '"' + (v === t.lugIn ? " selected" : "") + ">" + v + '"</option>';
+        }).join("") + "</select></div>" +
+      '<div class="field"><label for="tDriver">Drivers</label><select id="tDriver">' +
+        '<option value="8">8-tooth (stock)</option><option value="7">7-tooth</option></select></div>' +
+      "</div><div id=\"tResult\"></div></section>";
+
+    html += '<section class="group"><h2>Before you order</h2><ul class="checklist">' +
+      "<li>Pitch must stay <b>2.52\"</b>. Every sled in this data uses it, and a 2.86\" or 3.00\" track will not drive on these sprockets.</li>" +
+      "<li>Check four clearances, not one: <b>bulkhead, tunnel, heat exchanger, and suspension wheel positioning</b>. That's the manufacturer's own list, and the heat exchanger is the one people forget.</li>" +
+      "<li>Length is set by the <b>rails and tunnel</b>, not the track. A longer track needs the matching skid — you can't just stretch what's under there.</li>" +
+      "<li>Taller lugs shorten the <b>effective</b> circumference. Recheck track tension and alignment after the swap, not before.</li>" +
+      "<li>Gearing: taller lugs and more length add rotating mass. That's what the 16T drive sprocket (" +
+        esc(S.chaincase.options[0].pn) + ") is for.</li>" +
+      "</ul></section>";
+
+    main.innerHTML = html;
+    ["tLen", "tLug", "tDriver"].forEach(function (id) {
+      document.getElementById(id).addEventListener("change", updateTrack);
+    });
+    updateTrack();
+  }
+
+  function updateTrack() {
+    var m = byId[state.modelId], t = S.tracks[m.track] || {};
+    var len = parseFloat(document.getElementById("tLen").value);
+    var lug = parseFloat(document.getElementById("tLug").value);
+    var teeth = parseInt(document.getElementById("tDriver").value, 10);
+    var h = "";
+
+    /* Length: governed by rails + tunnel, so anything off-stock needs the matching skid. */
+    if (len === t.lengthIn) {
+      h += '<div class="verdict ok"><span class="vlabel">Length OK</span><span>' + len +
+        '" is what this sled came with. Direct swap on the stock skid.</span></div>';
+    } else if (len < t.lengthIn) {
+      h += '<div class="verdict warn"><span class="vlabel">Shorter than stock</span><span>Going from ' + t.lengthIn +
+        '" down to ' + len + '" means the shorter rails and the matching skid. The tunnel stays, but you’ll have unsupported overhang at the back.</span></div>';
+    } else {
+      var isKnown = (t.lengthIn === 121 && (len === 136 || len === 133));
+      h += '<div class="verdict warn"><span class="vlabel">Longer than stock</span><span>' + t.lengthIn + '" to ' + len + '" needs ' +
+        (isKnown ? "the <b>ST long-track rails and skid</b> — Yamaha did exactly this swap themselves, which is what the ST models are. Track " +
+                   esc("8BH-47110-00-00") + " is the 136." : "longer rails and almost certainly a <b>tunnel extension</b>.") +
+        " Budget for the skid, not just the track.</span></div>";
+    }
+
+    /* Lug: the numbers builders report on this chassis. */
+    if (lug <= 0.75) {
+      h += '<div class="verdict ok"><span class="vlabel">Lug OK</span><span>' + lug +
+        '" is at or near stock height. No clearance concerns.</span></div>';
+    } else if (lug <= 1.125) {
+      h += '<div class="verdict ok"><span class="vlabel">Lug OK</span><span>Up to 1⅛" is reported to have <b>plenty of room</b> on this chassis with stock 8-tooth drivers.</span></div>';
+    } else if (lug <= 1.25) {
+      h += '<div class="verdict warn"><span class="vlabel">Tight</span><span>1¼" fits, but it’s reported <b>tight with the stock 8-tooth drivers</b> — installation especially. Check clearance at the front of the tunnel before you commit.</span></div>';
+    } else {
+      h += '<div class="verdict stop"><span class="vlabel">Needs work</span><span>At ' + lug +
+        '" you need <b>7-tooth drivers</b> for clearance up front, and getting it in takes a <b>tunnel extension</b> and real effort. 1½" is the practical ceiling people report on this chassis.</span></div>';
+      if (teeth === 8) {
+        h += '<div class="verdict stop"><span class="vlabel">Driver conflict</span><span>You have 8-tooth selected. Switch to 7-tooth drivers for this lug height.</span></div>';
+      }
+    }
+    if (lug >= 1.25 && teeth === 7) {
+      h += '<div class="verdict ok"><span class="vlabel">Drivers right</span><span>7-tooth drivers are the correct call for a tall lug on this chassis.</span></div>';
+    }
+    document.getElementById("tResult").innerHTML = h;
+  }
+
+  /* ---------------- carb swap ---------------- */
+  function renderCarbs(main) {
+    var carb = S.carburetor;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">VMax flat-slide conversion</h2>' +
+      '<div class="sheet-sub"><span>Swapping the round slides for 38&nbsp;mm TM flat slides</span></div></div>';
+
+    html += '<div class="prov"><b>How much to trust this:</b> all of it is builder-reported from forums, none of it is a factory procedure. ' +
+      "Nobody publishes a kit for this. Verify the carb spacing on your own boots before you buy anything.</div>";
+
+    html += '<div class="verdict stop"><span class="vlabel">Read this first</span><span>' +
+      "<b>Flat-slide jet numbers are a different scale from your round-slide numbers.</b> A 52.5 pilot on TM carbs is not leaner than your #" +
+      carb.pilotJetStd.size + " — it is a different family with a different flow curve. " +
+      "The Jetting tab computes for the <b>stock round slides only</b>. Do not carry those numbers across this swap.</span></div>";
+
+    html += '<section class="group"><h2>What fits</h2><ul class="checklist">' +
+      "<li><b>94–96 VMax 600 carbs</b> are reported a direct fit: same centre-to-centre spacing, they slide into the stock boots, and the airbox lines up.</li>" +
+      "<li><b>Gut the airbox completely.</b> Left intact it runs rich from the midrange up. A cold-air feed is reported to help.</li>" +
+      "<li><b>Throttle cable</b> ends up with more cable outside the casing. Fix it with a VMax throttle block, or make a spacer.</li>" +
+      "</ul></section>";
+
+    html += '<section class="group"><h2>Reported flat-slide jetting</h2><dl class="specgrid">' +
+      row("Pilot", "52.5 (stock TM)") + row("Main, tried range", "143.8 – 156.3") +
+      row("Pilot ceiling", "Yamaha uses no larger than 65") + row("Part numbers", null) +
+      "</dl><p class=\"note\">These are starting points people have posted, not a specification. Flat slides are more sensitive to needle and slide-cutaway changes than the round slides are, so expect to spend time in the midrange rather than chasing the main.</p></section>";
+
+    html += '<section class="group"><h2>Is it worth it?</h2><p style="max-width:62ch;margin:0 0 10px">' +
+      "The honest answer from the threads is that flat slides sharpen throttle response and help top end, but they don’t fix the Phazer’s known lean midrange on their own — " +
+      "that’s the nozzle, and Yamaha addressed it with the 1996 bulletin kit (nozzles <span class=\"mono\">" +
+      esc(carb.mainNozzleAlternates[0].pn) + "</span> / <span class=\"mono\">" + esc(carb.mainNozzleAlternates[1].pn) +
+      "</span>, metering nozzle <span class=\"mono\">" + esc(carb.meteringNozzleAlt.pn) + "</span>). " +
+      "If the midrange is what bothers you, that kit is the cheaper first move.</p></section>";
+
+    main.innerHTML = html;
+  }
+
+  /* ---------------- year-over-year changes ---------------- */
+  /* ---------------- clutch, gearing & suspension ---------------- */
+  function renderSetup(main) {
+    var A = S.altitude, G = S.gearRatios, SU = S.suspension, CT = S.carbTuning;
+
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Clutch, gearing &amp; suspension</h2>' +
+      '<div class="sheet-sub"><span>PZ480 high-altitude and setup tables</span></div></div>';
+
+    html += '<div class="prov"><b>' + esc(A.factoryBaseline) + "</b> " + esc(A.powerLoss) + "</div>";
+
+    /* The single most actionable finding in the chapter. */
+    html += '<div class="verdict warn"><span class="vlabel">Above 6,000 ft</span><span>' + esc(A.clutchThreshold) + "</span></div>";
+
+    html += '<section class="group"><h2>High-altitude clutching</h2><div class="tablewrap"><table>' +
+      "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
+      A.clutch.rows.map(function (r) {
+        var same = r.hi === "Same as standard";
+        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + esc(r.std) + "</td>" +
+          '<td class="mono"' + (r.change ? ' style="font-weight:600"' : "") + ">" +
+          (same ? '<span style="color:var(--muted)">' + esc(r.hi) + "</span>" : esc(r.hi)) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div>" +
+      '<div class="verdict ok"><span class="vlabel">Bottom line</span><span>' + esc(A.clutch.verdict) + "</span></div>" +
+      '<p class="note">' + esc(A.clutch.source) + "</p></section>";
+
+    html += '<section class="group"><h2>High-altitude gearing</h2><div class="tablewrap"><table>' +
+      "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
+      A.gearing.rows.map(function (r) {
+        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + esc(r.std) + '</td><td class="mono">' + esc(r.hi) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div>" +
+      '<div class="verdict ok"><span class="vlabel">Bottom line</span><span>' + esc(A.gearing.verdict) + "</span></div>" +
+      '<p class="note">' + esc(A.gearing.source) + "</p></section>";
+
+    /* Ratio matrix. Ratios are computed rather than transcribed, since the
+       scan is poor and driven/drive is exact arithmetic. */
+    html += '<section class="group"><h2>Gear ratio chart</h2><div class="tablewrap"><table><thead><tr>' +
+      "<th>Driven \\ Drive</th>" + G.drive.map(function (d) { return "<th>" + d + "T</th>"; }).join("") +
+      "</tr></thead><tbody>" +
+      G.driven.map(function (row) {
+        return "<tr><td><b>" + row.teeth + "T</b></td>" + G.drive.map(function (d, i) {
+          var ratio = (row.teeth / d).toFixed(3);
+          var links = row.links[i];
+          var isStd = row.teeth === G.stdDriven && d === G.stdDrive;
+          return '<td class="mono' + (isStd ? " jcell is-hit" : "") + '">' +
+            (isStd ? "<b>" + ratio + "</b>" : ratio) +
+            '<br><span style="color:var(--muted);font-size:11px">' + (links === null ? "&mdash;" : links + " lk") + "</span>" +
+            (isStd ? ' <span class="tag tag-std">Std</span>' : "") + "</td>";
+        }).join("") + "</tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(G.note) + " " + esc(G.guidance) + "</p>" +
+      '<div class="verdict warn"><span class="vlabel">Read this first</span><span>' + esc(G.caution) + "</span></div></section>";
+
+    html += '<section class="group"><h2>Suspension setup</h2>' +
+      '<p class="note" style="margin-top:0">' + esc(SU.principle) + " " + esc(SU.levers) + "</p>" +
+      '<div class="tablewrap"><table><thead><tr><th>Adjustment</th><th>Range</th><th>Standard</th><th>What it does</th></tr></thead><tbody>' +
+      SU.adjustments.map(function (a) {
+        return "<tr><td><b>" + esc(a.item) + "</b></td><td>" + esc(a.positions) + "</td>" +
+          '<td><span class="tag tag-std">' + esc(a.std) + "</span></td><td>" + esc(a.effect) + "</td></tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(SU.source) + "</p></section>";
+
+    html += '<section class="group"><h2>Which circuit to change</h2><div class="tablewrap"><table>' +
+      "<thead><tr><th>Throttle opening</th><th>Controlled by</th></tr></thead><tbody>" +
+      CT.circuits.map(function (c) {
+        return "<tr><td><b>" + esc(c.range) + "</b></td><td>" + esc(c.controls) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div>" +
+      '<div class="verdict warn"><span class="vlabel">Screw direction</span><span>' + esc(CT.airScrewWarning) + "</span></div>" +
+      '<p class="note">' + esc(CT.jetNumbers) + " " + esc(CT.idleProcedure) + " " + esc(CT.torsNote) + "</p>" +
+      '<div class="verdict stop"><span class="vlabel">Air box</span><span>' + esc(CT.airboxWarning) + "</span></div>" +
+      '<p class="note">' + esc(CT.mainJetAccess) + "</p></section>";
+
+    html += '<section class="group"><h2>Reading the plugs</h2><div class="tablewrap"><table>' +
+      "<thead><tr><th>Condition</th><th>What you see</th><th>What it means</th></tr></thead><tbody>" +
+      CT.plugReading.map(function (p) {
+        return "<tr><td><b>" + esc(p.condition) + "</b></td><td>" + esc(p.look) + "</td><td>" + esc(p.means) + "</td></tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(CT.finalWord) + "</p></section>";
+
+    main.innerHTML = html;
+  }
+
+  /* ---------------- torque & springs ---------------- */
+  function renderTorque(main) {
+    var T = S.torque, SP = S.springs, CR = S.crankshaft;
+
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Torque &amp; clutch springs</h2>' +
+      '<div class="sheet-sub"><span>PZ480 factory tables, plus Yamaha bulletin S88-007</span></div></div>';
+
+    html += '<div class="prov"><b>' + esc(T.appliesTo) + ".</b> " + esc(T.note) +
+      " The Phazer II and Venture share the engine and driveline, so these carry over, but they were read from the 1984&ndash;89 tables.</div>";
+
+    T.groups.forEach(function (g) {
+      html += '<section class="group"><h2>' + esc(g.name) + "</h2>";
+      html += '<div class="tablewrap"><table><thead><tr><th>Fastener</th><th>N·m</th><th>ft·lb</th><th>Note</th></tr></thead><tbody>';
+      g.rows.forEach(function (r) {
+        var exact = (r.nm * 0.737562).toFixed(1);
+        html += "<tr><td>" + esc(r.item) + '</td><td class="mono"><b>' + r.nm + '</b></td><td class="mono">' + r.ftlb +
+          (r.ftlbMismatch ? ' <span class="tag tag-unconf" title="Exact conversion of ' + r.nm + " N\u00b7m is " + exact + ' ft\u00b7lb">exact ' + exact + "</span>" : "") +
+          "</td><td>" +
+          (r.flag ? '<span class="tag tag-warn">' + esc(r.flag) + "</span>" : "") + "</td></tr>";
+      });
+      html += "</tbody></table></div><p class=\"note\">" + esc(g.source) + "</p></section>";
+    });
+
+    html += '<section class="group"><h2>Crankshaft limits</h2>' +
+      '<div class="tablewrap"><table><thead><tr><th>Item</th><th>mm</th><th>in</th></tr></thead><tbody>' +
+      CR.rows.map(function (r) {
+        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + esc(r.mm) + '</td><td class="mono">' + esc(r["in"]) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div><p class=\"note\">" + esc(CR.source) + "</p></section>";
+
+    html += '<section class="group"><h2>Primary clutch springs</h2>' +
+      '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate<br>kg/mm</th><th>Preload<br>kg</th><th>Colour</th>' +
+      "<th>Wire</th><th>OD</th><th>Turns</th><th>Free<br>length</th><th>Used on</th></tr></thead><tbody>" +
+      SP.primary.map(function (s) {
+        return "<tr>" +
+          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button></td>" +
+          '<td class="mono"><b>' + esc(s.rate) + "</b></td><td class=\"mono\">" + esc(s.preload) + "</td><td>" + esc(s.color) + "</td>" +
+          '<td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.turns) + "</td>" +
+          '<td class="mono">' + esc(s.free) + "</td><td>" + esc(s.usedOn) +
+          (s.std ? ' <span class="tag tag-std">Std</span>' : "") + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div></section>";
+
+    html += '<section class="group"><h2>Secondary clutch springs</h2>' +
+      '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate</th><th>Turns</th><th>OD</th><th>Wire</th>' +
+      "<th>Free length</th><th>Colour</th><th>Used on</th></tr></thead><tbody>" +
+      SP.secondary.map(function (s) {
+        return "<tr>" +
+          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button></td>" +
+          '<td class="mono"><b>' + esc(s.rate) + '</b></td><td class="mono">' + esc(s.turns) + "</td>" +
+          '<td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.free) + "</td>" +
+          "<td>" + esc(s.color) + "</td><td>" + esc(s.usedOn) +
+          (s.std ? ' <span class="tag tag-std">Std</span>' : "") + "</td></tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(SP.secondaryNote) + "</p></section>";
+
+    html += '<div class="verdict warn"><span class="vlabel">Primary spring conflict</span><span>' + esc(SP.conflict) + "</span></div>";
+    html += '<div class="verdict warn"><span class="vlabel">Secondary colour conflict</span><span>' + esc(SP.secondaryConflict) + "</span></div>";
+    html += '<p class="note">' + esc(SP.source) + "</p>";
+
+    main.innerHTML = html;
+    wirePnButtons(main);
+  }
+
+  function renderChanges(main) {
+    var FIELDS = [
+      { key: "track", label: "Track" }, { key: "slide", label: "Slide rail" },
+      { key: "belt", label: "Drive belt" }, { key: "primarySpring", label: "Primary spring" },
+      { key: "cdi", label: "CDI unit" }, { key: "coil", label: "Ignition coil" },
+      { key: "brakeDisc", label: "Brake disc" }
+    ];
+    var FAMS = ["Phazer", "Phazer II", "Venture"];
+
+    var html = '<div class="sheet-head"><h2 class="sheet-title">What changed, and when</h2>' +
+      '<div class="sheet-sub"><span>One row per model line; consecutive years sharing a part number are collapsed into one run</span></div></div>';
+    /* A model line is a family plus its variant, with the long-track suffix folded in,
+       so a 1994 "Phazer II ST (LT)" continues the 1991-93 "Phazer II ST" line. */
+    function lineOf(m) { return m.variant.replace(/\s*\(LT\)$/, ""); }
+
+    FIELDS.forEach(function (f) {
+      html += '<section class="group"><h2>' + esc(f.label) + "</h2>";
+      FAMS.forEach(function (fam) {
+        var ms = MODELS.filter(function (m) { return m.family === fam; })
+                       .sort(function (a, b) { return a.year - b.year; });
+        if (!ms.length) return;
+        var lines = [];
+        ms.forEach(function (m) { if (lines.indexOf(lineOf(m)) < 0) lines.push(lineOf(m)); });
+        lines.forEach(function (ln) {
+          /* Collapse consecutive years of this line that share the value. */
+          var runs = [];
+          ms.filter(function (m) { return lineOf(m) === ln; }).forEach(function (m) {
+            var v = m[f.key];
+            var last = runs[runs.length - 1];
+            if (last && last.v === v) { last.to = m.year; last.models.push(m); }
+            else runs.push({ v: v, from: m.year, to: m.year, models: [m] });
+          });
+          html += '<div style="margin-bottom:12px"><div class="rail-head">' + esc(ln) + "</div><div class=\"runs\">";
+          runs.forEach(function (r, i) {
+            if (i) html += '<span class="arrow">&rarr;</span>';
+            var yrs = r.from === r.to ? String(r.from) : r.from + "–" + r.to;
+            var codes = r.models.map(function (m) { return m.code; }).join(", ");
+            html += '<div class="run' + (i ? " changed" : "") + '"><span class="years">' + yrs + "</span>" +
+              '<button class="pn val" data-pn="' + esc(r.v) + '">' + esc(r.v) + "</button>" +
+              '<span class="val" style="font-family:inherit">' + esc(codes) + "</span></div>";
+          });
+          html += "</div></div>";
+        });
+      });
+      html += "</section>";
+    });
+
+    html += '<p class="note">Each row follows one model line (standard, LE, ST, XL, GT) through the years, so a change in a row is a real change for that sled. Click any number to copy it.</p>';
+    main.innerHTML = html;
+    wirePnButtons(main);
+  }
+
+  var qEl = document.getElementById("q");
+  qEl.addEventListener("input", function () { state.q = qEl.value; render(); });
+
+  syncChrome();
+  renderList();
+})();
+</script>
