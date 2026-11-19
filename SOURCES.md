@@ -149,6 +149,12 @@ Found in the manuals while checking clutches: the stock primary changed. The 199
 
 Second pass (same day): cold air intake, handlebar risers, running boards, tunnel extensions, long-track skid swaps and track-swap reports, plus a "Where to look" section. All forum-tagged except the manual and fitment references. snowmobileforum.com, dootalk.com and vintagesleds.com (JavaScript wall) could not be read either. Running boards and riser cable part numbers remain undocumented for these chassis.
 
+## Maintenance schedule (2026-11-19)
+
+The **Maintenance** tab uses Yamaha's own Periodic Maintenance Table and Lubrication Intervals from LIT-12618-PZ-50 (1990 PZ480P/EP), pp.2-1 to 2-3 (PDF pp.214-216), transcribed item by item. The Clymer 1984-89 Table 1 and Table 2 (Chapter Three) were compared: same 20/40/80-hour intervals and items, plus the 10-hour head-nut retorque. Items marked "PZ480EP only" (battery, grip warmer) are shown only on electric-start models. The Venture's touring-only items are not covered.
+
+The **Calculators** tab's clutch default (1:1 top ratio) is the top of Clymer's "ratio range 3.5:1 to 1:1" (Quick Reference Data, Transmission specifications, PZ480). Top speed is the no-slip track speed, for comparing setups only.
+
 ## Still open
 
 - **Venture VT480 manual** — the one real gap. Nothing in the local set covers it, so the Venture's clutching, gearing and suspension remain unverified.

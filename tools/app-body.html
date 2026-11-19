@@ -341,6 +341,11 @@
          border-radius: 2px; background: var(--surface); color: var(--ink); }
   .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; }
   .linkbtn:hover { text-decoration: underline; }
+  .btn.small { padding: 5px 10px; font-size: 12px; }
+  .gstrip { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; align-items: baseline; padding: 8px 12px; margin-bottom: 14px; background: var(--accent-soft); border-left: 3px solid var(--accent); font-size: 13px; }
+  .mod.gact { border-left: 3px solid var(--ok); padding-left: 12px; }
+  .muted-s { color: var(--muted); font-size: 11.5px; }
+  table.svc td:last-child { width: 1%; }
   textarea.field-ta {
     background: var(--surface); border: 1px solid var(--line); border-radius: 2px; color: var(--ink);
     font: 400 14px/1.4 "IBM Plex Sans", sans-serif; padding: 9px 10px; width: 100%; min-height: 64px; resize: vertical;
@@ -535,6 +540,8 @@
     { id: "changes", label: "Year changes" },
     { id: "mods",    label: "Mods & upgrades" },
     { id: "calc",    label: "Calculators" },
+    { id: "service", label: "Maintenance" },
+    { id: "garage",  label: "My garage" },
     { id: "order",   label: "Order list" },
     { id: "log",     label: "Tuning log" }
   ];
@@ -812,6 +819,10 @@
   function render() {
     persist();
     var main = document.getElementById("main");
+    renderView(main);
+    garageStrip(main);
+  }
+  function renderView(main) {
     if (state.view === "order")   return renderOrder(main);
     if (state.view === "log")     return renderLog(main);
     if (state.view === "specs")   return renderSpecs(main);
@@ -823,6 +834,8 @@
     if (state.view === "changes") return renderChanges(main);
     if (state.view === "mods")    return renderMods(main);
     if (state.view === "calc")    return renderCalc(main);
+    if (state.view === "service") return renderService(main);
+    if (state.view === "garage")  return renderGarage(main);
   }
 
   /* unconfirmed: the part number is on the spec sheet but not on this model's own
@@ -1256,7 +1269,8 @@
 
   /* ---------------- track fitment ---------------- */
   function renderTrack(main) {
-    var m = byId[state.modelId], t = S.tracks[m.track] || {};
+    var m = byId[state.modelId], t = S.tracks[m.track] || {}, g = activeSled();
+    var wantLen = g && g.trackLen ? +g.trackLen : t.lengthIn, wantLug = g && g.lug ? +g.lug : t.lugIn, wantTeeth = g && g.teeth ? +g.teeth : 8;
     var html = '<div class="sheet-head"><h2 class="sheet-title">Track fitment</h2><div class="sheet-sub">' +
       "<span>Against your " + m.year + " " + esc(m.variant) + " — stock " +
       (t.widthIn ? t.widthIn + " × " + t.lengthIn + (t.lugIn ? ' × ' + t.lugIn + '"' : "") : "?") + "</span></div></div>";
@@ -1267,14 +1281,14 @@
     html += '<section class="group"><h2>What you want to fit</h2><div class="calc">' +
       '<div class="field"><label for="tLen">Track length (in)</label><select id="tLen">' +
         [116, 121, 133, 136, 141, 144].map(function (v) {
-          return '<option value="' + v + '"' + (v === t.lengthIn ? " selected" : "") + ">" + v + '"</option>';
+          return '<option value="' + v + '"' + (v === wantLen ? " selected" : "") + ">" + v + '"</option>';
         }).join("") + "</select></div>" +
       '<div class="field"><label for="tLug">Lug height (in)</label><select id="tLug">' +
         [0.5, 0.625, 0.75, 1.0, 1.125, 1.25, 1.5, 1.75, 2.0].map(function (v) {
-          return '<option value="' + v + '"' + (v === t.lugIn ? " selected" : "") + ">" + v + '"</option>';
+          return '<option value="' + v + '"' + (v === wantLug ? " selected" : "") + ">" + v + '"</option>';
         }).join("") + "</select></div>" +
       '<div class="field"><label for="tDriver">Drivers</label><select id="tDriver">' +
-        '<option value="8">8-tooth (stock)</option><option value="7">7-tooth</option></select></div>' +
+        '<option value="8">8-tooth (stock)</option><option value="7"' + (wantTeeth === 7 ? " selected" : "") + '>7-tooth</option></select></div>' +
       "</div><div id=\"tResult\"></div></section>";
 
     html += '<section class="group"><h2>Before you order</h2><ul class="checklist">' +
@@ -1466,6 +1480,264 @@
         "<span>Per US gallon <b>" + (128 / ratio).toFixed(1) + " oz</b></span><span>Per litre <b>" + Math.round(1000 / ratio) + " ml</b></span></div></div>";
     }
     document.getElementById("pResult").innerHTML = p;
+  }
+
+
+  /* ---------------- maintenance schedule + service log ----------------
+     Yamaha's interval table, plus a per-sled record of when each item was last
+     done. Due-ness is worked out from the hours or miles typed in (whichever
+     comes first, as Yamaha writes it) and, for seasonal items, from the date:
+     a season is taken to start on 1 August. Saved in this browser only. */
+  function svcKey() { var g = activeSled(); return g ? "g:" + g.id : state.modelId; }
+  function svcLoad() { var all = store.get("service", {}); return all[svcKey()] || { hours: "", miles: "", done: {}, history: [] }; }
+  function svcSave(rec) { var all = store.get("service", {}); all[svcKey()] = rec; store.set("service", all); }
+  function seasonStart() {
+    var d = new Date(), y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1;
+    return y + "-08-01";
+  }
+  function svcStatus(it, rec) {
+    var MT = S.maintenance, last = rec.done[it.key], H = parseFloat(rec.hours), MI = parseFloat(rec.miles);
+    var worst = null, why = "";
+    it.at.forEach(function (a) {
+      var iv = MT.intervals[a], st = null, w = "";
+      if (a === "when") return;
+      if (a === "season") {
+        st = !last ? "none" : last.date >= seasonStart() ? "ok" : "due";
+        w = st === "ok" ? "done this season" : st === "none" ? "no record" : "not done since 1 Aug";
+      } else if (!last) {
+        st = "none"; w = "no record";
+      } else {
+        var dh = !isNaN(H) && last.hours !== "" && last.hours != null ? H - parseFloat(last.hours) : NaN;
+        var dm = !isNaN(MI) && last.miles !== "" && last.miles != null ? MI - parseFloat(last.miles) : NaN;
+        var lim = iv.km / 1.609344;
+        var fh = isNaN(dh) ? NaN : dh / iv.hours, fm = isNaN(dm) ? NaN : dm / lim;
+        var f = Math.max(isNaN(fh) ? -1 : fh, isNaN(fm) ? -1 : fm);
+        if (f < 0) { st = "none"; w = "enter hours or miles"; }
+        else if (f >= 1) { st = "due"; w = "due"; }
+        else if (f >= 0.8) { st = "soon"; w = (isNaN(fh) ? "" : Math.max(0, iv.hours - dh).toFixed(0) + " h") + (isNaN(fh) || isNaN(fm) ? "" : " / ") + (isNaN(fm) ? "" : Math.max(0, lim - dm).toFixed(0) + " mi") + " left"; }
+        else { st = "ok"; w = (isNaN(fh) ? "" : (iv.hours - dh).toFixed(0) + " h") + (isNaN(fh) || isNaN(fm) ? "" : " / ") + (isNaN(fm) ? "" : (lim - dm).toFixed(0) + " mi") + " left"; }
+      }
+      var rank = { due: 3, soon: 2, none: 1, ok: 0 };
+      if (worst === null || rank[st] > rank[worst]) { worst = st; why = w; }
+    });
+    return { st: worst, why: why };
+  }
+  var SVC_TAG = { due: "tag-std", soon: "tag-alt", ok: "tag-ok", none: "tag-unconf" };
+  var SVC_WORD = { due: "Due", soon: "Soon", ok: "OK", none: "No record" };
+  function svcItems() {
+    var MT = S.maintenance;
+    return MT.items.map(function (x) { return { key: x.group + "|" + x.item, group: x.group, item: x.item, at: x.at }; })
+      .concat(MT.lube.map(function (x) { return { key: "lube|" + x.group + "|" + x.item, group: x.group, item: "Lubricate: " + x.item, at: x.at, lube: x.lube }; }));
+  }
+  function renderService(main) {
+    var MT = S.maintenance, m = byId[state.modelId], rec = svcLoad();
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Maintenance</h2>' +
+      '<div class="sheet-sub"><span>Yamaha&rsquo;s schedule for your ' + m.year + " " + esc(m.variant) + ", and what you have done. Saved in this browser only</span></div></div>";
+    html += '<div class="prov"><b>Source:</b> ' + esc(MT.source) + (m.family === "Venture" ? " " + esc(MT.ventureNote) : "") + "</div>";
+    html += '<section class="group"><h2>Where the sled is now</h2><div class="calc">' +
+      '<div class="field"><label for="sHours">Hours</label><input id="sHours" type="number" inputmode="decimal" min="0" step="0.1" value="' + esc(rec.hours) + '"></div>' +
+      '<div class="field"><label for="sMiles">Miles</label><input id="sMiles" type="number" inputmode="numeric" min="0" step="1" value="' + esc(rec.miles) + '"></div>' +
+      '</div><div id="svcBanner"></div>' +
+      '<p class="note">Type the meter reading, then tap <b>Done</b> on an item when you service it. That stores today&rsquo;s date with these hours and miles, and the item counts down from there. ' + esc(MT.headNote) + '</p></section><div id="svcBody"></div>';
+    main.innerHTML = html;
+    ["sHours", "sMiles"].forEach(function (id) {
+      document.getElementById(id).addEventListener("input", function () {
+        var r = svcLoad(); r.hours = document.getElementById("sHours").value; r.miles = document.getElementById("sMiles").value; svcSave(r); drawSvc();
+      });
+    });
+    drawSvc();
+  }
+  function drawSvc() {
+    var MT = S.maintenance, m = byId[state.modelId], rec = svcLoad(), main = document.getElementById("svcBody");
+    var all = svcItems().filter(function (it) { return m.start === "electric" || !/electric start/.test(it.item); });
+    var counts = { due: 0, soon: 0 };
+    all.forEach(function (it) { it.s = svcStatus(it, rec); if (counts[it.s.st] != null) counts[it.s.st]++; });
+
+    document.getElementById("svcBanner").innerHTML = counts.due || counts.soon ? '<div class="verdict ' + (counts.due ? "stop" : "warn") + '"><span class="vlabel">' + (counts.due ? counts.due + " due" : counts.soon + " coming up") + "</span><span>" +
+        (counts.due ? counts.due + " item" + (counts.due > 1 ? "s are" : " is") + " due" + (counts.soon ? " and " + counts.soon + " coming up" : "") : counts.soon + " item" + (counts.soon > 1 ? "s are" : " is") + " within 20% of the interval") + ". They are at the top of each group below.</span></div>" : "";
+    var html = "";
+    ["20", "40", "80", "season", "when"].forEach(function (a) {
+      var list = all.filter(function (it) { return it.at[0] === a; });
+      if (!list.length) return;
+      list.sort(function (x, y) { var r = { due: 0, soon: 1, none: 2, ok: 3 }; return (r[x.s.st] == null ? 4 : r[x.s.st]) - (r[y.s.st] == null ? 4 : r[y.s.st]); });
+      html += '<section class="group"><h2>' + esc(MT.intervals[a].label) + '</h2><div class="tablewrap"><table class="svc"><thead><tr><th>Item</th><th>Status</th><th>Last done</th><th></th></tr></thead><tbody>' +
+        list.map(function (it) {
+          var last = rec.done[it.key];
+          return "<tr><td><b>" + esc(it.item) + '</b><br><span class="muted-s">' + esc(it.group) +
+            (it.at.length > 1 ? " &middot; also " + it.at.slice(1).map(function (x) { return x === "season" ? "once a season" : "every " + x + " h"; }).join(", ") : "") +
+            (it.lube ? " &middot; " + esc(it.lube) : "") + "</span></td>" +
+            "<td>" + (it.s.st ? '<span class="tag ' + SVC_TAG[it.s.st] + '">' + SVC_WORD[it.s.st] + '</span><br><span class="muted-s">' + esc(it.s.why) + "</span>" : '<span class="muted-s">as needed</span>') + "</td>" +
+            '<td class="mono">' + (last ? esc(last.date) + '<br><span class="muted-s">' + (last.hours !== "" ? esc(last.hours) + " h" : "") + (last.hours !== "" && last.miles !== "" ? " &middot; " : "") + (last.miles !== "" ? esc(last.miles) + " mi" : "") + "</span>" : "&mdash;") + "</td>" +
+            '<td><button type="button" class="btn small" data-svcdone="' + esc(it.key) + '">Done</button></td></tr>';
+        }).join("") + "</tbody></table></div></section>";
+    });
+
+    html += '<section class="group"><h2>Service history &mdash; ' + rec.history.length + "</h2>";
+    if (!rec.history.length) html += '<p class="empty">Nothing recorded yet for this sled.</p>';
+    else html += '<div class="tablewrap"><table><thead><tr><th>Date</th><th>Item</th><th>Hours</th><th>Miles</th><th></th></tr></thead><tbody>' +
+      rec.history.slice().reverse().map(function (e) {
+        return '<tr><td class="mono">' + esc(e.date) + "</td><td>" + esc(e.item) + '</td><td class="mono">' + esc(e.hours) + '</td><td class="mono">' + esc(e.miles) +
+          '</td><td><button type="button" class="linkbtn" data-svcdel="' + e.id + '">Delete</button></td></tr>';
+      }).join("") + '</tbody></table></div><div class="btnrow"><button type="button" class="btn" id="sExport">Export CSV</button></div>';
+    html += '<p class="note">' + esc(MT.breakIn) + "</p></section>";
+    main.innerHTML = html;
+
+    Array.prototype.forEach.call(main.querySelectorAll("[data-svcdone]"), function (b) {
+      b.addEventListener("click", function () {
+        var r = svcLoad(), key = b.getAttribute("data-svcdone");
+        r.hours = document.getElementById("sHours").value; r.miles = document.getElementById("sMiles").value;
+        var it = all.filter(function (x) { return x.key === key; })[0];
+        var entry = { date: todayIso(), hours: r.hours, miles: r.miles };
+        r.done[key] = entry;
+        r.history.push({ id: Date.now(), key: key, item: it ? it.item : key, date: entry.date, hours: r.hours, miles: r.miles });
+        svcSave(r); toast("Recorded"); drawSvc();
+      });
+    });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-svcdel]"), function (b) {
+      b.addEventListener("click", function () {
+        if (!window.confirm("Delete this history entry?")) return;
+        var r = svcLoad(), id = b.getAttribute("data-svcdel");
+        var gone = r.history.filter(function (e) { return String(e.id) === id; })[0];
+        r.history = r.history.filter(function (e) { return String(e.id) !== id; });
+        if (gone) {  /* fall back to the previous record of the same item, if any */
+          var prev = r.history.filter(function (e) { return e.key === gone.key; }).pop();
+          if (prev) r.done[gone.key] = { date: prev.date, hours: prev.hours, miles: prev.miles }; else delete r.done[gone.key];
+        }
+        svcSave(r); drawSvc();
+      });
+    });
+    var ex = document.getElementById("sExport");
+    if (ex) ex.addEventListener("click", function () {
+      var csv = [["Date", "Sled", "Item", "Hours", "Miles"]].concat(svcLoad().history.map(function (e) {
+        return [e.date, m.year + " " + m.variant + " (" + m.code + ")", e.item, e.hours, e.miles];
+      })).map(function (r) { return r.map(csvCell).join(","); }).join("\n");
+      try {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+        a.download = "phazermania-service-log.csv";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      } catch (e) { copyText(csv, "Download blocked here, CSV copied instead"); }
+    });
+  }
+
+
+  /* ---------------- my garage ----------------
+     The rider's own sleds with what has been changed on them. Using one sets
+     the model and carries its pipe, track, drivers and gearing into the
+     Jetting, Track fit and Calculators tabs, and gives it its own maintenance
+     record. Saved in this browser only. */
+  function garageLoad() { return store.get("garage", []); }
+  function garageSave(g) { store.set("garage", g); }
+  function activeSled() {
+    var id = store.get("garageActive", null);
+    var g = garageLoad().filter(function (x) { return x.id === id; })[0];
+    return g && g.modelId === state.modelId ? g : null;
+  }
+  function sledSummary(g) {
+    var bits = [];
+    if (g.pipe && g.pipe !== "stock") bits.push(PIPES[g.pipe] ? PIPES[g.pipe].label : g.pipe);
+    if (g.trackLen || g.lug) bits.push((g.trackLen ? g.trackLen + '"' : "stock length") + (g.lug ? " x " + g.lug + '" lug' : ""));
+    if (g.teeth && +g.teeth !== 8) bits.push(g.teeth + "-tooth drivers");
+    if (g.drive && g.driven && (+g.drive !== S.gearRatios.stdDrive || +g.driven !== S.gearRatios.stdDriven)) bits.push(g.drive + "/" + g.driven + " gearing");
+    if (g.main) bits.push("#" + g.main + " mains");
+    return bits.length ? bits.join(" · ") : "stock";
+  }
+  function useSled(g) {
+    store.set("garageActive", g.id);
+    state.modelId = g.modelId; state.family = "All";
+    state.jet.pipe = g.pipe || "stock";
+    var c = store.get("calc", {});
+    if (g.drive) c.drive = +g.drive; if (g.driven) c.driven = +g.driven; if (g.teeth) c.teeth = +g.teeth;
+    store.set("calc", c);
+    renderList();
+  }
+  function garageStrip(main) {
+    var g = activeSled();
+    if (!g || state.view === "garage") return;
+    var d = document.createElement("div");
+    d.className = "gstrip printhide";
+    d.innerHTML = "<span><b>" + esc(g.name) + "</b> &middot; " + esc(sledSummary(g)) + '</span><button type="button" class="linkbtn" id="gOff">Stock view</button>';
+    main.insertBefore(d, main.firstChild);
+    document.getElementById("gOff").addEventListener("click", function () { store.set("garageActive", null); render(); });
+  }
+  function renderGarage(main) {
+    var list = garageLoad(), act = store.get("garageActive", null), edit = state.garageEdit || null;
+    var e = edit ? list.filter(function (x) { return x.id === edit; })[0] : null;
+    var m = byId[(e && e.modelId) || state.modelId];
+    var html = '<div class="sheet-head"><h2 class="sheet-title">My garage</h2>' +
+      '<div class="sheet-sub"><span>Your own sleds and what you have changed on them. Saved in this browser only</span></div></div>';
+
+    html += '<section class="group"><h2>Your sleds &mdash; ' + list.length + "</h2>";
+    if (!list.length) html += '<p class="empty">No sleds yet. Add one below. When you use it, the Jetting, Track fit and Calculators tabs start from your setup, and Maintenance keeps a record for that sled.</p>';
+    list.forEach(function (g) {
+      var gm = byId[g.modelId];
+      html += '<div class="mod' + (g.id === act ? " gact" : "") + '"><div class="mod-top"><b>' + esc(g.name) + "</b> " +
+        (g.id === act ? '<span class="tag tag-ok">in use</span>' : "") + "</div>" +
+        "<p>" + (gm ? gm.year + " " + esc(gm.variant) + " (" + esc(gm.code) + ")" : esc(g.modelId)) + " &middot; " + esc(sledSummary(g)) + "</p>" +
+        (g.notes ? '<p class="mod-src">' + esc(g.notes) + "</p>" : "") +
+        '<div class="btnrow"><button type="button" class="btn small primary" data-guse="' + esc(g.id) + '">Use</button>' +
+        '<button type="button" class="btn small" data-gedit="' + esc(g.id) + '">Edit</button>' +
+        '<button type="button" class="btn small" data-gdel="' + esc(g.id) + '">Delete</button></div></div>';
+    });
+    html += "</section>";
+
+    var v = function (k, d) { return e && e[k] != null && e[k] !== "" ? e[k] : d; };
+    var G = S.gearRatios;
+    html += '<section class="group" id="gForm"><h2>' + (e ? "Edit " + esc(e.name) : "Add a sled") + '</h2><div class="calc">' +
+      '<div class="field"><label for="gName">Name</label><input id="gName" type="text" maxlength="40" placeholder="e.g. Dad’s 91" value="' + esc(v("name", "")) + '"></div>' +
+      '<div class="field"><label for="gModel">Model</label><select id="gModel">' + MODELS.map(function (x) {
+        return '<option value="' + esc(x.id) + '"' + (x.id === m.id ? " selected" : "") + ">" + x.year + " " + esc(x.variant) + " (" + esc(x.code) + ")</option>";
+      }).join("") + "</select></div>" +
+      '<div class="field"><label for="gPipe">Exhaust</label><select id="gPipe">' + Object.keys(PIPES).map(function (k) {
+        return '<option value="' + k + '"' + (k === v("pipe", "stock") ? " selected" : "") + ">" + esc(PIPES[k].label) + "</option>";
+      }).join("") + "</select></div>" +
+      '<div class="field"><label for="gMain">Main jets (if changed)</label><input id="gMain" type="text" inputmode="decimal" placeholder="stock" value="' + esc(v("main", "")) + '"></div>' +
+      '<div class="field"><label for="gLen">Track length</label><select id="gLen"><option value="">Stock</option>' + opts([116, 121, 133, 136, 141, 144], v("trackLen", ""), function (x) { return x + '"'; }) + "</select></div>" +
+      '<div class="field"><label for="gLug">Lug height</label><select id="gLug"><option value="">Stock</option>' + opts([0.5, 0.625, 0.75, 1.0, 1.125, 1.25, 1.5, 1.75, 2.0], v("lug", ""), function (x) { return x + '"'; }) + "</select></div>" +
+      '<div class="field"><label for="gTeeth">Drivers</label><select id="gTeeth">' + opts([8, 7], v("teeth", 8), function (x) { return x + "-tooth" + (x === 8 ? " (stock)" : ""); }) + "</select></div>" +
+      '<div class="field"><label for="gDrive">Top sprocket</label><select id="gDrive">' + opts(G.drive, v("drive", G.stdDrive), function (x) { return x + "T" + (x === G.stdDrive ? " (std)" : ""); }) + "</select></div>" +
+      '<div class="field"><label for="gDriven">Bottom sprocket</label><select id="gDriven">' + opts(G.driven.map(function (r) { return r.teeth; }), v("driven", G.stdDriven), function (x) { return x + "T" + (x === G.stdDriven ? " (std)" : ""); }) + "</select></div>" +
+      "</div>" +
+      '<div class="field"><label for="gNotes">Other changes</label><textarea id="gNotes" class="field-ta" placeholder="Clutch springs and weights, reeds, skis, risers&hellip;">' + esc(v("notes", "")) + "</textarea></div>" +
+      '<div class="btnrow"><button type="button" class="btn primary" id="gSave">' + (e ? "Save changes" : "Add sled") + "</button>" +
+      (e ? '<button type="button" class="btn" id="gCancel">Cancel</button>' : "") + "</div></section>";
+    main.innerHTML = html;
+
+    document.getElementById("gSave").addEventListener("click", function () {
+      var val = function (id) { return document.getElementById(id).value.trim(); };
+      var l = garageLoad();
+      var rec = { id: e ? e.id : "s" + Date.now(), name: val("gName") || "My sled", modelId: val("gModel"), pipe: val("gPipe"),
+                  main: val("gMain").replace(/^#/, ""), trackLen: val("gLen"), lug: val("gLug"), teeth: val("gTeeth"),
+                  drive: val("gDrive"), driven: val("gDriven"), notes: val("gNotes") };
+      if (e) l = l.map(function (x) { return x.id === e.id ? rec : x; }); else l.push(rec);
+      garageSave(l); state.garageEdit = null;
+      if (!e || store.get("garageActive", null) === rec.id) useSled(rec);
+      toast(e ? "Saved" : "Added and in use"); render();
+    });
+    var cancel = document.getElementById("gCancel");
+    if (cancel) cancel.addEventListener("click", function () { state.garageEdit = null; render(); });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-guse]"), function (b) {
+      b.addEventListener("click", function () {
+        var g = garageLoad().filter(function (x) { return x.id === b.getAttribute("data-guse"); })[0];
+        if (g) { useSled(g); toast("Using " + g.name); selectView("specs"); }
+      });
+    });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-gedit]"), function (b) {
+      b.addEventListener("click", function () {
+        state.garageEdit = b.getAttribute("data-gedit"); render();
+        document.getElementById("gForm").scrollIntoView({ block: "start" });
+      });
+    });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-gdel]"), function (b) {
+      b.addEventListener("click", function () {
+        if (!window.confirm("Delete this sled and its maintenance record?")) return;
+        var id = b.getAttribute("data-gdel"), svc = store.get("service", {});
+        delete svc["g:" + id]; store.set("service", svc);
+        garageSave(garageLoad().filter(function (x) { return x.id !== id; }));
+        if (store.get("garageActive", null) === id) store.set("garageActive", null);
+        render();
+      });
+    });
   }
 
   /* ---------------- carb swap ---------------- */

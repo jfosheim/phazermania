@@ -478,6 +478,525 @@
     "finalWord": "The manual is explicit that these are guidelines only, that they vary with altitude, temperature and snow conditions, and that the condition of the spark plugs is the determining factor when changing jets."
   },
 
+  "maintenance": {
+    "source": "Yamaha LIT-12618-PZ-50 (1990 PZ480P/EP), Periodic maintenance table and Lubrication intervals, pp.2-1 to 2-3. The 1984-89 schedule in the Clymer manual (Chapter Three, Tables 1 and 2) uses the same 20/40/80-hour intervals and the same items.",
+    "intervals": {
+      "20": {
+        "label": "Every 20 hrs or 400 km (250 mi)",
+        "hours": 20,
+        "km": 400
+      },
+      "40": {
+        "label": "Every 40 hrs or 800 km (500 mi)",
+        "hours": 40,
+        "km": 800
+      },
+      "80": {
+        "label": "Every 80 hrs or 1,600 km (1,000 mi)",
+        "hours": 80,
+        "km": 1600
+      },
+      "season": {
+        "label": "Once a season"
+      },
+      "when": {
+        "label": "When necessary"
+      }
+    },
+    "headNote": "Retighten the cylinder head every 10 hours from first use (footnote to Yamaha's table). Clymer: retighten the head nuts after the 10-hour break-in.",
+    "breakIn": "After a rebuild: first 10 hours at no more than 3/4 throttle, vary the speed, avoid hard acceleration and wet snow, then check every engine and chassis fastener (Clymer, Chapter Three).",
+    "ventureNote": "The Venture's touring-chassis items (rear suspension, battery, lights) are not in this table; no VT480 manual has been checked.",
+    "items": [
+      {
+        "group": "Engine",
+        "item": "Tightness of bolts and nuts",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Bends, cracks and wear",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Abnormal noise",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Fuel and pulse hoses: loose connections, breaks",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Oil hoses: loose connections, breaks",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Oil delivery hoses: loose connections, breaks",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Manual rope starter",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Carburettor: starter (choke) lever operation",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Carburettor: pilot screw",
+        "at": [
+          "when"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Carburettor: idle speed",
+        "at": [
+          "when"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Carburettor: throttle valve synchronization",
+        "at": [
+          "40",
+          "season"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Oil pump operation and adjustment",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Ignition timing",
+        "at": [
+          "season"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Engine compression",
+        "at": [
+          "80"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Cylinder head and exhaust pipe decarbonization",
+        "at": [
+          "season"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Fan belt tension and damage",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Engine",
+        "item": "Spark plug condition, gap and cleaning",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Tightness of bolts and nuts",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Wear on slide runners",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Primary drive system (clutch)",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "V-belt",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Secondary drive system",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Sheave distance",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Sheave offset",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Brake pad wear",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Brake operation and adjustment",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Guide wheel rubber",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Wear of drive track wheel sprockets",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Drive track adjustment",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Breaks in drive track",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Bends in front and rear axles",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Lock washer check",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Drive chain adjustment",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Drive",
+        "item": "Drive chain oil level",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Tightness of bolts and nuts",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Bends and cracks",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Welded and riveted joints",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Ski adjustment",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Breaks in fuel tank",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Clean fuel tank",
+        "at": [
+          "season"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Fuel filter",
+        "at": [
+          "season"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Fuel pipe: loose connections, breaks",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Breaks in oil tank",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Body",
+        "item": "Oil filter",
+        "at": [
+          "season"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Wear and breaks in wire covering",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Breaks in high-tension (plug) leads",
+        "at": [
+          "20"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Voltage regulator working voltage",
+        "at": [
+          "season"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Engine stop switch operation",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Throttle override system operation",
+        "at": [
+          "40",
+          "season"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Headlight",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Taillight",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Brake light",
+        "at": [
+          "40"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Battery fluid, specific gravity and breather pipe (electric start)",
+        "at": [
+          "20",
+          "season"
+        ]
+      },
+      {
+        "group": "Electrical",
+        "item": "Grip warmer switch (electric start)",
+        "at": [
+          "season"
+        ]
+      }
+    ],
+    "lube": [
+      {
+        "group": "Engine",
+        "item": "Starter case",
+        "at": [
+          "season"
+        ],
+        "lube": "Aeroshell grease #7A or Esso Beacon 325"
+      },
+      {
+        "group": "Engine",
+        "item": "Oil pump control box",
+        "at": [
+          "80"
+        ],
+        "lube": "Aeroshell grease #7A or Esso Beacon 325"
+      },
+      {
+        "group": "Engine",
+        "item": "Pump drive cover",
+        "at": [
+          "80"
+        ],
+        "lube": "Aeroshell grease #7A or Esso Beacon 325"
+      },
+      {
+        "group": "Engine",
+        "item": "Oil in the oil tank",
+        "at": [
+          "when"
+        ],
+        "lube": "Yamalube 2-cycle oil"
+      },
+      {
+        "group": "Drive",
+        "item": "Secondary shaft and sliding sheave",
+        "at": [
+          "40"
+        ],
+        "lube": "Molybdenum disulfide snowmobile grease"
+      },
+      {
+        "group": "Drive",
+        "item": "Front axle housing",
+        "at": [
+          "40"
+        ],
+        "lube": "Light all-purpose grease"
+      },
+      {
+        "group": "Drive",
+        "item": "Slide rail shafts 1 and 2",
+        "at": [
+          "80"
+        ],
+        "lube": "Light all-purpose grease"
+      },
+      {
+        "group": "Drive",
+        "item": "Drive chain oil replacement",
+        "at": [
+          "40"
+        ],
+        "lube": "Gear oil API GL-3, SAE 75 or 80"
+      },
+      {
+        "group": "Body",
+        "item": "Steering column lower bearing",
+        "at": [
+          "40"
+        ],
+        "lube": "Light all-purpose grease"
+      },
+      {
+        "group": "Body",
+        "item": "Steering column upper bearing",
+        "at": [
+          "40"
+        ],
+        "lube": "Motor oil"
+      },
+      {
+        "group": "Body",
+        "item": "Steering links",
+        "at": [
+          "40"
+        ],
+        "lube": "Light all-purpose grease"
+      },
+      {
+        "group": "Body",
+        "item": "Brake wire end stopper and brake lever",
+        "at": [
+          "40",
+          "season"
+        ],
+        "lube": "Esso Beacon 325"
+      },
+      {
+        "group": "Body",
+        "item": "Telescopic strut suspension",
+        "at": [
+          "season"
+        ],
+        "lube": "Esso Beacon 325"
+      }
+    ]
+  },
   "calc": {
     "clutchRange": { "low": 3.5, "high": 1.0, "source": "Clymer 1984-89 Yamaha snowmobile manual, Quick Reference Data, Transmission specifications: V-belt automatic, ratio range 3.5:1 to 1:1 (PZ480)." },
     "driverPitchIn": 2.52,
