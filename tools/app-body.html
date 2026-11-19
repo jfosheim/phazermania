@@ -341,6 +341,17 @@
          border-radius: 2px; background: var(--surface); color: var(--ink); }
   .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; }
   .linkbtn:hover { text-decoration: underline; }
+  details.ts { border: 1px solid var(--line); background: var(--surface); margin: 0 0 8px; }
+  details.ts summary { cursor: pointer; padding: 11px 14px; font-weight: 600; font-size: 14px; list-style-position: inside; }
+  details.ts[open] summary { border-bottom: 1px solid var(--line-soft); }
+  details.ts ol { margin: 10px 0 10px; padding: 0 16px 0 34px; font-size: 13.5px; line-height: 1.5; }
+  details.ts ol li { margin: 4px 0; }
+  details.ts .note { margin: 0 14px 12px; }
+  .swh { margin: 10px 14px 4px; font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .swl { list-style: none; margin: 0 14px 10px; padding: 0; font-size: 13px; }
+  .swl li { padding: 3px 0; }
+  .swk .pn { white-space: nowrap; font-size: 11.5px; }
+  details.ts summary .tag { margin-left: 6px; font-weight: 500; }
   .btn.small { padding: 5px 10px; font-size: 12px; }
   .gstrip { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; align-items: baseline; padding: 8px 12px; margin-bottom: 14px; background: var(--accent-soft); border-left: 3px solid var(--accent); font-size: 13px; }
   .mod.gact { border-left: 3px solid var(--ok); padding-left: 12px; }
@@ -540,6 +551,9 @@
     { id: "changes", label: "Year changes" },
     { id: "mods",    label: "Mods & upgrades" },
     { id: "calc",    label: "Calculators" },
+    { id: "ident",   label: "Which sled is this?" },
+    { id: "trouble", label: "Troubleshooting" },
+    { id: "swap",    label: "Interchange" },
     { id: "service", label: "Maintenance" },
     { id: "garage",  label: "My garage" },
     { id: "order",   label: "Order list" },
@@ -835,6 +849,9 @@
     if (state.view === "mods")    return renderMods(main);
     if (state.view === "calc")    return renderCalc(main);
     if (state.view === "service") return renderService(main);
+    if (state.view === "trouble") return renderTrouble(main);
+    if (state.view === "ident")   return renderIdent(main);
+    if (state.view === "swap")    return renderSwap(main);
     if (state.view === "garage")  return renderGarage(main);
   }
 
@@ -1359,7 +1376,8 @@
   var MOD_TAGS = {
     forum:    '<span class="tag tag-unconf" title="One or more riders reporting their own sled; not a Yamaha figure">forum-reported</span>',
     press:    '<span class="tag tag-alt" title="Period magazine figure">press</span>',
-    official: '<span class="tag tag-ok" title="Manufacturer document or fitment chart">official</span>'
+    official: '<span class="tag tag-ok" title="Manufacturer document or fitment chart">official</span>',
+    retailer: '<span class="tag tag-alt" title="A parts seller\u2019s fitment list, not Yamaha\u2019s">retailer listing</span>'
   };
   function renderMods(main) {
     var M = S.mods;
@@ -1417,7 +1435,7 @@
       '</div><div id="gResult"></div>' +
       '<p class="note">Speed = engine rpm &divide; clutch ratio &divide; chaincase ratio &times; driver circumference (teeth &times; ' + C.driverPitchIn + '&quot; pitch). ' +
       "It is the track speed with no belt slip and the clutch fully shifted out. " + esc(C.clutchRange.source) +
-      " Real top speed is lower; use this to compare one setup with another.</p></section>";
+      " Real top speed is lower; use this to compare one setup with another. " + esc(C.stGearing) + "</p></section>";
 
     html += '<section class="group" id="mixCalc"><h2>Premix and oil</h2>' +
       '<div class="prov">' + esc(C.autolube) + "</div>" +
@@ -1738,6 +1756,187 @@
         render();
       });
     });
+  }
+
+
+  /* ---------------- troubleshooting ----------------
+     Symptom -> checks, in the manual's own order. A filter box narrows it
+     down; each symptom opens to its checks. */
+  function renderTrouble(main) {
+    var T = S.troubleshooting, q = state.tsq || "";
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Troubleshooting</h2>' +
+      '<div class="sheet-sub"><span>Pick the symptom, then work down the checks in order</span></div></div>';
+    html += '<div class="prov"><b>Source:</b> ' + esc(T.source) + "</div>";
+    html += '<div class="field" style="margin-bottom:14px"><label for="tsQ">Filter symptoms</label><input id="tsQ" type="search" placeholder="e.g. bog, belt, spark, ratchet" value="' + esc(q) + '"></div>';
+    html += '<nav class="modnav printhide">' + T.groups.map(function (g) {
+      return '<a href="#" data-jump="ts-' + esc(g.id) + '">' + esc(g.title) + "</a>";
+    }).join("") + '<a href="#" data-jump="ts-elec">Resistance table</a></nav><div id="tsBody"></div>';
+    html += '<section class="group" id="ts-elec"><h2>' + esc(T.electrical.title) + ' <span class="tag tag-ok">manual</span></h2><div class="tablewrap"><table><tbody>' +
+      T.electrical.rows.map(function (r) { return "<tr><td>" + esc(r[0]) + '</td><td class="mono">' + esc(r[1]) + "</td></tr>"; }).join("") +
+      '</tbody></table></div><p class="note">' + esc(T.electrical.note) + "</p></section>";
+    main.innerHTML = html;
+    var draw = function () {
+      var words = (state.tsq || "").toLowerCase().split(/\s+/).filter(Boolean), shown = 0;
+      var out = T.groups.map(function (g) {
+        var items = g.items.filter(function (it) {
+          var hay = (it.symptom + " " + it.checks.join(" ") + " " + (it.note || "")).toLowerCase();
+          return words.every(function (w) { return hay.indexOf(w) >= 0; });
+        });
+        shown += items.length;
+        if (!items.length) return "";
+        return '<section class="group" id="ts-' + esc(g.id) + '"><h2>' + esc(g.title) + "</h2>" + items.map(function (it) {
+          return '<details class="ts"' + (words.length ? " open" : "") + "><summary>" + esc(it.symptom) + "</summary><ol>" +
+            it.checks.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("") + "</ol>" +
+            (it.note ? '<p class="note">' + esc(it.note) + "</p>" : "") + "</details>";
+        }).join("") + "</section>";
+      }).join("");
+      document.getElementById("tsBody").innerHTML = shown ? out : '<p class="empty">No symptom matches that. Try one word, such as "belt" or "spark".</p>';
+    };
+    document.getElementById("tsQ").addEventListener("input", function (e) { state.tsq = e.target.value; draw(); });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-jump]"), function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var el = document.getElementById(a.getAttribute("data-jump"));
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+    draw();
+  }
+
+
+  /* ---------------- parts interchange ----------------
+     Compares the parts index for two models section by section: a part number
+     both list is a direct swap by Yamaha's catalogue. */
+  var KEYPARTS = [["track", "Track"], ["slide", "Slide (hyfax)"], ["belt", "Drive belt"], ["primarySpring", "Primary spring"],
+                  ["cdi", "CDI unit"], ["coil", "Ignition coil"], ["brakeDisc", "Brake disc"]];
+  function partsBySection(m) {
+    var out = {};
+    (P.m[m.partzilla] || []).forEach(function (r) {
+      var f = r.split("|"), sec = P.s[+f[0]] || f[0];
+      (out[sec] = out[sec] || []);
+      if (out[sec].indexOf(f[2]) < 0) out[sec].push(f[2]);
+    });
+    return out;
+  }
+  function secTitle(s) { s = s.replace(/-(\d)$/, " $1").replace(/-/g, " "); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function renderSwap(main) {
+    var I = S.interchange, a = byId[state.modelId];
+    var bId = state.swapB && byId[state.swapB] && state.swapB !== a.id ? state.swapB : (MODELS.filter(function (x) { return x.id !== a.id && x.family === a.family; })[0] || MODELS[0]).id;
+    var b = byId[bId];
+    var modelOpts = function (sel) {
+      return MODELS.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === sel ? " selected" : "") + ">" + x.year + " " + esc(x.variant) + " (" + esc(x.code) + ")</option>"; }).join("");
+    };
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Parts interchange</h2>' +
+      '<div class="sheet-sub"><span>Which parts swap between two sleds, by Yamaha&rsquo;s part numbers</span></div></div>';
+    html += '<div class="prov"><b>How to read this:</b> ' + esc(I.note) + " The comparison covers the " + P.s.length + " parts sections in this app&rsquo;s index, not every part on the sled.</div>";
+    html += '<section class="group"><h2>Compare</h2><div class="calc">' +
+      '<div class="field"><label for="swA">Your sled</label><select id="swA">' + modelOpts(a.id) + "</select></div>" +
+      '<div class="field"><label for="swB">Donor or other sled</label><select id="swB">' + modelOpts(b.id) + "</select></div></div>";
+
+    var A = partsBySection(a), B = partsBySection(b), same = 0, diff = 0;
+    var keyRows = KEYPARTS.map(function (k) {
+      var x = a[k[0]], y = b[k[0]], eq = x && y && x === y;
+      if (x && y) { if (eq) same++; else diff++; }
+      return "<tr><td><b>" + k[1] + "</b><br>" + (eq ? '<span class="tag tag-ok">same</span>' : '<span class="tag tag-std">differs</span>') + "</td>" +
+        '<td class="mono">' + (x ? '<button class="pn" data-pn="' + esc(x) + '">' + esc(x) + "</button>" : "&mdash;") + "</td>" +
+        '<td class="mono">' + (eq ? '<span class="muted-s">same</span>' : y ? '<button class="pn" data-pn="' + esc(y) + '">' + esc(y) + "</button>" : "&mdash;") + "</td></tr>";
+    }).join("");
+    var secs = P.s.filter(function (s) { return A[s] || B[s]; });
+    var secHtml = secs.map(function (s) {
+      var pa = A[s] || [], pb = B[s] || [];
+      var both = pa.filter(function (pn) { return pb.indexOf(pn) >= 0; });
+      var onlyA = pa.filter(function (pn) { return pb.indexOf(pn) < 0; }), onlyB = pb.filter(function (pn) { return pa.indexOf(pn) < 0; });
+      same += both.length; diff += onlyA.length + onlyB.length;
+      var li = function (pn) { return '<li><button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + "</button> " + esc(P.d[pn] || "") + "</li>"; };
+      var verdict = !onlyA.length && !onlyB.length ? '<span class="tag tag-ok">all the same</span>' :
+        !both.length ? '<span class="tag tag-std">nothing shared</span>' : '<span class="tag tag-alt">' + both.length + " shared, " + (onlyA.length + onlyB.length) + " differ</span>";
+      return '<details class="ts"><summary>' + esc(secTitle(s)) + " " + verdict + "</summary>" +
+        (onlyA.length ? '<p class="swh">Only on your ' + a.year + " " + esc(a.variant) + '</p><ul class="swl">' + onlyA.map(li).join("") + "</ul>" : "") +
+        (onlyB.length ? '<p class="swh">Only on the ' + b.year + " " + esc(b.variant) + '</p><ul class="swl">' + onlyB.map(li).join("") + "</ul>" : "") +
+        (both.length ? '<p class="swh">Same on both</p><ul class="swl">' + both.map(li).join("") + "</ul>" : "") + "</details>";
+    }).join("");
+    html += '<div class="result"><div class="result-top"><div><span class="biglabel">Same part number</span><span class="big">' + same + '</span></div>' +
+      '<div><span class="biglabel">Different</span><span class="big">' + diff + "</span></div></div></div>";
+    html += '<div class="tablewrap" style="margin-top:14px"><table class="swk"><thead><tr><th>Key part</th><th>' + a.year + " " + esc(a.code) + "</th><th>" + b.year + " " + esc(b.code) + "</th></tr></thead><tbody>" + keyRows + "</tbody></table></div>";
+    html += '<div style="margin-top:14px">' + secHtml + "</div></section>";
+
+    html += '<section class="group"><h2>Worth knowing</h2>' + I.facts.map(function (it) {
+      return '<div class="mod"><div class="mod-top"><b>' + esc(it.title) + "</b> " + (MOD_TAGS[it.tag] || "") + "</div><p>" + esc(it.text) + "</p>" +
+        '<p class="mod-src">Sources: ' + it.sources.map(function (x) {
+          return x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.label) + "</a>" : esc(x.label);
+        }).join(" &middot; ") + "</p></div>";
+    }).join("") + "</section>";
+    main.innerHTML = html;
+    wirePnButtons(main);
+    document.getElementById("swA").addEventListener("change", function (e) { state.modelId = e.target.value; renderList(); });
+    document.getElementById("swB").addEventListener("change", function (e) { state.swapB = e.target.value; render(); });
+  }
+
+
+  /* ---------------- which sled is this? ----------------
+     Serial-number prefixes read from the manuals, then a feature filter over
+     the model list for the years the manuals do not cover. */
+  function renderIdent(main) {
+    var D = S.identify, f = state.ident || (state.ident = { sn: "", seat: "", start: "", len: "" });
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Which sled is this?</h2>' +
+      '<div class="sheet-sub"><span>From the serial number if the manuals list it, otherwise from what you can see</span></div></div>';
+    html += '<section class="group"><h2>Serial number <span class="tag tag-ok">manual</span></h2>' +
+      '<div class="field"><label for="idSn">Frame or engine number</label><input id="idSn" type="text" autocomplete="off" autocapitalize="characters" placeholder="e.g. 88F-012345" value="' + esc(f.sn) + '"></div>' +
+      '<div id="idSnOut"></div><p class="note">' + esc(D.where) + " " + esc(D.note) + "</p></section>";
+    var sel = function (id, label, val, list) {
+      return '<div class="field"><label for="' + id + '">' + label + '</label><select id="' + id + '"><option value="">Not sure</option>' +
+        list.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === val ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></div>";
+    };
+    html += '<section class="group"><h2>By what you can see</h2><div class="calc">' +
+      sel("idSeat", "Seat", f.seat, [["one", "One rider"], ["two", "Two-up touring with backrest"]]) +
+      sel("idStart", "Electric start", f.start, [["electric", "Yes (key start)"], ["recoil", "No, pull start only"]]) +
+      sel("idLen", "Track length", f.len, [["116", '116"'], ["121", '121"'], ["136", '136"']]) +
+      '</div><div id="idOut"></div><p class="note">' + esc(D.gaps) + " Measure the track around its outside, or count the windows: the first-generation 116&quot; track has 46. " + esc(D.trackLenNote) + "</p></section>";
+    html += '<p class="note">Sources: ' + esc(D.source) + "</p>";
+    main.innerHTML = html;
+
+    var draw = function () {
+      var sn = f.sn.toUpperCase().replace(/[^0-9A-Z]/g, ""), out = "";
+      if (sn.length >= 3) {
+        var hit = D.prefixes.filter(function (x) { return x.prefix === sn.slice(0, 3); })[0];
+        if (hit && hit.modelId && byId[hit.modelId]) {
+          var mm = byId[hit.modelId];
+          out = '<div class="verdict ok"><span class="vlabel">' + esc(hit.prefix) + "</span><span><b>" + mm.year + " " + esc(mm.variant) + " (" + esc(mm.code) + ")</b>. Production started at " + esc(hit.start) + '. <button type="button" class="linkbtn" data-idgo="' + esc(mm.id) + '">Open its spec sheet</button></span></div>';
+        } else if (hit) {
+          out = '<div class="verdict warn"><span class="vlabel">' + esc(hit.prefix) + "</span><span>" + esc(hit.label) + ", which is outside the 1986&ndash;1995 range this app covers.</span></div>";
+        } else {
+          out = '<div class="verdict warn"><span class="vlabel">Not listed</span><span>' + esc(sn.slice(0, 3)) + " is not in the manuals checked. " + esc(D.gaps) + "</span></div>";
+        }
+      }
+      document.getElementById("idSnOut").innerHTML = out;
+      var c = MODELS.filter(function (m) {
+        var len = D.trackLenOverride[m.id] || (S.tracks[m.track] || {}).lengthIn;
+        if (f.seat === "two" && m.family !== "Venture") return false;
+        if (f.seat === "one" && m.family === "Venture") return false;
+        if (f.start && m.start !== f.start) return false;
+        if (f.len && String(len) !== f.len) return false;
+        return true;
+      });
+      var o;
+      if (!c.length) o = '<div class="verdict warn"><span class="vlabel">No match</span><span>No 1986&ndash;1995 model has that combination as it left the factory. A track or skid may have been changed; try &ldquo;Not sure&rdquo; for the track.</span></div>';
+      else {
+        o = '<p class="note" style="margin:6px 0">' + c.length + " model" + (c.length > 1 ? "s" : "") + " match" + (c.length > 1 ? "" : "es") + ".</p>" +
+          '<div class="tablewrap"><table><thead><tr><th>Year</th><th>Model</th><th>Code</th><th>Serial starts</th></tr></thead><tbody>' + c.map(function (m) {
+            var px = D.prefixes.filter(function (x) { return x.modelId === m.id; })[0];
+            return '<tr><td class="mono">' + m.year + '</td><td><button type="button" class="linkbtn" style="font-size:13px" data-idgo="' + esc(m.id) + '">' + esc(m.variant) + '</button></td><td class="mono">' + esc(m.code) + '</td><td class="mono">' + (px ? esc(px.start) : '<span class="muted-s">not listed</span>') + "</td></tr>";
+          }).join("") + "</tbody></table></div>";
+        if (c.length > 1) o += '<p class="note">To tell the years apart, compare part numbers on the sled with the <b>Year changes</b> tab (drive belt, CDI unit and primary spring change between years), or use <b>Interchange</b> to compare two candidates.</p>';
+      }
+      document.getElementById("idOut").innerHTML = o;
+      Array.prototype.forEach.call(main.querySelectorAll("[data-idgo]"), function (b) {
+        b.addEventListener("click", function () { state.modelId = b.getAttribute("data-idgo"); state.family = "All"; state.view = "specs"; selectView("specs"); renderList(); });
+      });
+    };
+    document.getElementById("idSn").addEventListener("input", function (e) { f.sn = e.target.value; draw(); });
+    [["idSeat", "seat"], ["idStart", "start"], ["idLen", "len"]].forEach(function (p) {
+      document.getElementById(p[0]).addEventListener("change", function (e) { f[p[1]] = e.target.value; draw(); });
+    });
+    draw();
   }
 
   /* ---------------- carb swap ---------------- */
