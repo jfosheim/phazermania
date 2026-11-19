@@ -179,6 +179,22 @@
     box-shadow: inset 0 0 0 1px var(--accent);
   }
   td.jcell.is-hit .tag { background: rgba(255,255,255,.22); color: var(--chipfg); }
+  /* Mods & upgrades tab. */
+  .modnav { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 22px; }
+  .modnav a {
+    padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px;
+    font-size: 12.5px; color: var(--ink); text-decoration: none;
+  }
+  .modnav a:hover { border-color: var(--accent); color: var(--accent); }
+  .mod { padding: 12px 0 14px; border-bottom: 1px solid var(--line-soft); max-width: 72ch; }
+  .mod:last-child { border-bottom: 0; }
+  .mod-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .mod p { margin: 4px 0 0; line-height: 1.5; }
+  .mod-warn { border-left: 3px solid var(--flag); padding-left: 12px; }
+  .mod-pns { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .mod-src { font-size: 12px; color: var(--muted); }
+  .mod-src a { color: var(--muted); }
+
   /* 1984-89 chart: one chip per arrow, wrapping on a phone. */
   .jrange {
     display: inline-block; margin: 2px 6px 2px 0; padding: 3px 8px;
@@ -517,6 +533,7 @@
     { id: "torque",  label: "Torque & springs" },
     { id: "setup",   label: "Clutch, gearing & suspension" },
     { id: "changes", label: "Year changes" },
+    { id: "mods",    label: "Mods & upgrades" },
     { id: "order",   label: "Order list" },
     { id: "log",     label: "Tuning log" }
   ];
@@ -803,6 +820,7 @@
     if (state.view === "torque")  return renderTorque(main);
     if (state.view === "setup")   return renderSetup(main);
     if (state.view === "changes") return renderChanges(main);
+    if (state.view === "mods")    return renderMods(main);
   }
 
   /* unconfirmed: the part number is on the spec sheet but not on this model's own
@@ -1206,9 +1224,11 @@
 
     if (pipe.steps) {
       h += '<div class="verdict"><span class="vlabel">Nozzle</span><span>A pipe leans the midrange, which the main jet does not reach. ' +
-        "Yamaha’s richer nozzles are <b>1A</b> " + esc(carb.mainNozzleAlternates[0].pn) + " and <b>2A</b> " +
-        esc(carb.mainNozzleAlternates[1].pn) + ", with metering nozzle " + esc(carb.meteringNozzleAlt.pn) +
-        " — the 1996 service-bulletin kit. Stock is 3A " + esc(carb.mainNozzleStd.pn) + ".</span></div>";
+        "Riders fit Yamaha’s two-hole primary (metering) nozzle <b>" + esc(carb.meteringNozzleAlt.pn) + "</b> first, then the <b>2A</b> main nozzle " +
+        esc(carb.mainNozzleAlternates[1].pn) + " if it is still lean; that pair is reported as the richest combination. The 1A " +
+        esc(carb.mainNozzleAlternates[0].pn) + " is the other bulletin option. Stock is 3A " + esc(carb.mainNozzleStd.pn) + ".</span></div>";
+      h += '<div class="verdict warn"><span class="vlabel">Burn-down risk</span><span>Forum reports include a piston burned within six miles on 148 mains with the two-hole primary, ' +
+        "and melted pistons traced to belt dust blocking the carburettor vent tubes. Read the plugs after every change. More on the <b>Mods &amp; upgrades</b> tab.</span></div>";
     }
 
     document.getElementById("jResult").innerHTML = h;
@@ -1248,7 +1268,7 @@
           return '<option value="' + v + '"' + (v === t.lengthIn ? " selected" : "") + ">" + v + '"</option>';
         }).join("") + "</select></div>" +
       '<div class="field"><label for="tLug">Lug height (in)</label><select id="tLug">' +
-        [0.5, 0.625, 0.75, 1.0, 1.125, 1.25, 1.5, 1.75].map(function (v) {
+        [0.5, 0.625, 0.75, 1.0, 1.125, 1.25, 1.5, 1.75, 2.0].map(function (v) {
           return '<option value="' + v + '"' + (v === t.lugIn ? " selected" : "") + ">" + v + '"</option>';
         }).join("") + "</select></div>" +
       '<div class="field"><label for="tDriver">Drivers</label><select id="tDriver">' +
@@ -1293,25 +1313,70 @@
         " Budget for the skid, not just the track.</span></div>";
     }
 
-    /* Lug: the numbers builders report on this chassis. */
+    /* Lug: the numbers builders report on this chassis (forum consensus, see Mods & upgrades). */
     if (lug <= 0.75) {
       h += '<div class="verdict ok"><span class="vlabel">Lug OK</span><span>' + lug +
         '" is at or near stock height. No clearance concerns.</span></div>';
-    } else if (lug <= 1.125) {
-      h += '<div class="verdict ok"><span class="vlabel">Lug OK</span><span>Up to 1⅛" is reported to have <b>plenty of room</b> on this chassis with stock 8-tooth drivers.</span></div>';
     } else if (lug <= 1.25) {
-      h += '<div class="verdict warn"><span class="vlabel">Tight</span><span>1¼" fits, but it’s reported <b>tight with the stock 8-tooth drivers</b> — installation especially. Check clearance at the front of the tunnel before you commit.</span></div>';
-    } else {
-      h += '<div class="verdict stop"><span class="vlabel">Needs work</span><span>At ' + lug +
-        '" you need <b>7-tooth drivers</b> for clearance up front, and getting it in takes a <b>tunnel extension</b> and real effort. 1½" is the practical ceiling people report on this chassis.</span></div>';
+      h += '<div class="verdict ok"><span class="vlabel">Lug OK</span><span>Up to 1&frac14;" is the most-reported <b>safe choice on the stock 8-tooth drivers</b>. ' +
+        (lug === 1.25 ? "It is snug at the front of the tunnel, and the stock drivers are awkward to refit, but riders run it widely." : "Riders report plenty of room.") + "</span></div>";
+    } else if (lug <= 1.5) {
       if (teeth === 8) {
-        h += '<div class="verdict stop"><span class="vlabel">Driver conflict</span><span>You have 8-tooth selected. Switch to 7-tooth drivers for this lug height.</span></div>';
+        h += '<div class="verdict warn"><span class="vlabel">At the limit</span><span>1&frac12;" on 8-tooth drivers is reported to fit with about 3/8" to spare on one sled, ' +
+          "but others say it slaps the tunnel and bulkhead under compression or when the track balloons. Drop brackets, or lowering the front arm about 5/8\", buy room. 7-tooth drivers make it comfortable.</span></div>";
+      } else {
+        h += '<div class="verdict ok"><span class="vlabel">Lug OK</span><span>1&frac12;" on 7-tooth drivers is a reported, workable combination. 7-tooth drivers gear the sled down about as much as two teeth off the top gear.</span></div>';
+      }
+    } else {
+      h += '<div class="verdict ' + (teeth === 7 && lug <= 1.75 ? "warn" : "stop") + '"><span class="vlabel">' + (teeth === 7 && lug <= 1.75 ? "Tight" : "Needs work") + "</span><span>At " + lug +
+        '" you need <b>7-tooth drivers</b>' + (lug > 1.75 ? ", and riders who run 2\" paddles have trimmed the front tunnel metal" : "; riders report 1&frac34;\" fits on them, tightly") +
+        ". Snow evacuation and the track's bend over the smaller drivers both suffer.</span></div>";
+      if (teeth === 8) {
+        h += '<div class="verdict stop"><span class="vlabel">Driver conflict</span><span>You have 8-tooth selected. Nobody reports clearing more than 1&frac12;" on the stock drivers.</span></div>';
       }
     }
-    if (lug >= 1.25 && teeth === 7) {
-      h += '<div class="verdict ok"><span class="vlabel">Drivers right</span><span>7-tooth drivers are the correct call for a tall lug on this chassis.</span></div>';
-    }
+    h += '<p class="note">Lug clearances are forum-reported, from riders who have done the swap; Yamaha and Camoplast publish no maximum. Sources and detail on the <b>Mods &amp; upgrades</b> tab.</p>';
     document.getElementById("tResult").innerHTML = h;
+  }
+
+  /* ---------------- mods & upgrades ---------------- */
+  var MOD_TAGS = {
+    forum:    '<span class="tag tag-unconf" title="One or more riders reporting their own sled; not a Yamaha figure">forum-reported</span>',
+    press:    '<span class="tag tag-alt" title="Period magazine figure">press</span>',
+    official: '<span class="tag tag-ok" title="Manufacturer document or fitment chart">official</span>'
+  };
+  function renderMods(main) {
+    var M = S.mods;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Mods &amp; upgrades</h2>' +
+      '<div class="sheet-sub"><span>What riders do to these sleds, what fits, and what goes wrong</span><span>Researched ' + esc(M.researched) + "</span></div></div>";
+    html += '<div class="prov"><b>How much to trust this:</b> ' + esc(M.note) + "</div>";
+    html += '<nav class="modnav printhide">' + M.sections.map(function (sec) {
+      return '<a href="#" data-jump="mod-' + esc(sec.id) + '">' + esc(sec.title) + "</a>";
+    }).join("") + "</nav>";
+    M.sections.forEach(function (sec) {
+      html += '<section class="group" id="mod-' + esc(sec.id) + '"><h2>' + esc(sec.title) + "</h2>";
+      sec.items.forEach(function (it) {
+        html += '<div class="mod' + (it.warn ? " mod-warn" : "") + '"><div class="mod-top"><b>' + esc(it.title) + "</b> " + (MOD_TAGS[it.tag] || "") + "</div>" +
+          "<p>" + esc(it.text) + "</p>" +
+          (it.pns ? '<p class="mod-pns">' + it.pns.map(function (pn) {
+            return '<button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + "</button>" + addBtn(pn, 2);
+          }).join(" ") + "</p>" : "") +
+          '<p class="mod-src">Sources: ' + it.sources.map(function (x) {
+            return x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.label) + "</a>" : esc(x.label);
+          }).join(" &middot; ") + "</p></div>";
+      });
+      html += "</section>";
+    });
+    main.innerHTML = html;
+    wirePnButtons(main);
+    /* In-page jumps without touching the hash, which carries the sled and tab. */
+    Array.prototype.forEach.call(main.querySelectorAll("[data-jump]"), function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var el = document.getElementById(a.getAttribute("data-jump"));
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
   }
 
   /* ---------------- carb swap ---------------- */

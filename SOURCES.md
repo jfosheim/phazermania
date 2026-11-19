@@ -123,7 +123,7 @@ Same copyright position as before: watermarked Yamaha illustrations, kept local,
 The 111 MB compiled *1984-1999 Yamaha Phazer 480 Series Service Manual* (567 scanned pages, no text layer) was read page by page from images. It holds four Yamaha documents: the 1984-89 PZ480 factory manual (pp.3-156), the 1990 PZ480P/EP manual LIT-12618-PZ-50 (pp.197-488), and supplements for 1991 PZ480R/ER/STR (pp.490-518), 1993 PZ480T/ET/STT (pp.520-535) and 1996 (pp.537-566). PDF page numbers are given here; the printed page is in the data.
 
 **Torque, the 11 "3% low" rows.** Not misreadings. Yamaha's own PZ480 table (p.8-8, PDF p.127) gives N-m, m-kg and ft-lb, and Yamaha works in m-kg: N-m is printed as m-kg x 10 and ft-lb as m-kg x 7.2. So 6.0 m-kg is printed as 60 N-m and 43 ft-lb. The data keeps the printed values, adds the m-kg column where the factory table gives it, and `tools/check.js` now accepts either the exact conversion or Yamaha's rule. Two real corrections came out of it:
-- Primary sheave bolt, seating step: Clymer prints 85 ft-lb; Yamaha's 1993 supplement prints 120 N-m (12 m-kg, 87 ft-lb). Now 87.
+- Primary sheave bolt, seating step: the Clymer and Yamaha's 1990 manual print 85 ft-lb; the 1993 supplement prints 120 N-m (12 m-kg, 87 ft-lb). Now 87, with the difference noted.
 - Slide rail suspension mounting bolts: Clymer prints 70 N-m; Yamaha's table and the 1991 supplement print 69 N-m (6.9 m-kg, 50 ft-lb). Now 69.
 
 **Jetting baseline conflict, closed.** Both manuals were right for their own years. Yamaha's 1984-89 chart (p.8-5, PDF p.124) uses round jets and overlapping arrows, and puts the stock #143.8 at sea level from about -25 to 15 C, which contains the Clymer text's 0 to -20 C. The 1990 chart is a recalibration, richer, on the in-between sizes. The 1991 supplement (p.23, PDF p.513) recalibrates again, back to round sizes, and prints a part number for each jet. The app now carries all three charts and picks by model year. 1992-95 and the Venture get the 1991 chart, labelled as the nearest chart rather than their own.
@@ -140,6 +140,12 @@ The 1991 supplement disagrees with itself in two places (page 24 repeats the 199
 **1991 Phazer II ST spring, confirmed.** 90501-45534 is Yamaha's standard primary for the 1991 ST, so Partzilla is right for that sled. It also means the 84-89 conflict spring is a real, softer part (1.06 kg/mm against 1.88), not a typo; the 84-89 warning stands.
 
 **1992-1995.** No 1992 supplement is in the compilation, and the 1993 one covers only the primary sheave (it gives primary spring free length 76.8 mm for PZ480T/ET). Partzilla lists new primary springs from 1992 (527G1 std, 507G2 ST), and the 1996 supplement lists 527G1 for the standard Phazer, so the 1991 clutch figures are not carried forward. These years now show "needs manual" for clutch settings instead of borrowed numbers.
+
+## Mods & upgrades research (2026-11-19)
+
+The **Mods & upgrades** tab is built from `specs.json` → `mods`. Each item carries a tag: `official` (a Yamaha manual or Camoplast chart), `press` (period magazine) or `forum` (riders reporting their own sleds), and links to its sources. Most forum material is from TotallYamaha; snowmobileworld.com, snowest.com, hardcoresledder.com and snowmobilefanatics.com refuse automated reading and were not covered. The full write-up is the Claude Doc "Phazer 485: mods, upgrades and compatibility".
+
+Found in the manuals while checking clutches: the stock primary changed. The 1990 manual (p.4-1) shows pinned weights; the 1993 supplement (p.9) shows riveted weights, roller collars and a spring shim, and the 1991 supplement already lists the newer W176A weight numbers.
 
 ## Still open
 
