@@ -65,9 +65,21 @@ for (let i = 1; i < ladder.length; i++) {
   if (parseFloat(ladder[i]) <= parseFloat(ladder[i - 1])) err(`main jet ladder is out of order at #${ladder[i]}`);
 }
 if (!ladder.includes(C.mainJetStd.size)) err(`standard main jet #${C.mainJetStd.size} is not on the ladder`);
-for (const b of C.altitudeChart.bands) {
-  for (const z of C.altitudeChart.zones) {
-    if (!ladder.includes(b[z.key])) err(`altitude chart ${b.ft} ft / ${z.key}: #${b[z.key]} is not on the ladder`);
+for (const [key, ch] of Object.entries(C.altitudeCharts)) {
+  if (ch.format === "ranges") {
+    let last = -Infinity;
+    for (const r of ch.rows) {
+      if (!(r.ftMax > last)) err(`altitude chart ${key}: rows are not in altitude order at ${r.label}`);
+      last = r.ftMax;
+      for (const g of r.ranges) {
+        if (!ladder.includes(g.jet)) err(`altitude chart ${key} ${r.label}: #${g.jet} is not on the ladder`);
+        if (g.fromC != null && g.toC != null && g.fromC >= g.toC) err(`altitude chart ${key} ${r.label} #${g.jet}: range runs backwards`);
+      }
+    }
+  } else {
+    for (const b of ch.bands) for (const z of ch.zones) {
+      if (!ladder.includes(b[z.key])) err(`altitude chart ${key} ${b.ft} ft / ${z.key}: #${b[z.key]} is not on the ladder`);
+    }
   }
 }
 for (const j of C.mainJetLadder) {
@@ -83,14 +95,20 @@ for (const [pn, d] of Object.entries(P.d)) {
 }
 
 /* ---- torque ---------------------------------------------------------------- */
-let off = 0;
+/* Yamaha specifies in m·kg and prints N·m as m·kg x 10 and ft·lb as m·kg x 7.2,
+   so a printed pair must match either the exact conversion or Yamaha's. */
 for (const g of S.torque.groups) for (const r of g.rows) {
-  if (Math.abs(r.nm * 0.737562 - r.ftlb) > 1.0 && !r.ftlbMismatch) {
-    err(`torque "${r.item}": ${r.nm} N·m is ${(r.nm * 0.737562).toFixed(1)} ft·lb, data says ${r.ftlb}. Fix it or mark ftlbMismatch: true until the manual is checked`);
+  const exact = r.nm * 0.737562, yamaha = (r.mkg != null ? r.mkg : r.nm / 10) * 7.233;
+  if (Math.abs(exact - r.ftlb) > 1.0 && Math.abs(yamaha - r.ftlb) > 1.0) {
+    err(`torque "${r.item}": ${r.nm} N·m is ${exact.toFixed(1)} ft·lb exact or ${yamaha.toFixed(1)} by Yamaha's m·kg rule; data says ${r.ftlb}`);
   }
-  if (r.ftlbMismatch) off++;
+  if (r.mkg != null && Math.abs(r.mkg * 10 - r.nm) > 0.6) err(`torque "${r.item}": ${r.mkg} m·kg does not match ${r.nm} N·m as Yamaha prints it`);
 }
-if (off) warn(`${off} torque rows have ft·lb that differs from the exact conversion; check them against the manual`);
+
+/* ---- clutch tables --------------------------------------------------------- */
+for (const [key, e] of Object.entries(S.clutch.eras)) {
+  for (const f of ["title", "source", "engagementRpm", "shiftRpm", "primarySpring"]) if (!e[f]) err(`clutch era ${key}: missing ${f}`);
+}
 
 /* ---- scraper model list matches specs.json --------------------------------- */
 const scraper = read("tools/scrape-partzilla.js");

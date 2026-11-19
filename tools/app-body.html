@@ -179,6 +179,15 @@
     box-shadow: inset 0 0 0 1px var(--accent);
   }
   td.jcell.is-hit .tag { background: rgba(255,255,255,.22); color: var(--chipfg); }
+  /* 1984-89 chart: one chip per arrow, wrapping on a phone. */
+  .jrange {
+    display: inline-block; margin: 2px 6px 2px 0; padding: 3px 8px;
+    border: 1px solid var(--line); border-radius: 6px; font-variant-numeric: tabular-nums;
+  }
+  .jrange .jr { font-family: inherit; font-size: 11.5px; color: var(--muted); margin-left: 4px; }
+  .jrange.is-hit { background: var(--accent); color: var(--chipfg); border-color: var(--accent); font-weight: 600; }
+  .jrange.is-hit .jr { color: var(--chipfg); }
+  .jrange.is-hit .tag { background: rgba(255,255,255,.22); color: var(--chipfg); }
 
   /* Fiche link grid. */
   .fiches { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
@@ -688,35 +697,87 @@
     return -1;
   }
 
-  /* Locate the cell in Yamaha's altitude x temperature chart. The chart's three
-     temperature columns are bands, not points: cold below -20 C, mid -20 to 0,
-     warm 0 and up. Altitude and temperature are clamped to the chart's edges. */
-  function factoryPick(altFt, degF) {
-    var chart = S.carburetor.altitudeChart;
+  /* Which factory altitude chart applies to a sled. Yamaha recalibrated twice:
+     1984-89, 1990, and 1991. Nothing later is in the local manuals, so 1992-95
+     and the Venture get the 1991 chart marked as the nearest, not as theirs. */
+  function chartFor(m) {
+    var C = S.carburetor.altitudeCharts;
+    if (m.year <= 1989) return { key: "pz8489", chart: C.pz8489, own: true };
+    if (m.year === 1990) return { key: "pz1990", chart: C.pz1990, own: true };
+    return { key: "pz1991", chart: C.pz1991, own: m.year === 1991 && m.family === "Phazer II" };
+  }
+  /* Which clutch setting table applies, or null when no manual covers the sled. */
+  function clutchFor(m) {
+    var E = S.clutch.eras;
+    if (m.family === "Phazer") return E.pz8489;
+    if (m.family !== "Phazer II") return null;
+    if (m.year === 1990) return E.pz1990;
+    if (m.year === 1991) return /ST/.test(m.code) ? E.pz1991st : E.pz1991;
+    return null;
+  }
+  function cToF(c) { return Math.round(c * 9 / 5 + 32); }
+
+  /* Locate the answer in a Yamaha altitude x temperature chart. A "zones" chart
+     has three temperature columns that are bands, not points: cold below -20 C,
+     mid -20 to 0, warm 0 and up. A "ranges" chart (1984-89) has arrows with their
+     own ends, which can overlap. Altitude and temperature clamp to the edges. */
+  function factoryPick(chart, altFt, degF) {
     var degC = (degF - 32) * 5 / 9;
-    var zoneKey = degC < -20 ? "cold" : (degC < 0 ? "mid" : "warm");
-    var zone = chart.zones.filter(function (z) { return z.key === zoneKey; })[0];
-    var band = null, clamped = false;
-    for (var i = 0; i < chart.bands.length; i++) {
-      if (altFt < chart.bands[i].ftMax) { band = chart.bands[i]; break; }
+    var rows = chart.format === "ranges" ? chart.rows : chart.bands;
+    var band = null;
+    for (var i = 0; i < rows.length; i++) {
+      if (altFt < rows[i].ftMax) { band = rows[i]; break; }
     }
-    if (!band) band = chart.bands[chart.bands.length - 1];
+    if (!band) band = rows[rows.length - 1];
     /* Name only the edges actually crossed, so the warning never cites a limit the rider is inside. */
     var edges = [];
-    if (altFt > chart.bands[chart.bands.length - 1].ftMax) edges.push("above 10,000 ft");
+    if (altFt > 10000) edges.push("above 10,000 ft");
     if (altFt < 0) edges.push("below sea level");
     if (degC > 20) edges.push("warmer than 20 °C (68 °F)");
     if (degC < -30) edges.push("colder than −30 °C (−22 °F)");
-    if (edges.length) clamped = true;
-    return { band: band, zone: zone, clamped: clamped, edges: edges, bandIndex: chart.bands.indexOf(band) };
+    var out = { band: band, clamped: edges.length > 0, edges: edges, bandIndex: rows.indexOf(band), degC: degC };
+    if (chart.format === "ranges") {
+      var t = Math.max(-30, Math.min(20, degC));
+      var hits = band.ranges.filter(function (r) {
+        return (r.fromC == null || t >= r.fromC) && (r.toC == null || t <= r.toC);
+      });
+      if (!hits.length) {
+        /* A gap between arrows: take the arrow whose end is nearest. */
+        var best = null, bd = Infinity;
+        band.ranges.forEach(function (r) {
+          var d = Math.min(r.fromC == null ? Infinity : Math.abs(t - r.fromC), r.toC == null ? Infinity : Math.abs(t - r.toC));
+          if (d < bd) { bd = d; best = r; }
+        });
+        hits = [best];
+      }
+      hits.sort(function (a, b) { return parseFloat(b.jet) - parseFloat(a.jet); });
+      out.size = hits[0].jet;
+      out.sizes = hits.map(function (r) { return r.jet; });
+      out.zoneLabel = Math.round(degC) + " °C";
+    } else {
+      var zoneKey = degC < -20 ? "cold" : (degC < 0 ? "mid" : "warm");
+      out.zone = chart.zones.filter(function (z) { return z.key === zoneKey; })[0];
+      out.size = band[zoneKey];
+      out.sizes = [out.size];
+      out.zoneLabel = out.zone.label;
+      out.note = zoneKey === "warm" ? band.warmNote : null;
+    }
+    return out;
+  }
+
+  function rangeText(r) {
+    if (r.fromC == null) return "to " + r.toC + " °C (" + cToF(r.toC) + " °F)";
+    if (r.toC == null) return "from " + r.fromC + " °C (" + cToF(r.fromC) + " °F)";
+    return r.fromC + " to " + r.toC + " °C (" + cToF(r.fromC) + " to " + cToF(r.toC) + " °F)";
   }
 
   function highlightChart(fc) {
     var t = document.getElementById("jChart");
     if (!t) return;
     Array.prototype.forEach.call(t.querySelectorAll(".jcell"), function (c) { c.classList.remove("is-hit"); });
-    var cell = t.querySelector('[data-cell="' + fc.bandIndex + "-" + fc.zone.key + '"]');
-    if (cell) cell.classList.add("is-hit");
+    var sel = fc.zone ? ['[data-cell="' + fc.bandIndex + "-" + fc.zone.key + '"]'] :
+      fc.sizes.map(function (s) { return '[data-cell="' + fc.bandIndex + "-" + s + '"]'; });
+    sel.forEach(function (q) { var cell = t.querySelector(q); if (cell) cell.classList.add("is-hit"); });
   }
 
   var PIPES = {
@@ -759,7 +820,8 @@
   var SOURCE_NOTE = {
     clymer8489: "<b>Manual-verified for this sled.</b> Engine, carburettor and service figures come from the 1984&ndash;1989 PZ480 manual tables, which cover this model directly.",
     factory9096: "<b>Manual-verified for this sled.</b> Carburettor and jetting come from Yamaha LIT-12618-PZ-50, Maintenance Specifications p.8-5, which is the page for PZ480P/PZ480EP.",
-    assumed: "<b>Carried forward, not verified.</b> No manual page for this exact year was checked. It carries the same carburettor and jetting part numbers as the 1990 Phazer II, and the carburettor is confirmed unchanged from 1984 to 1990 &mdash; so these figures are very likely right, but they are inherited rather than read.",
+    factory91: "<b>Manual-verified for this sled.</b> Clutch settings and the altitude jetting chart come from Yamaha&rsquo;s 1991 PZ480R/ER/STR supplementary service manual. The carburettor part numbers are unchanged from 1990.",
+    assumed: "<b>Carburettor carried forward; clutching not verified.</b> The local manuals have no page for this year. It carries the same carburettor and jetting part numbers as 1990 and 1991, so the carburettor figures are very likely right. Its primary spring differs from 1991, so no clutch RPM is shown, and jetting uses the 1991 chart as the nearest factory chart.",
     venture: "<b>Engine shared, chassis not verified.</b> The Venture uses the same 485 cc twin and the same carburettor part numbers as the Phazer, so the engine and jetting figures should hold. There is <b>no VT480 manual</b> in the local set, and the Venture is a touring sled &mdash; its clutching, gearing and suspension figures are NOT verified."
   };
   function provenance(m) {
@@ -814,7 +876,7 @@
             esc(eng.hpNote) + "</p></section>";
 
     html += '<section class="group"><h2>Carburetion &mdash; ' + esc(carb.manufacturer) + " " + esc(carb.type) +
-      badge(src === "clymer8489" || src === "factory9096", "Same carburettor part numbers as the 1990 Phazer II; no manual page for this year was checked") + '</h2><dl class="specgrid">';
+      badge(src === "clymer8489" || src === "factory9096", "Same carburettor part numbers as the 1990 Phazer II; no carburettor spec page for this year was checked") + '</h2><dl class="specgrid">';
     html += row("Main jet (M.J.)", "#" + carb.mainJetStd.size, carb.mainJetStd.pn);
     html += row("Pilot jet (P.J.)", "#" + carb.pilotJetStd.size, carb.pilotJetStd.pn);
     html += row("Main air jet (M.A.J.)", carb.mainAirJet) + row("Pilot air jet (P.A.J.)", carb.pilotAirJet);
@@ -826,16 +888,31 @@
     html += row("Carburettor assy", "—", carb.assembly) + row("Fuel pump", carb.fuelPump);
     html += "</dl><p class=\"note\">These are the factory figures. The carburettor and its jetting are <strong>confirmed unchanged</strong> between the 1984&ndash;89 PZ480 manual and the 1990 PZ480P/EP manual &mdash; so the identical part numbers across years are real, not a supersession artifact. Altitude jetting is on the <strong>Jetting</strong> tab.</p></section>";
 
-    html += '<section class="group"><h2>Capacities, clutching &amp; service limits' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
+    var cl = clutchFor(m);
+    html += '<section class="group"><h2>Clutch settings' + (cl ? BADGE_OK : "") + '</h2><dl class="specgrid">';
+    html += row("Engagement RPM", cl ? cl.engagementRpm : null) + row("Shift RPM", cl ? cl.shiftRpm : null);
+    html += row("Primary spring", cl ? cl.primarySpring : null) + row("Weights", cl ? cl.weights : null);
+    html += row("Secondary spring", cl ? cl.secondarySpring : null) + row("Belt wear limit", cl ? cl.beltWearLimit || null : null);
+    html += "</dl>";
+    if (cl) {
+      html += '<p class="note">' + esc(cl.source) + "." + (cl.printNote ? " " + esc(cl.printNote) : "") +
+        (cl.highAltitude ? " High-altitude settings are on the <b>Clutch &amp; setup</b> tab." : "") + "</p>";
+    } else {
+      html += '<p class="note">' + (m.family === "Venture" ?
+        "There is no Venture manual in the local set, and the Venture is a touring setup, so no clutch figures are shown rather than borrowing the Phazer’s." :
+        "The local manuals have Phazer II clutch tables for 1990 and 1991 only. From 1992 Partzilla lists a different primary spring for this sled, so the 1991 figures are not carried forward.") + "</p>";
+    }
+    html += "</section>";
+
+    html += '<section class="group"><h2>Capacities &amp; service limits' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
     html += row("Fuel tank", S.capacities.fuelTank) + row("Oil tank", S.capacities.oilTank);
-    html += row("Chaincase oil", S.capacities.chaincase) + row("Engagement RPM", S.clutch.engagementRpm);
-    html += row("Shift RPM", S.clutch.shiftRpm) + row("Ratio range", S.clutch.ratioRange);
+    html += row("Chaincase oil", S.capacities.chaincase) + row("Ratio range", S.clutch.ratioRange);
     html += row("Belt circumference", S.clutch.beltOutsideCircumference) + row("Belt width, new", S.clutch.beltWidthNew);
-    html += row("Belt wear limit", S.clutch.beltWidthWearLimit) + row("Track deflection", S.service.trackDeflection);
+    html += row("Track deflection", S.service.trackDeflection);
     html += row("Toe-out", S.service.toeOut) + row("Throttle free play", S.service.throttleCableFreePlay);
     html += row("Oil pump cable", S.service.oilPumpCableFreePlay) + row("Brake disc OD", S.service.brakeDiscOuterDiameter);
     html += row("Brake disc thickness", S.service.brakeDiscThickness) + row("Pad-to-disc clearance", S.service.padToDiscClearance);
-    html += '</dl><p class="note">Read off the <strong>PZ480 1984&ndash;89</strong> tables. The Phazer II shares the engine and carburettor, but its clutching and suspension were revised, and the Venture is a touring setup &mdash; treat the RPM and deflection figures as the Phazer baseline unless you have the matching manual page.</p></section>';
+    html += '</dl><p class="note">Read off the <strong>PZ480 1984&ndash;89</strong> tables. The Phazer II shares the engine and carburettor, but its suspension was revised, and the Venture is a touring setup &mdash; treat the deflection figures as the Phazer baseline unless you have the matching manual page.</p></section>';
 
     html += '<section class="group"><h2>Drive &amp; clutching</h2><dl class="specgrid">';
     html += row("Drive belt", "—", m.belt, unc("belt")) + row("Primary spring", "—", m.primarySpring, unc("primarySpring"));
@@ -851,7 +928,7 @@
       });
     } else { html += row("Chaincase gearing", "see note"); }
     html += "</dl>";
-    if (m.primarySpring === SUPERSEDED_SPRING) {
+    if (m.primarySpring === SUPERSEDED_SPRING && m.family === "Phazer") {
       html += '<div class="verdict warn"><span class="vlabel">Spring conflict</span><span>Partzilla lists ' + SUPERSEDED_SPRING +
         " for this sled, but Yamaha bulletin S88-007 and the high-altitude table both give 90501-52798 (red-blue, 25.8 kg) for the PZ480. " +
         "Measure free length and wire diameter before ordering. Details on the <b>Torque &amp; springs</b> tab.</span></div>";
@@ -957,30 +1034,52 @@
 
   /* ---------------- jetting calculator ---------------- */
   function renderJetting(main) {
-    var carb = S.carburetor;
+    var carb = S.carburetor, m = byId[state.modelId], cf = chartFor(m), chart = cf.chart;
     var html = '<div class="sheet-head"><h2 class="sheet-title">Altitude &amp; temperature jetting</h2>' +
-      '<div class="sheet-sub"><span>Mikuni density correction, snapped to a real Yamaha part number</span><span>Part numbers for the ' + byId[state.modelId].year + " " + esc(byId[state.modelId].variant) + '</span></div></div>';
+      '<div class="sheet-sub"><span>Mikuni density correction, snapped to a real Yamaha part number</span><span>Part numbers for the ' + m.year + " " + esc(m.variant) + '</span></div></div>';
 
-    html += '<div class="prov"><b>This is Yamaha’s own table.</b> ' + esc(carb.altitudeChart.source) +
+    html += '<div class="prov"><b>This is Yamaha’s own table' + (cf.own ? " for this sled." : ", but not this sled’s.") + "</b> " + esc(chart.source) +
       '. Pick your altitude and temperature and the matching cell is highlighted below. ' +
       'The density calculation underneath is only a cross-check for conditions that fall between bands — the table wins.</div>';
-    if (carb.altitudeChart.baselineConflict) {
-      html += '<div class="verdict warn" style="margin:-10px 0 22px"><span class="vlabel">Manuals disagree</span><span>' +
-        esc(carb.altitudeChart.baselineConflict) + "</span></div>";
+    if (!cf.own) {
+      html += '<div class="verdict warn" style="margin:-10px 0 22px"><span class="vlabel">Nearest chart</span><span>' +
+        "No factory jetting chart for the " + m.year + " " + esc(m.variant) + " is in the manuals checked. This is the " + esc(chart.title) +
+        " chart, the latest one available. The carburettor part numbers are unchanged, so it is a sound starting point, but read the plugs.</span></div>";
     }
+    html += '<p class="note" style="margin:-8px 0 24px">' + esc(chart.note) + " Yamaha recalibrated twice: the 1984&ndash;89 chart, a richer 1990 chart, and a 1991 chart back on round jet sizes. The app picks the one for the sled you have selected.</p>";
 
-    html += '<section class="group"><h2>Factory altitude &amp; temperature chart</h2><div class="tablewrap"><table id="jChart">' +
-      "<thead><tr><th>Altitude</th>" +
-      carb.altitudeChart.zones.map(function (z) { return "<th>" + esc(z.label) + "<br><span style=\"font-weight:400;text-transform:none;letter-spacing:0\">" + esc(z.labelF) + "</span></th>"; }).join("") +
-      "</tr></thead><tbody>" +
-      carb.altitudeChart.bands.map(function (b, bi) {
-        return '<tr data-band="' + bi + '"><td><b>' + esc(b.ft) + ' ft</b><br><span style="color:var(--muted);font-size:11.5px">' + esc(b.m) + " m</span></td>" +
-          carb.altitudeChart.zones.map(function (z) {
-            return '<td data-cell="' + bi + "-" + z.key + '" class="jcell mono">#' + esc(b[z.key]) +
-              (b[z.key] === carb.mainJetStd.size ? ' <span class="tag tag-std">Std</span>' : "") + "</td>";
-          }).join("") + "</tr>";
-      }).join("") +
-      "</tbody></table></div></section>";
+    html += '<section class="group"><h2>Factory chart &mdash; ' + esc(chart.title) + '</h2><div class="tablewrap"><table id="jChart">';
+    if (chart.format === "ranges") {
+      html += "<thead><tr><th>Altitude</th><th>Main jets and the temperatures Yamaha’s arrows cover</th></tr></thead><tbody>" +
+        chart.rows.map(function (b, bi) {
+          return '<tr data-band="' + bi + '"><td><b>' + esc(b.label) + '</b><br><span style="color:var(--muted);font-size:11.5px">' + esc(b.m) + " m</span></td><td>" +
+            b.ranges.map(function (r) {
+              return '<span data-cell="' + bi + "-" + esc(r.jet) + '" class="jcell jrange mono">#' + esc(r.jet) +
+                (r.jet === carb.mainJetStd.size ? ' <span class="tag tag-std">Std</span>' : "") +
+                ' <span class="jr">' + esc(rangeText(r)) + "</span></span>";
+            }).join("") + "</td></tr>";
+        }).join("");
+    } else {
+      html += "<thead><tr><th>Altitude</th>" +
+        chart.zones.map(function (z) { return "<th>" + esc(z.label) + "<br><span style=\"font-weight:400;text-transform:none;letter-spacing:0\">" + esc(z.labelF) + "</span></th>"; }).join("") +
+        "</tr></thead><tbody>" +
+        chart.bands.map(function (b, bi) {
+          return '<tr data-band="' + bi + '"><td><b>' + esc(b.ft) + ' ft</b><br><span style="color:var(--muted);font-size:11.5px">' + esc(b.m) + " m</span></td>" +
+            chart.zones.map(function (z) {
+              return '<td data-cell="' + bi + "-" + z.key + '" class="jcell mono">#' + esc(b[z.key]) +
+                (b[z.key] === carb.mainJetStd.size ? ' <span class="tag tag-std">Std</span>' : "") +
+                (z.key === "warm" && b.warmNote ? ' <span class="tag tag-alt">' + esc(b.warmNote) + "</span>" : "") + "</td>";
+            }).join("") + "</tr>";
+        }).join("");
+    }
+    html += "</tbody></table></div>";
+    if (cf.key === "pz1991") {
+      html += '<p class="note">The 1991 supplement prints a part number for each jet: ' +
+        carb.mainJetLadder.filter(function (j) { return j.manual1991; }).map(function (j) {
+          return "#" + esc(j.size) + " " + esc(j.manual1991);
+        }).join(", ") + ". Where these differ from the order number, the order number is Partzilla’s current replacement.</p>";
+    }
+    html += "</section>";
 
     html += '<section class="group"><h2>Conditions</h2><div class="calc">' +
       '<div class="field"><label for="jAlt">Riding altitude (ft)</label><input id="jAlt" type="number" inputmode="numeric" value="' + esc(state.jet.alt) + '" step="500" min="-500" max="14000"></div>' +
@@ -1033,8 +1132,8 @@
     var m = byId[state.modelId];
 
     /* Yamaha's table is the answer. The density maths is only a cross-check. */
-    var fc = factoryPick(alt, tmp);
-    var factorySize = fc.band[fc.zone.key];
+    var fc = factoryPick(chartFor(m).chart, alt, tmp);
+    var factorySize = fc.size;
     var factoryJet = carb.mainJetLadder[ladderIndex(factorySize)] || nearestJet(parseFloat(factorySize));
 
     /* A pipe shifts the factory answer up the ladder. */
@@ -1060,8 +1159,8 @@
         "</span></div>" +
       "</div>";
     h += '<div class="readout">' +
-      "<span>Band <b>" + esc(fc.band.ft) + " ft</b></span>" +
-      "<span>Zone <b>" + esc(fc.zone.label) + "</b></span>" +
+      "<span>Band <b>" + esc(fc.band.ft ? fc.band.ft + " ft" : fc.band.label) + "</b></span>" +
+      "<span>" + (fc.zone ? "Zone" : "Temperature") + " <b>" + esc(fc.zoneLabel) + "</b></span>" +
       "<span>Table value <b>#" + esc(factorySize) + "</b>" + (pipe.steps ? " → pipe +" + pipe.steps : "") + "</span>" +
       "<span>Pilot estimate <b>~" + pilot + "</b></span>" +
       "</div></div>";
@@ -1073,6 +1172,17 @@
        "That differs from the table’s #" + factorySize + " — you are near a band edge, so <b>follow the table</b> and let a plug chop settle it.") +
       "</span></div>";
 
+    if (fc.sizes.length > 1) {
+      h += '<div class="verdict warn"><span class="vlabel">Arrows overlap</span><span>Yamaha’s chart gives both ' +
+        fc.sizes.map(function (x) { return "#" + esc(x); }).join(" and ") + " here. The table answer above is the richer one, which is the safer start; drop one size if the plugs read rich.</span></div>";
+    }
+    if (fc.note) {
+      h += '<div class="verdict"><span class="vlabel">Pilot screw</span><span>The 1991 chart also sets the pilot (idle mixture) screw to <b>2.0 turns</b> out in this cell, from the standard 1&frac12;.</span></div>';
+    }
+    if (pick.manual1991 && chartFor(m).key === "pz1991" && pick.manual1991 !== pickPn.pn) {
+      h += '<div class="verdict"><span class="vlabel">1991 manual</span><span>The 1991 supplement lists #' + esc(pick.size) + " as <b>" + esc(pick.manual1991) +
+        "</b>. Order the number above; Yamaha supersedes jets, so the manual number may no longer be stocked.</span></div>";
+    }
     if (fc.clamped) {
       h += '<div class="verdict warn"><span class="vlabel">Past the table</span><span>These conditions are ' +
         esc(fc.edges.join(" and ")) + ", outside Yamaha’s chart. The nearest cell is shown — beyond it you are into plug-chop-only territory.</span></div>";
@@ -1245,14 +1355,14 @@
     var A = S.altitude, G = S.gearRatios, SU = S.suspension, CT = S.carbTuning;
 
     var html = '<div class="sheet-head"><h2 class="sheet-title">Clutch, gearing &amp; suspension</h2>' +
-      '<div class="sheet-sub"><span>PZ480 high-altitude and setup tables</span></div></div>';
+      '<div class="sheet-sub"><span>PZ480 high-altitude and setup tables, plus the 1991 Phazer II clutch tables</span></div></div>';
 
     html += '<div class="prov"><b>' + esc(A.factoryBaseline) + "</b> " + esc(A.powerLoss) + "</div>";
 
     /* The single most actionable finding in the chapter. */
     html += '<div class="verdict warn"><span class="vlabel">Above 6,000 ft</span><span>' + esc(A.clutchThreshold) + "</span></div>";
 
-    html += '<section class="group"><h2>High-altitude clutching</h2><div class="tablewrap"><table>' +
+    html += '<section class="group"><h2>High-altitude clutching &mdash; 1984&ndash;89 Phazer (PZ480)</h2><div class="tablewrap"><table>' +
       "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
       A.clutch.rows.map(function (r) {
         var same = r.hi === "Same as standard";
@@ -1263,6 +1373,21 @@
       "</tbody></table></div>" +
       '<div class="verdict ok"><span class="vlabel">Bottom line</span><span>' + esc(A.clutch.verdict) + "</span></div>" +
       '<p class="note">' + esc(A.clutch.source) + "</p></section>";
+
+    /* 1991 Phazer II: Yamaha's own three-column clutch tables. */
+    [S.clutch.eras.pz1991, S.clutch.eras.pz1991st].forEach(function (E) {
+      var cols = [{ range: "Up to 2,000 ft (standard)", engagementRpm: E.engagementRpm, shiftRpm: E.shiftRpm, weights: E.weights, primarySpring: E.primarySpring, secondarySpring: E.secondarySpring }].concat(E.highAltitude);
+      var ROWS = [["engagementRpm", "Engagement"], ["shiftRpm", "Shift"], ["weights", "Weights"], ["primarySpring", "Primary spring"], ["secondarySpring", "Secondary spring"]];
+      html += '<section class="group"><h2>High-altitude clutching &mdash; ' + esc(E.title) + ' <span class="tag tag-ok">manual</span></h2><div class="tablewrap"><table>' +
+        "<thead><tr><th>Item</th>" + cols.map(function (c) { return "<th>" + esc(c.range) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+        ROWS.map(function (r) {
+          return "<tr><td>" + r[1] + "</td>" + cols.map(function (c, i) {
+            var v = c[r[0]], same = i > 0 && v === cols[i - 1][r[0]];
+            return '<td class="mono">' + (same ? '<span style="color:var(--muted)">same</span>' : esc(v)) + "</td>";
+          }).join("") + "</tr>";
+        }).join("") +
+        '</tbody></table></div><p class="note">' + esc(E.source) + ". Yamaha says to apply these above 2,000 ft (600 m). Unlike the 1984&ndash;89 Phazer, the 1991 Phazer II changes weights as well as the primary spring.</p></section>";
+    });
 
     html += '<section class="group"><h2>High-altitude gearing</h2><div class="tablewrap"><table>' +
       "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
@@ -1334,13 +1459,14 @@
 
     T.groups.forEach(function (g) {
       html += '<section class="group"><h2>' + esc(g.name) + "</h2>";
-      html += '<div class="tablewrap"><table><thead><tr><th>Fastener</th><th>N·m</th><th>ft·lb</th><th>Note</th></tr></thead><tbody>';
+      html += '<div class="tablewrap"><table><thead><tr><th>Fastener</th><th>N·m</th><th>m·kg</th><th>ft·lb</th><th>Note</th></tr></thead><tbody>';
       g.rows.forEach(function (r) {
-        var exact = (r.nm * 0.737562).toFixed(1);
-        html += "<tr><td>" + esc(r.item) + '</td><td class="mono"><b>' + r.nm + '</b></td><td class="mono">' + r.ftlb +
-          (r.ftlbMismatch ? ' <span class="tag tag-unconf" title="Exact conversion of ' + r.nm + " N\u00b7m is " + exact + ' ft\u00b7lb">exact ' + exact + "</span>" : "") +
+        html += "<tr><td>" + esc(r.item) + '</td><td class="mono"><b>' + r.nm + '</b></td><td class="mono">' +
+          (r.mkg != null ? r.mkg : '<span style="color:var(--muted)">&mdash;</span>') + '</td><td class="mono">' + r.ftlb +
           "</td><td>" +
-          (r.flag ? '<span class="tag tag-warn">' + esc(r.flag) + "</span>" : "") + "</td></tr>";
+          (r.flag ? '<span class="tag tag-warn">' + esc(r.flag) + "</span> " : "") +
+          (r.printNote ? '<span class="tag tag-alt" title="' + esc(r.printNote) + '">corrected</span> <span style="color:var(--muted);font-size:12px">' + esc(r.printNote) + "</span>" : "") +
+          "</td></tr>";
       });
       html += "</tbody></table></div><p class=\"note\">" + esc(g.source) + "</p></section>";
     });
