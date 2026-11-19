@@ -290,6 +290,50 @@
   .toast.show { opacity: 1; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* ---- source badges ---- */
+  .tag-ok { background: var(--ok-soft); color: var(--ok); }
+  .group > h2 .tag { vertical-align: 0; letter-spacing: .06em; }
+
+  /* ---- buttons used by the order list and the log ---- */
+  .btn {
+    font: 500 12px/1 "IBM Plex Sans", sans-serif; letter-spacing: .04em; text-transform: uppercase;
+    padding: 9px 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    border-radius: 2px; cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--chipfg); }
+  .btn.primary:hover { color: var(--chipfg); filter: brightness(1.08); }
+  .btnrow { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .addbtn {
+    font: 500 11px/1 "IBM Plex Sans", sans-serif; padding: 4px 7px; margin-left: 8px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--accent); border-radius: 2px; cursor: pointer;
+    white-space: nowrap;
+  }
+  .addbtn:hover { border-color: var(--accent); }
+  .addbtn.added { color: var(--ok); border-color: var(--ok); }
+  .qty { width: 64px; font: 400 14px/1 "IBM Plex Mono", monospace; padding: 6px 8px; border: 1px solid var(--line);
+         border-radius: 2px; background: var(--surface); color: var(--ink); }
+  .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; }
+  .linkbtn:hover { text-decoration: underline; }
+  textarea.field-ta {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 2px; color: var(--ink);
+    font: 400 14px/1.4 "IBM Plex Sans", sans-serif; padding: 9px 10px; width: 100%; min-height: 64px; resize: vertical;
+  }
+
+  /* ---- printable spec card: the spec sheet only, without the full parts index ---- */
+  @media print {
+    :root { color-scheme: light; }
+    body { background: #fff; color: #000; font-size: 11px; }
+    .viewnav, .controls, #rail, .toast, .printhide, .addbtn, .btnrow { display: none !important; }
+    .shell { max-width: none; padding: 0; }
+    .split { display: block; padding-top: 8px; }
+    .masthead { padding-top: 0; }
+    .group { break-inside: avoid; margin-bottom: 14px; }
+    .prov, .verdict, .trackfig, .tablewrap { background: #fff !important; }
+    a { color: #000; text-decoration: none; }
+    .pn { border: 0; }
+  }
 </style>
 
 <div class="shell">
@@ -384,6 +428,12 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 1600);
   }
+  function copyText(text, msg) {
+    var done = function () { toast(msg); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(text, done); });
+    } else { fallback(text, done); }
+  }
   function copyPn(pn) {
     var done = function () { toast(pn + "  copied"); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -403,6 +453,50 @@
       b.addEventListener("click", function () { copyPn(b.getAttribute("data-pn")); });
       b.title = "Copy " + b.getAttribute("data-pn");
     });
+    /* "+ list" buttons add a part to the order list. */
+    Array.prototype.forEach.call(scope.querySelectorAll("[data-add]"), function (b) {
+      var pn = b.getAttribute("data-add");
+      if (orderHas(pn)) { b.classList.add("added"); b.textContent = "✓ on list"; }
+      b.addEventListener("click", function () {
+        orderAdd(pn, parseInt(b.getAttribute("data-qty") || "1", 10));
+        b.classList.add("added"); b.textContent = "✓ on list";
+      });
+    });
+  }
+  function addBtn(pn, qty) {
+    return '<button type="button" class="addbtn" data-add="' + esc(pn) + '"' + (qty ? ' data-qty="' + qty + '"' : "") +
+      ' title="Add ' + esc(pn) + ' to the order list">+ list</button>';
+  }
+
+  /* ================= order list =================
+     [{ pn, qty }] kept in this browser. Descriptions come from the parts index,
+     or from the clutch spring tables for the bulletin numbers not in it. */
+  var order = (function () {
+    var o = []; try { o = JSON.parse(localStorage.getItem("phazermania.order") || "[]"); } catch (e) { o = []; }
+    return Array.isArray(o) ? o.filter(function (x) { return x && x.pn; }) : [];
+  })();
+  function orderSave() {
+    try { localStorage.setItem("phazermania.order", JSON.stringify(order)); } catch (e) { /* keep in memory */ }
+    var t = document.getElementById("tab-order");
+    if (t) t.textContent = "Order list" + (order.length ? " (" + order.length + ")" : "");
+  }
+  function orderHas(pn) { return order.some(function (x) { return x.pn === pn; }); }
+  function orderAdd(pn, qty) {
+    var hit = order.filter(function (x) { return x.pn === pn; })[0];
+    if (hit) { toast(pn + "  already on the list"); return; }
+    order.push({ pn: pn, qty: qty > 0 ? qty : 1 });
+    orderSave(); toast(pn + "  added to the order list");
+  }
+  function describe(pn) {
+    if (P.d[pn]) return cleanName(P.d[pn]);
+    var s = S.springs.primary.concat(S.springs.secondary).filter(function (x) { return x.pn === pn; })[0];
+    if (s) return "SPRING, " + (S.springs.primary.indexOf(s) >= 0 ? "PRIMARY" : "SECONDARY") + " (" + s.color + ", " + s.usedOn + ")";
+    return "";
+  }
+  /* The models a part number is listed for, as "1990-93 Phazer II, ..." */
+  function fitsText(pn) {
+    var ids = fits[pn] || [];
+    return ids.length ? ids.length + (ids.length === 1 ? " model" : " models") : "not in the parts index";
   }
 
   /* ================= view tabs ================= */
@@ -413,8 +507,52 @@
     { id: "carbs",   label: "Carb swap" },
     { id: "torque",  label: "Torque & springs" },
     { id: "setup",   label: "Clutch, gearing & suspension" },
-    { id: "changes", label: "Year changes" }
+    { id: "changes", label: "Year changes" },
+    { id: "order",   label: "Order list" },
+    { id: "log",     label: "Tuning log" }
   ];
+
+  /* ================= saved state + shareable links =================
+     The address carries the sled and the tab, e.g. #1992-pz480s/jetting, so a
+     link opens the same sheet for someone else. The browser also remembers the
+     last sled, the jetting inputs, the order list and the tuning log. All of it
+     lives in this browser only; nothing is sent anywhere. */
+  var store = {
+    get: function (k, dflt) {
+      try { var v = localStorage.getItem("phazermania." + k); return v == null ? dflt : JSON.parse(v); }
+      catch (e) { return dflt; }
+    },
+    set: function (k, v) {
+      try { localStorage.setItem("phazermania." + k, JSON.stringify(v)); } catch (e) { /* private mode: keep going */ }
+    }
+  };
+  function viewExists(id) { return VIEWS.some(function (v) { return v.id === id; }); }
+  function readHash() {
+    var h = decodeURIComponent((location.hash || "").replace(/^#/, "")).split("/");
+    var out = {};
+    if (h[0] && byId[h[0]]) out.modelId = h[0];
+    else if (h[0] && viewExists(h[0])) out.view = h[0];
+    if (h[1] && viewExists(h[1])) out.view = h[1];
+    return out;
+  }
+  function writeHash() {
+    var h = "#" + state.modelId + (state.view === "specs" ? "" : "/" + state.view);
+    if (location.hash !== h) {
+      try { history.replaceState(null, "", h); } catch (e) { /* sandboxed frame: the link just won't update */ }
+    }
+  }
+  (function restore() {
+    var saved = store.get("state", {});
+    if (saved.modelId && byId[saved.modelId]) state.modelId = saved.modelId;
+    if (saved.jet) Object.keys(state.jet).forEach(function (k) { if (saved.jet[k] != null) state.jet[k] = String(saved.jet[k]); });
+    var fromHash = readHash();
+    if (fromHash.modelId) state.modelId = fromHash.modelId;
+    if (fromHash.view) state.view = fromHash.view;
+  })();
+  function persist() {
+    store.set("state", { modelId: state.modelId, jet: state.jet });
+    writeHash();
+  }
   var nav = document.getElementById("viewnav");
   function selectView(id, focus) {
     state.view = id;
@@ -593,7 +731,10 @@
 
   /* ================= renderers ================= */
   function render() {
+    persist();
     var main = document.getElementById("main");
+    if (state.view === "order")   return renderOrder(main);
+    if (state.view === "log")     return renderLog(main);
     if (state.view === "specs")   return renderSpecs(main);
     if (state.view === "jetting") return renderJetting(main);
     if (state.view === "track")   return renderTrack(main);
@@ -638,8 +779,16 @@
     html += '<div class="sheet-head"><h2 class="sheet-title">' + m.year + " Yamaha " + esc(m.variant) + "</h2>";
     html += '<div class="sheet-sub"><span>Model code <span class="mono">' + esc(m.code) + "</span></span>";
     html += "<span>" + (m.start === "electric" ? "Electric start" : "Recoil start") + "</span>";
-    html += '<span><a class="diagram" href="' + diagramUrl(m, "carburetor") + '" target="_blank" rel="noopener">Partzilla diagrams &rarr;</a></span></div></div>';
+    html += '<span><a class="diagram" href="' + diagramUrl(m, "carburetor") + '" target="_blank" rel="noopener">Partzilla diagrams &rarr;</a></span></div>' +
+      '<div class="btnrow printhide"><button type="button" class="btn" id="printCard">Print spec card</button>' +
+      '<button type="button" class="btn" id="copyLink">Copy link to this sled</button></div></div>';
     html += provenance(m);
+    /* Per-section source: was this section read off a manual page for this exact sled? */
+    var src = m.specSource;
+    var BADGE_OK = ' <span class="tag tag-ok" title="Read off the manual page that covers this model">manual</span>';
+    var badge = function (verified, why) {
+      return verified ? BADGE_OK : ' <span class="tag tag-alt" title="' + esc(why) + '">carried over</span>';
+    };
 
     html += '<section class="group"><h2>Track</h2><div class="trackfig"><span class="dim">' +
             (t.widthIn ? t.widthIn + " × " + t.lengthIn : "—") + '</span><span class="dimnote">in.' +
@@ -652,7 +801,7 @@
     if (t.usedBy) html += '<p class="note">Same track fits: ' + esc(t.usedBy) + "</p>";
     html += "</section>";
 
-    html += '<section class="group"><h2>Engine</h2><dl class="specgrid">';
+    html += '<section class="group"><h2>Engine' + badge(src === "clymer8489", "From the 1984-89 PZ480 manual; this model shares the engine part numbers") + '</h2><dl class="specgrid">';
     html += row("Displacement", eng.displacementCc + " cc") + row("Bore × stroke", eng.boreMm + " × " + eng.strokeMm + " mm");
     html += row("Type", "2-stroke fan-cooled twin") + row("Compression", eng.compressionRatio);
     html += row("Head volume", eng.cylinderHeadVolumeCc + " cc") + row("Bore material", eng.cylinderBoreMaterial);
@@ -664,7 +813,8 @@
     html += "</dl><p class=\"note\">Bore and stroke self-check: 72 × 59.6 mm over two cylinders computes to 485.2 cc. " +
             esc(eng.hpNote) + "</p></section>";
 
-    html += '<section class="group"><h2>Carburetion &mdash; ' + esc(carb.manufacturer) + " " + esc(carb.type) + '</h2><dl class="specgrid">';
+    html += '<section class="group"><h2>Carburetion &mdash; ' + esc(carb.manufacturer) + " " + esc(carb.type) +
+      badge(src === "clymer8489" || src === "factory9096", "Same carburettor part numbers as the 1990 Phazer II; no manual page for this year was checked") + '</h2><dl class="specgrid">';
     html += row("Main jet (M.J.)", "#" + carb.mainJetStd.size, carb.mainJetStd.pn);
     html += row("Pilot jet (P.J.)", "#" + carb.pilotJetStd.size, carb.pilotJetStd.pn);
     html += row("Main air jet (M.A.J.)", carb.mainAirJet) + row("Pilot air jet (P.A.J.)", carb.pilotAirJet);
@@ -676,7 +826,7 @@
     html += row("Carburettor assy", "—", carb.assembly) + row("Fuel pump", carb.fuelPump);
     html += "</dl><p class=\"note\">These are the factory figures. The carburettor and its jetting are <strong>confirmed unchanged</strong> between the 1984&ndash;89 PZ480 manual and the 1990 PZ480P/EP manual &mdash; so the identical part numbers across years are real, not a supersession artifact. Altitude jetting is on the <strong>Jetting</strong> tab.</p></section>";
 
-    html += '<section class="group"><h2>Capacities, clutching &amp; service limits</h2><dl class="specgrid">';
+    html += '<section class="group"><h2>Capacities, clutching &amp; service limits' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
     html += row("Fuel tank", S.capacities.fuelTank) + row("Oil tank", S.capacities.oilTank);
     html += row("Chaincase oil", S.capacities.chaincase) + row("Engagement RPM", S.clutch.engagementRpm);
     html += row("Shift RPM", S.clutch.shiftRpm) + row("Ratio range", S.clutch.ratioRange);
@@ -725,7 +875,7 @@
     var rows = partsFor(m), bySection = {};
     rows.forEach(function (r) { var p = r.split("|"); (bySection[+p[0]] = bySection[+p[0]] || []).push({ ref: p[1], pn: p[2] }); });
 
-    html += '<section class="group"><h2>Full parts index &mdash; ' + rows.length + " entries</h2>";
+    html += '<section class="group printhide"><h2>Full parts index &mdash; ' + rows.length + " entries</h2>";
     html += '<div class="tablewrap"><table><thead><tr><th>Ref</th><th>Part</th><th>Number</th></tr></thead><tbody>';
     P.s.forEach(function (sec, si) {
       var items = bySection[si];
@@ -739,7 +889,7 @@
         var d = P.d[it.pn] || it.pn, f = flagOf(d);
         var tag = f === "std" ? '<span class="tag tag-std">Std</span>' : f === "alt" ? '<span class="tag tag-alt">Alt</span>' : "";
         html += '<tr><td class="ref">' + esc(it.ref) + "</td><td>" + esc(cleanName(d)) + tag +
-                '</td><td class="pncell"><button class="pn" data-pn="' + esc(it.pn) + '">' + esc(it.pn) + "</button></td></tr>";
+                '</td><td class="pncell"><button class="pn" data-pn="' + esc(it.pn) + '">' + esc(it.pn) + "</button>" + addBtn(it.pn) + "</td></tr>";
       });
     });
     html += "</tbody></table></div>";
@@ -759,7 +909,7 @@
       var names = Object.keys(fiches).sort();
       var covered = {};
       P.s.forEach(function (sec, si) { if (bySection[si]) covered[sec] = 1; });
-      html += '<section class="group"><h2>Exploded diagrams &mdash; ' + names.length + " sections</h2>";
+      html += '<section class="group printhide"><h2>Exploded diagrams &mdash; ' + names.length + " sections</h2>";
       html += '<div class="fiches">' + names.map(function (sec) {
         return '<a class="fiche" href="data/diagrams-richs/' + esc(fiches[sec]) + '.gif" target="_blank" rel="noopener">' +
           esc(sec.replace(/-/g, " ")) +
@@ -771,6 +921,11 @@
 
     main.innerHTML = html;
     wirePnButtons(main);
+    document.getElementById("printCard").addEventListener("click", function () { window.print(); });
+    document.getElementById("copyLink").addEventListener("click", function () {
+      var url = location.href.split("#")[0] + "#" + m.id;
+      copyText(url, "Link copied");
+    });
   }
 
   function renderSearch(main) {
@@ -791,7 +946,7 @@
       var ids = fits[pn] || [];
       var names = ids.map(function (id) { var mm = byId[id]; return mm ? mm.year + " " + mm.variant : id; });
       html += '<div class="hit"><div class="hit-top"><span class="hit-desc">' + esc(cleanName(d)) + "</span>" + tag +
-              '<span style="margin-left:auto"><button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + '</button></span></div>' +
+              '<span style="margin-left:auto"><button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + "</button>" + addBtn(pn) + "</span></div>" +
               '<div class="hit-fits"><b>Fits ' + ids.length + (ids.length === 1 ? " model:</b> " : " models:</b> ") +
               esc(names.join(", ")) + "</div></div>";
     });
@@ -855,7 +1010,12 @@
     var KEYS = { jAlt: "alt", jTemp: "temp", jPipe: "pipe", jRefAlt: "refAlt", jRefTemp: "refTemp" };
     Object.keys(KEYS).forEach(function (id) {
       var el = document.getElementById(id);
-      var save = function () { state.jet[KEYS[id]] = el.value; updateJetting(); };
+      /* Skip when nothing changed: the "change" event that fires on blur would
+         otherwise redraw the result under a click that is already in progress. */
+      var save = function () {
+        if (state.jet[KEYS[id]] === el.value) return;
+        state.jet[KEYS[id]] = el.value; persist(); updateJetting();
+      };
       el.addEventListener("input", save); el.addEventListener("change", save);
     });
     updateJetting();
@@ -893,7 +1053,7 @@
 
     var h = '<div class="result"><div class="result-top">' +
       '<div><span class="biglabel">Main jet — Yamaha table</span><span class="big">' + pick.size + "</span></div>" +
-      '<div><span class="biglabel">Order</span><button class="pn pnbig" data-pn="' + esc(pickPn.pn) + '">' + esc(pickPn.pn) + "</button>" +
+      '<div><span class="biglabel">Order</span><button class="pn pnbig" data-pn="' + esc(pickPn.pn) + '">' + esc(pickPn.pn) + "</button>" + addBtn(pickPn.pn, 2) +
         '<span class="biglabel" style="margin:6px 0 0;text-transform:none;letter-spacing:0">' +
         (pickPn.listed ? "As listed for the " + m.year + " " + esc(m.variant) : "Catalogue number; not on this model\u2019s diagram") +
         (pick.alt ? " &middot; also sold as " + esc([pick.pn].concat(pick.alt).filter(function (x) { return x !== pickPn.pn; }).join(", ")) : "") +
@@ -950,6 +1110,13 @@
       return '<button class="' + cls + '" data-pn="' + esc(jp) + '"><span class="sz">' + esc(j.size) +
         '</span><br><span class="rpn">' + esc(jp.slice(0, 3)) + "…" + esc(jp.slice(-5)) + "</span></button>";
     }).join("");
+
+    state.lastPick = { main: pick.size, pilot: pilot };
+    var logBtn = document.createElement("div");
+    logBtn.className = "btnrow";
+    logBtn.innerHTML = '<button type="button" class="btn">Log this setup in the tuning log &rarr;</button>';
+    logBtn.firstChild.addEventListener("click", function () { state.logDraft = true; selectView("log", true); });
+    document.getElementById("jResult").appendChild(logBtn);
 
     wirePnButtons(document.getElementById("jResult"));
     wirePnButtons(lad);
@@ -1190,7 +1357,7 @@
       "<th>Wire</th><th>OD</th><th>Turns</th><th>Free<br>length</th><th>Used on</th></tr></thead><tbody>" +
       SP.primary.map(function (s) {
         return "<tr>" +
-          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button></td>" +
+          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button>" + addBtn(s.pn) + "</td>" +
           '<td class="mono"><b>' + esc(s.rate) + "</b></td><td class=\"mono\">" + esc(s.preload) + "</td><td>" + esc(s.color) + "</td>" +
           '<td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.turns) + "</td>" +
           '<td class="mono">' + esc(s.free) + "</td><td>" + esc(s.usedOn) +
@@ -1203,7 +1370,7 @@
       "<th>Free length</th><th>Colour</th><th>Used on</th></tr></thead><tbody>" +
       SP.secondary.map(function (s) {
         return "<tr>" +
-          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button></td>" +
+          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button>" + addBtn(s.pn) + "</td>" +
           '<td class="mono"><b>' + esc(s.rate) + '</b></td><td class="mono">' + esc(s.turns) + "</td>" +
           '<td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.free) + "</td>" +
           "<td>" + esc(s.color) + "</td><td>" + esc(s.usedOn) +
@@ -1271,9 +1438,157 @@
     wirePnButtons(main);
   }
 
+  /* ---------------- order list ---------------- */
+  function partzillaSearch(pn) { return "https://www.partzilla.com/search?q=" + encodeURIComponent(pn); }
+  function orderText() {
+    return order.map(function (x) {
+      var d = describe(x.pn);
+      return x.qty + " x " + x.pn + (d ? "  " + d : "");
+    }).join("\n");
+  }
+  function renderOrder(main) {
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Order list</h2>' +
+      '<div class="sheet-sub"><span>Parts you have marked with <b>+ list</b>, saved in this browser</span></div></div>';
+    if (!order.length) {
+      main.innerHTML = html + '<p class="empty">The list is empty. Use the <b>+ list</b> buttons in the parts index, part search, jetting result or spring tables to add parts.</p>';
+      return;
+    }
+    html += '<div class="tablewrap"><table><thead><tr><th>Qty</th><th>Part</th></tr></thead><tbody>' +
+      order.map(function (x, i) {
+        var d = describe(x.pn);
+        return "<tr><td><input class=\"qty\" type=\"number\" min=\"1\" max=\"99\" inputmode=\"numeric\" data-i=\"" + i + '" value="' + x.qty + '" aria-label="Quantity for ' + esc(x.pn) + '"></td>' +
+          "<td>" + (d ? esc(d) : '<span class="gap">not in the parts index</span>') +
+          '<div style="margin-top:4px"><button class="pn" data-pn="' + esc(x.pn) + '">' + esc(x.pn) + "</button></div>" +
+          '<div class="hit-fits">Listed for ' + esc(fitsText(x.pn)) + " &middot; " +
+          '<a class="diagram" href="' + partzillaSearch(x.pn) + '" target="_blank" rel="noopener">Find on Partzilla &rarr;</a> &middot; ' +
+          '<button type="button" class="linkbtn" data-del="' + i + '">Remove</button></div></td></tr>';
+      }).join("") + "</tbody></table></div>";
+    html += '<div class="btnrow"><button type="button" class="btn primary" id="oCopy">Copy list</button>' +
+      '<button type="button" class="btn" id="oClear">Clear list</button></div>';
+    html += '<p class="note">Copy the list into an email or a dealer\u2019s order form. Part numbers are Partzilla\u2019s current replacement numbers; check the description against your sled before ordering.</p>';
+    main.innerHTML = html;
+    wirePnButtons(main);
+    Array.prototype.forEach.call(main.querySelectorAll("input.qty"), function (el) {
+      el.addEventListener("change", function () {
+        var n = parseInt(el.value, 10);
+        order[+el.getAttribute("data-i")].qty = n > 0 ? Math.min(n, 99) : 1;
+        orderSave();
+      });
+    });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-del]"), function (b) {
+      b.addEventListener("click", function () { order.splice(+b.getAttribute("data-del"), 1); orderSave(); render(); });
+    });
+    document.getElementById("oCopy").addEventListener("click", function () { copyText(orderText(), "Order list copied"); });
+    document.getElementById("oClear").addEventListener("click", function () {
+      if (window.confirm("Remove every part from the order list?")) { order = []; orderSave(); render(); }
+    });
+  }
+
+  /* ---------------- tuning log ----------------
+     Each entry: { id, date, modelId, alt, temp, main, pilot, plug, notes }.
+     Saved in this browser; Export makes a CSV the rider can keep. */
+  var PLUGS = ["Not checked", "Tan / light coffee (right)", "Grey or white (lean)", "Black, dry soot (rich)", "Wet or oily", "Other, see notes"];
+  function logLoad() { var l = store.get("log", []); return Array.isArray(l) ? l : []; }
+  function logSave(l) { store.set("log", l); }
+  function todayIso() {
+    var d = new Date(), z = function (n) { return (n < 10 ? "0" : "") + n; };
+    return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate());
+  }
+  function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function renderLog(main) {
+    var log = logLoad();
+    var draft = state.logDraft && state.lastPick ? state.lastPick : null;
+    state.logDraft = false;
+    var m = byId[state.modelId];
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Tuning log</h2>' +
+      '<div class="sheet-sub"><span>What you ran, where, and how the plugs read. Saved in this browser only</span></div></div>';
+
+    html += '<section class="group"><h2>New entry</h2><div class="calc">' +
+      '<div class="field"><label for="lDate">Date</label><input id="lDate" type="date" value="' + todayIso() + '"></div>' +
+      '<div class="field"><label for="lModel">Sled</label><select id="lModel">' + MODELS.map(function (x) {
+        return '<option value="' + esc(x.id) + '"' + (x.id === m.id ? " selected" : "") + ">" + x.year + " " + esc(x.variant) + "</option>";
+      }).join("") + "</select></div>" +
+      '<div class="field"><label for="lAlt">Altitude (ft)</label><input id="lAlt" type="number" inputmode="numeric" value="' + esc(state.jet.alt) + '"></div>' +
+      '<div class="field"><label for="lTemp">Temperature (&deg;F)</label><input id="lTemp" type="number" inputmode="numeric" value="' + esc(state.jet.temp) + '"></div>' +
+      '<div class="field"><label for="lMain">Main jet</label><input id="lMain" type="text" value="' + esc(draft ? draft.main : S.carburetor.mainJetStd.size) + '"></div>' +
+      '<div class="field"><label for="lPilot">Pilot jet</label><input id="lPilot" type="text" value="' + esc(S.carburetor.pilotJetStd.size) + '"></div>' +
+      '<div class="field"><label for="lPlug">Plug reading</label><select id="lPlug">' +
+        PLUGS.map(function (p) { return "<option>" + esc(p) + "</option>"; }).join("") + "</select></div>" +
+      "</div>" +
+      '<div class="field"><label for="lNotes">Notes</label><textarea id="lNotes" class="field-ta" placeholder="Snow, pipe, needle clip, how it pulled&hellip;"></textarea></div>' +
+      '<div class="btnrow"><button type="button" class="btn primary" id="lAdd">Save entry</button></div>' +
+      (draft ? '<p class="note">Altitude, temperature and main jet are filled in from the Jetting tab.</p>' : "") +
+      "</section>";
+
+    html += '<section class="group"><h2>Entries &mdash; ' + log.length + "</h2>";
+    if (!log.length) {
+      html += '<p class="empty">No entries yet. After a run, note the conditions and the plug colour here, and the pattern shows up over a season.</p>';
+    } else {
+      html += '<div class="tablewrap"><table><thead><tr><th>Date</th><th>Sled</th><th>Alt ft</th><th>&deg;F</th><th>Main</th><th>Pilot</th><th>Plugs</th><th>Notes</th><th></th></tr></thead><tbody>' +
+        log.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : b.id - a.id; }).map(function (e) {
+          var mm = byId[e.modelId];
+          return '<tr><td class="mono">' + esc(e.date) + "</td><td>" + (mm ? mm.year + " " + esc(mm.variant) : esc(e.modelId)) + "</td>" +
+            '<td class="mono">' + esc(e.alt) + '</td><td class="mono">' + esc(e.temp) + '</td><td class="mono">#' + esc(e.main) +
+            '</td><td class="mono">#' + esc(e.pilot) + "</td><td>" + esc(e.plug) + "</td><td>" + esc(e.notes) + "</td>" +
+            '<td><button type="button" class="linkbtn" data-logdel="' + e.id + '">Delete</button></td></tr>';
+        }).join("") + "</tbody></table></div>" +
+        '<div class="btnrow"><button type="button" class="btn" id="lExport">Export CSV</button>' +
+        '<button type="button" class="btn" id="lCopy">Copy as text</button></div>';
+    }
+    html += '<p class="note">The log lives in this browser on this device. Export it now and then to keep a copy, or to move it to another device.</p></section>';
+    main.innerHTML = html;
+
+    document.getElementById("lAdd").addEventListener("click", function () {
+      var v = function (id) { return document.getElementById(id).value.trim(); };
+      var l = logLoad();
+      l.push({ id: Date.now(), date: v("lDate") || todayIso(), modelId: v("lModel"), alt: v("lAlt"), temp: v("lTemp"),
+               main: v("lMain").replace(/^#/, ""), pilot: v("lPilot").replace(/^#/, ""), plug: v("lPlug"), notes: v("lNotes") });
+      logSave(l); toast("Entry saved"); render();
+    });
+    Array.prototype.forEach.call(main.querySelectorAll("[data-logdel]"), function (b) {
+      b.addEventListener("click", function () {
+        if (!window.confirm("Delete this log entry?")) return;
+        logSave(logLoad().filter(function (e) { return String(e.id) !== b.getAttribute("data-logdel"); })); render();
+      });
+    });
+    var rows = function () {
+      return logLoad().map(function (e) {
+        var mm = byId[e.modelId];
+        return [e.date, mm ? mm.year + " " + mm.variant + " (" + mm.code + ")" : e.modelId, e.alt, e.temp, e.main, e.pilot, e.plug, e.notes];
+      });
+    };
+    var HEAD = ["Date", "Sled", "Altitude ft", "Temp F", "Main jet", "Pilot jet", "Plug reading", "Notes"];
+    var ex = document.getElementById("lExport");
+    if (ex) ex.addEventListener("click", function () {
+      var csv = [HEAD].concat(rows()).map(function (r) { return r.map(csvCell).join(","); }).join("\n");
+      try {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+        a.download = "phazermania-tuning-log.csv";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      } catch (e) { copyText(csv, "Download blocked here, CSV copied instead"); }
+    });
+    var cp = document.getElementById("lCopy");
+    if (cp) cp.addEventListener("click", function () {
+      copyText(rows().map(function (r) { return r.join(" | "); }).join("\n"), "Log copied");
+    });
+  }
+
+  /* A pasted or edited link moves to that sled and tab. */
+  window.addEventListener("hashchange", function () {
+    var h = readHash();
+    if (h.modelId && h.modelId !== state.modelId) {
+      state.modelId = h.modelId; state.family = "All";
+      Array.prototype.forEach.call(chipBox.children, function (x) { x.setAttribute("aria-pressed", String(x.textContent === "All")); });
+    }
+    selectView(h.view || "specs");
+    renderList();
+  });
+
   var qEl = document.getElementById("q");
   qEl.addEventListener("input", function () { state.q = qEl.value; render(); });
 
+  orderSave();
   syncChrome();
   renderList();
 })();

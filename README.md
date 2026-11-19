@@ -4,6 +4,15 @@ A specs, parts and tuning reference for the 485 cc fan-cooled twin Yamaha snowmo
 
 It covers 30 models with a spec sheet for each, an OEM parts index scraped from Partzilla, Yamaha's altitude and temperature jetting chart, track fitment, torque values, clutch springs, gearing, suspension setup, and what changed from year to year. Every figure says where it came from, and anything not read directly off a manual page is labelled as such.
 
+For riders it also has:
+
+- **Links to a sled and tab**, such as `#1992-pz480s/jetting`, to share on a forum
+- **An order list**: tap **+ list** next to any part, set quantities, and copy the list for a dealer
+- **A tuning log** of date, altitude, temperature, jets and plug colour, exportable as CSV
+- **A printable spec card** for each sled
+
+The order list, tuning log, last sled and jetting inputs are saved in the rider's own browser. Nothing is sent anywhere.
+
 **Live site:** https://jfosheim.github.io/phazermania/
 
 ## Layout
