@@ -187,6 +187,57 @@
     "beltOutsideCircumference": "1,099 mm (43.3 in)",
     "beltWidthNew": "31.6 mm (1.24 in)",
     "beltWidthWearLimit": "26 mm (1.02 in)",
+    "piped": {
+      "tag": "forum",
+      "intro": "A pipe moves the power peak up, so the clutch has to shift higher to keep the engine on it. Nothing here is a Yamaha figure: it is what riders report on their own piped sleds. No DG-specific clutch setup was found; the most detailed write-up is a 1990 Phazer II with a PSI pipe.",
+      "rows": [
+        {
+          "item": "Shift rpm",
+          "key": "shiftRpm",
+          "piped": "7,250 - 7,300 rpm"
+        },
+        {
+          "item": "Engagement rpm",
+          "key": "engagementRpm",
+          "piped": "4,000 - 4,500 rpm"
+        },
+        {
+          "item": "Primary spring",
+          "key": "primarySpring",
+          "piped": "Red-green (about 1.75 kg/mm, 35 kg or more preload, three engagement shims), red-silver or red-brown. A blue-white reached only about 7,000 rpm."
+        },
+        {
+          "item": "Weights",
+          "key": "weights",
+          "piped": "82M (Exciter) weights, which shift higher. The 8V0 (1984-89) and 87F (1990) weights are the weakest."
+        },
+        {
+          "item": "Secondary",
+          "key": "secondarySpring",
+          "piped": "45 degree helix from a 570 Exciter or an 80s VMax"
+        },
+        {
+          "item": "Gearing",
+          "key": null,
+          "piped": "One tooth up on the top sprocket, to 18"
+        }
+      ],
+      "cautions": "Springs and weights are tuned per clutch: settings for the YPZ primary do not carry over to a YXR, and the stock primary was revised around 1991-93 (pinned weights, then riveted). Check which you have before ordering. Change one thing at a time and tach the shift rpm on a long, wide-open pull.",
+      "sources": [
+        {
+          "label": "Phazer clutch set up",
+          "url": "https://totallyamaha.net/threads/108085/"
+        },
+        {
+          "label": "Flatslides for Phazer",
+          "url": "https://totallyamaha.net/threads/18794/"
+        },
+        {
+          "label": "Phazer mods",
+          "url": "https://totallyamaha.net/threads/35203/"
+        }
+      ]
+    },
     "eras": {
       "pz8489": {
         "title": "1984-89 Phazer (PZ480)",
