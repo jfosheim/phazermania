@@ -4,9 +4,21 @@ A specs, parts and tuning reference for the 485 cc fan-cooled twin Yamaha snowmo
 
 It covers 30 models with a spec sheet for each, an OEM parts index scraped from Partzilla, Yamaha's altitude and temperature jetting chart, track fitment, torque values, clutch springs, gearing, suspension setup, and what changed from year to year. Every figure says where it came from, and anything not read directly off a manual page is labelled as such.
 
+The app is organised in five sections named for what a rider is trying to do:
+
+| Section | Pages |
+| --- | --- |
+| **My sled** (home) | Quick specs, Full spec sheet, Identify my sled, My garage |
+| **Parts** | Find a part, Diagrams, Interchange, Order list |
+| **Tune** | Jetting, Clutching, Gearing, Suspension, Tuning log |
+| **Fix** | Troubleshooting, Maintenance, Torque specs, Service limits |
+| **Mods & history** | Mods & upgrades, Track fit, Carb swap, Year changes |
+
+The **Find** box searches all of it at once (parts, spec rows for the chosen sled, torque values, symptoms, maintenance items and mods), and the **Sled** picker sets the sled for every page.
+
 For riders it also has:
 
-- **Links to a sled and tab**, such as `#1992-pz480s/jetting`, to share on a forum
+- **Links to a sled and page**, such as `#1992-pz480s/jetting`, to share on a forum. Links from before the reorganisation still open the right page
 - **An order list**: tap **+ list** next to any part, set quantities, and copy the list for a dealer
 - **A tuning log** of date, altitude, temperature, jets and plug colour, exportable as CSV
 - **A printable spec card** for each sled
