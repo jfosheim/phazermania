@@ -20,8 +20,11 @@
  * future merge. The merge prints every part whose scraped description differs
  * from the one kept, so supersessions and flag changes (STD / AP) can be checked.
  *
- * Rows: a model in the scrape has its rows replaced by the scraped ones. A model
- * that is not in the scrape keeps its rows untouched.
+ * Rows: for each model in the scrape, the sections the scrape covers have their
+ * rows replaced by the scraped ones; sections it does not cover keep their rows.
+ * So a full scrape refreshes everything, and a one-section file (for example
+ * the generator rows read off Rich's Yamaha fiches) adds that section alone.
+ * A model that is not in the scrape keeps its rows untouched.
  */
 "use strict";
 const fs = require("fs");
@@ -35,6 +38,8 @@ const SCRAPER = path.join(root, "tools/scrape-partzilla.js");
 const HEADER = `/* Yamaha Phazer / Phazer II / Venture OEM parts index, 1986-1995.
  * Scraped from partzilla.com with tools/scrape-partzilla.js, folded in with
  * tools/parts.js merge, and corrected by data/parts-overrides.json.
+ * The generator section (stator, flywheel rotor, coils) was read off Rich's
+ * Yamaha fiches on 2026-11-24; same OEM catalogue, same model slugs.
  *
  * Shape:
  *   s = section names, indexed
@@ -89,6 +94,10 @@ function merge(file) {
   for (const [key, rows] of Object.entries(scrape)) {
     if (!P.m[key]) console.log(`note: ${key} is new to parts.js; add it to specs.json too`);
     const out = [];
+    const covered = new Set(rows.map((r) => r.section));
+    for (const old of P.m[key] || []) {
+      if (!covered.has(P.s[+old.split("|")[0]])) out.push(old);
+    }
     for (const r of rows) {
       let si = P.s.indexOf(r.section);
       if (si < 0) { P.s.push(r.section); si = P.s.length - 1; }

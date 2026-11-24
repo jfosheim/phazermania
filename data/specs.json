@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": "0.4",
-    "generated": "2026-11-19",
+    "version": "0.5",
+    "generated": "2026-11-24",
     "coverage": "1986-1995 Yamaha Phazer / Phazer II / Venture (485cc twin)",
     "notPresent": "1984-1985 Phazer - Partzilla's catalog begins at 1986",
     "sources": {
@@ -9,7 +9,8 @@
       "factory9096": "Yamaha factory service manual LIT-12618-PZ-50, 1990-1996 Phazer II. Maintenance Specifications page 8-5 for PZ480P/PZ480EP is the source for the 1990 column and the altitude jetting chart.",
       "factory8489": "Yamaha factory PZ480 service manual (1984-89), Appendix 8 specifications pp.8-1 to 8-12. Checked 2026-11-19 against the Clymer tables: same figures, and it adds the m-kg column and the 1984-89 altitude chart.",
       "factory91": "Yamaha PZ480R/ER/STR supplementary service manual (1991). Clutch setting data p.3 and p.26, power train p.24, carburettor setting chart with main jet part numbers p.23.",
-      "partzilla": "Current OEM replacement part numbers."
+      "partzilla": "Current OEM replacement part numbers.",
+    "richs": "Rich's Yamaha online fiches (richsyamaha.com). Same OEM catalogue and model slugs as Partzilla; the source for the generator section (stator, flywheel rotor, coils), read 2026-11-24."
     },
     "partNumberNote": "Partzilla shows current replacement numbers. Where a number looks unchanged across many years, that is often genuinely correct rather than a supersession artifact - the carburettor and its jetting are confirmed identical between the 1984-89 and 1990 manuals.",
     "verifiedFor": "Engine, carburettor and jetting figures are manual-verified for the Phazer (PZ480, 1984-89) and the 1990 Phazer II (PZ480P/PZ480EP). The 1991 Phazer II, LE and ST clutching and altitude jetting are read off the 1991 supplement. 1992-1995 carry the same carburettor part numbers, but no clutch or jetting page exists for those years in the local manuals.",
@@ -19,7 +20,9 @@
       "lug height on the 136 in ST tracks",
       "Main jet #121.3 has two Partzilla part numbers (3G2-1423E-48-00 and 8V0-1423E-48-00) and no manual lists it; confirm which is current with a dealer",
       "1993 Venture GT - no track-suspension-1 rows were scraped, so its track and slide are unconfirmed",
-      "1984-1985 Phazer (PZ480H/J) - the factory 1984-89 manual covers them, but they are outside the 1986-1995 scope and Partzilla has no parts lists for them"
+      "1984-1985 Phazer (PZ480H/J) - the factory 1984-89 manual covers them, but they are outside the 1986-1995 scope and Partzilla has no parts lists for them",
+      "Flywheel nut torque - the 1984-89 table gives 73 N-m and the 1990 table 85 N-m; the 1991-95 supplements do not restate it, and there is no figure for the Venture",
+      "Stator resistances - the 1984-89 and 1990 tables disagree on the pickup, source and grip warmer coils for the same part numbers, and the 1990 page omits the unit; confirm on a known-good stator"
     ]  },
 
   "engine": {
@@ -287,28 +290,60 @@
     ]
   },
 
+  "magneto": {
+    "type": "Flywheel magneto, Mitsubishi F3T368 (CDI ignition and lighting from one stator)",
+    "typeSource": "Yamaha PZ480 factory manual pp.8-2 and 8-10 (1984-89) and LIT-12618-PZ-50 p.8-13 (1990 PZ480P/EP). Both name the F3T368.",
+    "nut": {
+      "thread": "M16 x 1.0",
+      "e8489": {
+        "nm": 73,
+        "mkg": 7.3,
+        "ftlb": 53,
+        "source": "Yamaha PZ480 factory manual p.8-5, Engine tightening torque (\"C.D.I. magneto\" nut)"
+      },
+      "e1990": {
+        "nm": 85,
+        "mkg": 8.5,
+        "ftlb": 61,
+        "source": "Yamaha LIT-12618-PZ-50 p.8-6, PZ480P/EP tightening torque (\"Magneto rotor\")"
+      }
+    },
+    "statorScrew": {
+      "nm": 7,
+      "mkg": 0.7,
+      "ftlb": 5.1,
+      "source": "Yamaha 1991 PZ480R/ER/STR supplement p.16, Magneto rotor"
+    },
+    "install": "Clean any oil or grease off the crankshaft taper with a cloth dampened in thinner before fitting the rotor. Fit the Woodruff key and stator plate, pass the magneto leads through the crankcase hole and seat the grommet, and line up the timing mark on the stator plate with the crankcase seam (1991 supplement p.16).",
+    "partsSource": "Stator and rotor part numbers are each model's Generator fiche at Rich's Yamaha (same OEM catalogue and model slugs as Partzilla), read 2026-11-24. Every stator, coil and rotor except 88F-85550-00-00 was listed as discontinued that day.",
+    "partsNote": "Phazer and Phazer II use the same stator, 88F-85510-00-00, from 1986 to 1993, and 8BL-85510-00-00 for 1994-95; the coils inside it (source 86M-85511-00-00, lighting 8H8-85513-20-00 and 82M-85514-20-00, pulser 82M-85580-20-00) do not change. The rotor is 8V0-85550-21-00 through 1990, then 88F-85550-00-00 on recoil-start sleds and 88H-85550-00-00 on electric-start and ST sleds (the 1991 ST is listed with 88F). The Venture XL has its own 88T stator and rotor (8BK stator 1994-95). The Venture GT is listed with the Phazer II LE stator, coils and 88H rotor, except that the 1993 GT shows the 88T stator."
+  },
   "torque": {
     "appliesTo": "PZ480 1984-1989",
     "note": "Pairs were read from the Clymer tables and checked on 2026-11-19 against Yamaha's own PZ480 table (factory manual p.8-8), which gives every value in N-m, m-kg and ft-lb. Yamaha works in m-kg: its N-m figure is the m-kg value times 10, and its ft-lb figure is m-kg times 7.2. That is why the larger values look about 2% off an exact N-m conversion (60 N-m converts to 44.3 ft-lb, but Yamaha prints 43). The printed figures are correct as Yamaha specifies them; the m-kg column is shown where the factory table gives it.",
     "groups": [
       {
         "name": "Engine",
-        "source": "Table 4 ENGINE TIGHTENING TORQUES (PZ480)",
+        "source": "Table 4 ENGINE TIGHTENING TORQUES (PZ480). Spark plug and flywheel nut added 2026-11-24 from Yamaha's PZ480 table (factory manual p.8-5) and the 1990 PZ480P/EP table (LIT-12618-PZ-50 p.8-6); stator plate screws from the 1991 PZ480R/ER/STR supplement p.16. The m-kg column is from the same 1984-89 factory table, which matches every Clymer pair here.",
         "rows": [
-          { "item": "Cylinder head flange nut", "nm": 25, "ftlb": 18 },
-          { "item": "Cylinder head nut", "nm": 25, "ftlb": 18 },
-          { "item": "Cylinder head bolt", "nm": 15, "ftlb": 11 },
-          { "item": "Crankcase M8 x 1.25", "nm": 21, "ftlb": 15 },
-          { "item": "Crankcase M6 x 1.0", "nm": 11, "ftlb": 8 },
-          { "item": "Fan shaft and pulley nut", "nm": 43, "ftlb": 31 },
+          { "item": "Spark plug (M14 x 1.25)", "nm": 28, "mkg": 2.8, "ftlb": 20, "flag": "Same in the 1984-89 and 1990 tables" },
+          { "item": "Flywheel (magneto rotor) nut, 1984-89 (M16 x 1.0)", "nm": 73, "mkg": 7.3, "ftlb": 53, "flag": "1990 manual gives 85 N-m; see next row" },
+          { "item": "Flywheel (magneto rotor) nut, 1990 Phazer II", "nm": 85, "mkg": 8.5, "ftlb": 61, "flag": "1990 factory table only; not restated for 1991-95" },
+          { "item": "Stator plate screws", "nm": 7, "mkg": 0.7, "ftlb": 5.1, "flag": "1991 supplement; not in the 1984-89 or 1990 tables" },
+          { "item": "Cylinder head flange nut", "nm": 25, "mkg": 2.5, "ftlb": 18 },
+          { "item": "Cylinder head nut", "nm": 25, "mkg": 2.5, "ftlb": 18 },
+          { "item": "Cylinder head bolt", "nm": 15, "mkg": 1.5, "ftlb": 11 },
+          { "item": "Crankcase M8 x 1.25", "nm": 21, "mkg": 2.1, "ftlb": 15 },
+          { "item": "Crankcase M6 x 1.0", "nm": 11, "mkg": 1.1, "ftlb": 8 },
+          { "item": "Fan shaft and pulley nut", "nm": 43, "mkg": 4.3, "ftlb": 31 },
           { "item": "Fan housing", "nm": 15, "ftlb": 11 },
           { "item": "Starter pulley bolts", "nm": 15, "ftlb": 11 },
-          { "item": "Crankcase and engine bracket", "nm": 21, "ftlb": 15 },
-          { "item": "Engine bracket at front damper", "nm": 40, "ftlb": 29 },
-          { "item": "Engine bracket at rear damper", "nm": 40, "ftlb": 29 },
-          { "item": "Engine bracket at frame", "nm": 21, "ftlb": 15 },
-          { "item": "Rear damper at frame nut", "nm": 21, "ftlb": 15 },
-          { "item": "Fuel pump", "nm": 11, "ftlb": 8 }
+          { "item": "Crankcase and engine bracket", "nm": 21, "mkg": 2.1, "ftlb": 15 },
+          { "item": "Engine bracket at front damper", "nm": 40, "mkg": 4.0, "ftlb": 29 },
+          { "item": "Engine bracket at rear damper", "nm": 40, "mkg": 4.0, "ftlb": 29 },
+          { "item": "Engine bracket at frame", "nm": 21, "mkg": 2.1, "ftlb": 15 },
+          { "item": "Rear damper at frame nut", "nm": 21, "mkg": 2.1, "ftlb": 15 },
+          { "item": "Fuel pump", "nm": 11, "mkg": 1.1, "ftlb": 8 }
         ]
       },
       {
@@ -974,48 +1009,78 @@
       }
     ],
     "electrical": {
-      "title": "Ignition and charging resistance (PZ480, Clymer Table 2-1)",
-      "note": "Test at room temperature, 68 F (20 C). Lighting output is measured with the engine at operating temperature.",
+      "title": "Ignition and charging resistance (PZ480)",
+      "columns": [
+        "Phazer 1984-89",
+        "Phazer II 1990 (PZ480P/EP)"
+      ],
+      "note": "Test at room temperature, 68 F (20 C). Lighting output is measured with the engine at operating temperature. The 1984-89 column is Clymer Table 2-1, checked 2026-11-24 against Yamaha's PZ480 factory table (p.8-10). The 1990 column is Yamaha LIT-12618-PZ-50 pp.8-13 and 8-14; ranges are the printed nominal plus or minus its tolerance.",
+      "warning": "The two factory manuals print different pickup, source and grip warmer coil resistances, although the parts catalogue lists the same stator (88F-85510-00-00) and source coil (86M-85511-00-00) for 1986 through 1993. The 1990 page also prints the pickup and source figures with no unit (\"14\" and \"556\"); ohms are assumed. Neither has been confirmed on a known-good stator, so treat a reading inside either column as plausible, and a reading far outside both, or an open or shorted coil, as the fault.",
       "rows": [
         [
           "Charge coil, white to black",
-          "0.20-0.24 ohm"
+          "0.20-0.24 ohm",
+          "0.20-0.24 ohm (0.22 ohm +/-10%)"
         ],
         [
           "Pickup coil, white/red to black",
-          "15.3-18.7 ohm"
+          "15.3-18.7 ohm (17 ohm +/-10%)",
+          "12.6-15.4 ohm (printed \"14 +/-10%\", no unit)"
         ],
         [
           "Source coil, brown to black",
-          "1.16-1.42 ohm"
+          "1.16-1.42 k ohm (1.29 k ohm +/-10%)",
+          "500-612 ohm (printed \"556 +/-10%\", no unit)"
         ],
         [
           "Lighting coil, yellow to black",
-          "0.17-0.21 ohm"
+          "0.17-0.21 ohm",
+          "0.17-0.21 ohm (0.19 ohm +/-10%)"
         ],
         [
           "Grip warmer lighting coil, yellow/black to black",
-          "0.59-0.73 ohm"
+          "0.59-0.73 ohm",
+          "2.55-3.45 ohm (3 ohm +/-15%)"
         ],
         [
           "Ignition coil (Hitachi), primary / secondary",
-          "0.14-0.17 ohm / 2.8-4.2 k ohm"
+          "0.14-0.17 ohm / 2.8-4.2 k ohm",
+          "-"
         ],
         [
           "Ignition coil (Toyo Denso), primary / secondary",
-          "0.11-0.13 ohm / 3.2-4.8 k ohm"
+          "0.11-0.13 ohm / 3.2-4.8 k ohm",
+          "-"
+        ],
+        [
+          "Ignition coil (Moriyama 83R), primary / secondary",
+          "-",
+          "0.16-0.24 ohm / 3.9-5.9 k ohm"
+        ],
+        [
+          "Spark plug cap (NGK L05E)",
+          "5.5 k ohm, +25/-15%",
+          "5.5 k ohm +/-25%"
         ],
         [
           "Lighting current, non-electric start",
-          "0.6 A at 3,000 rpm"
+          "0.6 A at 3,000 rpm",
+          "0.6 A at 3,000 rpm; 1.5 +/-0.5 A at 8,000 rpm"
         ],
         [
           "Lighting output voltage",
-          "11.8 V at 3,000 rpm"
+          "11.8 V at 3,000 rpm",
+          "11.8 V at 3,000 rpm; 15 V max at 8,000 rpm"
+        ],
+        [
+          "Voltage regulator, no-load output",
+          "-",
+          "13.8 +/-0.5 V (Shindengen 82M-A0)"
         ],
         [
           "Battery (electric start)",
-          "YB14L-A2, 12 V 14 Ah"
+          "YB14L-A2, 12 V 14 Ah",
+          "YB14L-A2, specific gravity 1.260"
         ]
       ]
     }
@@ -2078,40 +2143,40 @@
   },
 
   "models": [
-    { "id": "1986-pz480k", "year": 1986, "family": "Phazer", "variant": "Phazer", "code": "PZ480K", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1986/phazer-pz480k", "specSource": "clymer8489" },
-    { "id": "1987-pz480l", "year": 1987, "family": "Phazer", "variant": "Phazer", "code": "PZ480L", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1987/phazer-pz480l", "specSource": "clymer8489" },
-    { "id": "1987-pz480el", "year": 1987, "family": "Phazer", "variant": "Phazer Deluxe", "code": "PZ480EL", "start": "electric", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1987/phazer-deluxe-elec-start-pz480el", "specSource": "clymer8489" },
-    { "id": "1988-pz480m", "year": 1988, "family": "Phazer", "variant": "Phazer", "code": "PZ480M", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1988/phazer-pz480m", "specSource": "clymer8489" },
-    { "id": "1988-pz480em", "year": 1988, "family": "Phazer", "variant": "Phazer Deluxe", "code": "PZ480EM", "start": "electric", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1988/phazer-deluxe-elec-start-pz480em", "specSource": "clymer8489" },
-    { "id": "1989-pz480n", "year": 1989, "family": "Phazer", "variant": "Phazer", "code": "PZ480N", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "8V0-25831-00-00", "partzilla": "1989/phazer-pz480n", "specSource": "clymer8489" },
+    { "id": "1986-pz480k", "year": 1986, "family": "Phazer", "variant": "Phazer", "code": "PZ480K", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1986/phazer-pz480k", "specSource": "clymer8489" },
+    { "id": "1987-pz480l", "year": 1987, "family": "Phazer", "variant": "Phazer", "code": "PZ480L", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1987/phazer-pz480l", "specSource": "clymer8489" },
+    { "id": "1987-pz480el", "year": 1987, "family": "Phazer", "variant": "Phazer Deluxe", "code": "PZ480EL", "start": "electric", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1987/phazer-deluxe-elec-start-pz480el", "specSource": "clymer8489" },
+    { "id": "1988-pz480m", "year": 1988, "family": "Phazer", "variant": "Phazer", "code": "PZ480M", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1988/phazer-pz480m", "specSource": "clymer8489" },
+    { "id": "1988-pz480em", "year": 1988, "family": "Phazer", "variant": "Phazer Deluxe", "code": "PZ480EM", "start": "electric", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8E7-82310-09-00", "brakeDisc": "8V0-25831-00-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1988/phazer-deluxe-elec-start-pz480em", "specSource": "clymer8489" },
+    { "id": "1989-pz480n", "year": 1989, "family": "Phazer", "variant": "Phazer", "code": "PZ480N", "start": "recoil", "track": "8V0-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "8V0-25831-00-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1989/phazer-pz480n", "specSource": "clymer8489" },
 
-    { "id": "1990-pz480p", "year": 1990, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480P", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1990/phazer-ii-pz480p", "specSource": "factory9096" },
-    { "id": "1990-pz480ep", "year": 1990, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EP", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1990/phazer-ii-le-elec-start-pz480ep", "specSource": "factory9096" },
-    { "id": "1991-pz480r", "year": 1991, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480R", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-pz480r", "specSource": "factory91" },
-    { "id": "1991-pz480er", "year": 1991, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ER", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-le-elec-start-pz480er", "specSource": "factory91" },
-    { "id": "1991-pz480str", "year": 1991, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STR", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1991/phazer-ii-st-pz480str", "specSource": "factory91" },
-    { "id": "1991-vt480r", "year": 1991, "family": "Venture", "variant": "Venture XL", "code": "VT480R", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-50543-00", "belt": "89X-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1991/venture-xl-vt480r", "specSource": "venture" },
+    { "id": "1990-pz480p", "year": 1990, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480P", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1990/phazer-ii-pz480p", "specSource": "factory9096" },
+    { "id": "1990-pz480ep", "year": 1990, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EP", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "8V0-85550-21-00", "partzilla": "1990/phazer-ii-le-elec-start-pz480ep", "specSource": "factory9096" },
+    { "id": "1991-pz480r", "year": 1991, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480R", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88F-85550-00-00", "partzilla": "1991/phazer-ii-pz480r", "specSource": "factory91" },
+    { "id": "1991-pz480er", "year": 1991, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ER", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-501G3-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1991/phazer-ii-le-elec-start-pz480er", "specSource": "factory91" },
+    { "id": "1991-pz480str", "year": 1991, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STR", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-45534-00", "belt": "89X-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88F-85550-00-00", "partzilla": "1991/phazer-ii-st-pz480str", "specSource": "factory91" },
+    { "id": "1991-vt480r", "year": 1991, "family": "Venture", "variant": "Venture XL", "code": "VT480R", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-50543-00", "belt": "89X-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "88T-85510-01-00", "rotor": "88T-85550-00-00", "partzilla": "1991/venture-xl-vt480r", "specSource": "venture" },
 
-    { "id": "1992-pz480s", "year": 1992, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480S", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-pz480s", "specSource": "assumed" },
-    { "id": "1992-pz480es", "year": 1992, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ES", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-le-elec-start-pz480es", "specSource": "assumed" },
-    { "id": "1992-pz480sts", "year": 1992, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STS", "start": "recoil", "track": "8BH-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1992/phazer-ii-st-pz480sts", "specSource": "assumed" },
-    { "id": "1992-vt480gts", "year": 1992, "family": "Venture", "variant": "Venture GT", "code": "VT480GTS", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1992/venture-gt-vt480gts", "specSource": "venture" },
-    { "id": "1992-vt480s", "year": 1992, "family": "Venture", "variant": "Venture XL", "code": "VT480S", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1992/vt480s", "specSource": "venture" },
+    { "id": "1992-pz480s", "year": 1992, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480S", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88F-85550-00-00", "partzilla": "1992/phazer-ii-pz480s", "specSource": "assumed" },
+    { "id": "1992-pz480es", "year": 1992, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ES", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1992/phazer-ii-le-elec-start-pz480es", "specSource": "assumed" },
+    { "id": "1992-pz480sts", "year": 1992, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STS", "start": "recoil", "track": "8BH-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "85T-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1992/phazer-ii-st-pz480sts", "specSource": "assumed" },
+    { "id": "1992-vt480gts", "year": 1992, "family": "Venture", "variant": "Venture GT", "code": "VT480GTS", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "88F-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1992/venture-gt-vt480gts", "specSource": "venture" },
+    { "id": "1992-vt480s", "year": 1992, "family": "Venture", "variant": "Venture XL", "code": "VT480S", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "88T-85510-01-00", "rotor": "88T-85550-00-00", "partzilla": "1992/vt480s", "specSource": "venture" },
 
-    { "id": "1993-pz480t", "year": 1993, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480T", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1993/phazer-ii-pz480t", "specSource": "assumed" },
-    { "id": "1993-pz480et", "year": 1993, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ET", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1993/phazer-ii-le-elec-start-pz480et", "specSource": "assumed" },
-    { "id": "1993-pz480stt", "year": 1993, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STT", "start": "recoil", "track": "8BH-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1993/phazer-ii-st-pz480stt", "specSource": "assumed" },
-    { "id": "1993-vt480gtt", "year": 1993, "family": "Venture", "variant": "Venture GT", "code": "VT480GTT", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1993/venture-gt-vt480gtt", "specSource": "venture" },
-    { "id": "1993-vt480t", "year": 1993, "family": "Venture", "variant": "Venture XL", "code": "VT480T", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1993/venture-xl-vt480t", "specSource": "venture" },
+    { "id": "1993-pz480t", "year": 1993, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480T", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88F-85550-00-00", "partzilla": "1993/phazer-ii-pz480t", "specSource": "assumed" },
+    { "id": "1993-pz480et", "year": 1993, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480ET", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1993/phazer-ii-le-elec-start-pz480et", "specSource": "assumed" },
+    { "id": "1993-pz480stt", "year": 1993, "family": "Phazer II", "variant": "Phazer II ST", "code": "PZ480STT", "start": "recoil", "track": "8BH-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "88F-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1993/phazer-ii-st-pz480stt", "specSource": "assumed" },
+    { "id": "1993-vt480gtt", "year": 1993, "family": "Venture", "variant": "Venture GT", "code": "VT480GTT", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8V0-85540-21-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "88T-85510-01-00", "rotor": "88H-85550-00-00", "partzilla": "1993/venture-gt-vt480gtt", "specSource": "venture" },
+    { "id": "1993-vt480t", "year": 1993, "family": "Venture", "variant": "Venture XL", "code": "VT480T", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "88T-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "88T-85510-01-00", "rotor": "88T-85550-00-00", "partzilla": "1993/venture-xl-vt480t", "specSource": "venture" },
 
-    { "id": "1994-pz480u", "year": 1994, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480U", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1994/phazer-ii-pz480u", "specSource": "assumed" },
-    { "id": "1994-pz480eu", "year": 1994, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EU", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1994/phazer-ii-le-elec-start-pz480eu", "specSource": "assumed" },
-    { "id": "1994-pz480stu", "year": 1994, "family": "Phazer II", "variant": "Phazer II ST (LT)", "code": "PZ480STU", "start": "recoil", "track": "8BH-47110-00-00", "slide": "89A-47115-01-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1994/phazer-ii-st-long-track-pz480stu", "specSource": "assumed" },
-    { "id": "1994-vt480u", "year": 1994, "family": "Venture", "variant": "Venture XL", "code": "VT480U", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BK-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1994/venture-xl-vt480u", "specSource": "venture" },
+    { "id": "1994-pz480u", "year": 1994, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480U", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "8BL-85510-00-00", "rotor": "88F-85550-00-00", "partzilla": "1994/phazer-ii-pz480u", "specSource": "assumed" },
+    { "id": "1994-pz480eu", "year": 1994, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EU", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "8BL-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1994/phazer-ii-le-elec-start-pz480eu", "specSource": "assumed" },
+    { "id": "1994-pz480stu", "year": 1994, "family": "Phazer II", "variant": "Phazer II ST (LT)", "code": "PZ480STU", "start": "recoil", "track": "8BH-47110-00-00", "slide": "89A-47115-01-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "8BL-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1994/phazer-ii-st-long-track-pz480stu", "specSource": "assumed" },
+    { "id": "1994-vt480u", "year": 1994, "family": "Venture", "variant": "Venture XL", "code": "VT480U", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BK-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "8BK-85510-00-00", "rotor": "88T-85550-00-00", "partzilla": "1994/venture-xl-vt480u", "specSource": "venture" },
 
-    { "id": "1995-pz480v", "year": 1995, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480V", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1995/phazer-ii-pz480v", "specSource": "assumed" },
-    { "id": "1995-pz480ev", "year": 1995, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EV", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1995/phazer-ii-le-elec-start-pz480ev", "specSource": "assumed" },
-    { "id": "1995-pz480stv", "year": 1995, "family": "Phazer II", "variant": "Phazer II ST (LT)", "code": "PZ480STV", "start": "recoil", "track": "8CC-47110-11-00", "slide": "89A-47115-01-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "partzilla": "1995/phazer-ii-st-long-track-pz480stv", "specSource": "assumed" },
-    { "id": "1995-vt480v", "year": 1995, "family": "Venture", "variant": "Venture XL", "code": "VT480V", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BK-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "partzilla": "1995/venture-xl-vt480v", "specSource": "venture" }
+    { "id": "1995-pz480v", "year": 1995, "family": "Phazer II", "variant": "Phazer II", "code": "PZ480V", "start": "recoil", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "8BL-85510-00-00", "rotor": "88F-85550-00-00", "partzilla": "1995/phazer-ii-pz480v", "specSource": "assumed" },
+    { "id": "1995-pz480ev", "year": 1995, "family": "Phazer II", "variant": "Phazer II LE", "code": "PZ480EV", "start": "electric", "track": "87F-47110-01-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-527G1-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "8BL-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1995/phazer-ii-le-elec-start-pz480ev", "specSource": "assumed" },
+    { "id": "1995-pz480stv", "year": 1995, "family": "Phazer II", "variant": "Phazer II ST (LT)", "code": "PZ480STV", "start": "recoil", "track": "8CC-47110-11-00", "slide": "89A-47115-01-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BL-85540-00-00", "coil": "8AB-82310-09-00", "brakeDisc": "87F-25711-01-00", "stator": "8BL-85510-00-00", "rotor": "88H-85550-00-00", "partzilla": "1995/phazer-ii-st-long-track-pz480stv", "specSource": "assumed" },
+    { "id": "1995-vt480v", "year": 1995, "family": "Venture", "variant": "Venture XL", "code": "VT480V", "start": "electric", "track": "82M-47110-00-00", "slide": "8A5-47115-00-00", "primarySpring": "90501-507G2-00", "belt": "89L-17641-01-00", "cdi": "8BK-85540-01-00", "coil": "8AB-82310-09-00", "brakeDisc": "89X-25711-00-00", "stator": "8BK-85510-00-00", "rotor": "88T-85550-00-00", "partzilla": "1995/venture-xl-vt480v", "specSource": "venture" }
   ]
 }
