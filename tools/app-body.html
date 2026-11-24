@@ -69,17 +69,76 @@
   .masthead-meta { margin-left: auto; text-align: right; font-size: 12px; color: var(--muted); line-height: 1.45; }
   .masthead-meta strong { color: var(--ink); font-weight: 600; }
 
-  /* Scrolls sideways on a phone instead of pushing the whole page wider. */
-  .viewnav { display: flex; gap: 0; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: thin; }
-  .viewtab {
+  /* Five sections across the top on a laptop; a fixed bar at the bottom on a phone. */
+  .secnav { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+  .sectab {
     flex: none; white-space: nowrap;
-    font-family: Oswald, "Arial Narrow", sans-serif; font-size: 14px; font-weight: 500;
+    font-family: Oswald, "Arial Narrow", sans-serif; font-size: 15px; font-weight: 500;
     letter-spacing: .07em; text-transform: uppercase;
     background: none; border: 0; border-bottom: 3px solid transparent;
-    color: var(--muted); padding: 12px 18px 9px; cursor: pointer; margin-bottom: -1px;
+    color: var(--muted); padding: 12px 20px 9px; cursor: pointer; margin-bottom: -1px;
   }
-  .viewtab:hover { color: var(--ink); }
-  .viewtab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .sectab:hover { color: var(--ink); }
+  .sectab[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .sectab .short { display: none; }
+  .badge { display: inline-block; min-width: 18px; padding: 2px 5px; margin-left: 6px; border-radius: 9px;
+           background: var(--accent); color: var(--chipfg); font: 600 10.5px/1.2 "IBM Plex Sans", sans-serif;
+           letter-spacing: 0; text-align: center; vertical-align: 2px; }
+
+  .topbar { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 14px 0 12px; }
+  .sledpick {
+    display: flex; align-items: center; gap: 8px; flex: 0 1 360px; min-width: 0;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 0 10px;
+  }
+  .sledpick:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .sledpick select {
+    flex: 1; min-width: 0; border: 0; background: none; color: var(--ink); outline: none;
+    font: 500 14px/1.2 "IBM Plex Sans", sans-serif; padding: 10px 0;
+  }
+  .pagenav { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 0 14px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
+  .pagebtn {
+    font: 500 13px/1 "IBM Plex Sans", sans-serif; padding: 8px 12px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink); border-radius: 999px; cursor: pointer;
+  }
+  .pagebtn:hover { border-color: var(--accent); color: var(--accent); }
+  .pagebtn[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--chipfg); }
+  .pagebtn .badge { background: var(--chipfg); color: var(--accent); }
+  .pagebtn:not([aria-current="page"]) .badge { background: var(--accent); color: var(--chipfg); }
+
+  @media (max-width: 720px) {
+    .secnav {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; border: 0; border-top: 1px solid var(--line);
+      background: var(--surface); padding-bottom: env(safe-area-inset-bottom);
+    }
+    .sectab {
+      flex: 1 1 0; min-width: 0; padding: 12px 2px 11px; font-size: 13px; letter-spacing: .04em;
+      border-bottom: 0; border-top: 3px solid transparent; margin: 0;
+    }
+    .sectab[aria-current="page"] { border-top-color: var(--accent); background: var(--accent-soft); }
+    .sectab .long { display: none; }
+    .sectab .short { display: inline; }
+    .sectab .badge { margin-left: 3px; }
+    .shell { padding-bottom: 92px; }
+    .toast { bottom: 84px !important; }
+    .sledpick { flex: 1 1 100%; }
+    .pagebtn { padding: 8px 10px; }
+  }
+
+  /* Search results and the row a result points at. */
+  .rgroup { margin-bottom: 26px; }
+  .rgroup > h2 { font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 8px; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
+  .ritem { display: block; width: 100%; text-align: left; cursor: pointer; font: inherit; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line); padding: 10px 14px; margin-bottom: 6px; }
+  .ritem:hover { border-color: var(--accent); }
+  .ritem .rhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 14px; }
+  .ritem .rt { font-weight: 600; }
+  .ritem .rv { font-variant-numeric: tabular-nums; font-weight: 500; }
+  .ritem .rs { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .flash { animation: flash 2.2s ease-out; }
+  @keyframes flash { 0%, 40% { background: var(--accent-soft); box-shadow: 0 0 0 3px var(--accent); } 100% { background: transparent; box-shadow: none; } }
+  .quick .specgrid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .quick .spec dd { font-size: 16px; }
 
   .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--line); }
   .chipset { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -93,17 +152,9 @@
   .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--chipfg); }
 
   .search {
-    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px;
     background: var(--surface); border: 1px solid var(--line); border-radius: 2px;
-    padding: 0 10px; min-width: 0; flex: 1 1 220px; max-width: 320px;
-  }
-  @media (max-width: 560px) { .search { max-width: none; margin-left: 0; } }
-
-  /* On narrow screens the model rail becomes a dropdown above the sheet. */
-  #rail .modelselect { display: none; width: 100%; margin-bottom: 4px; }
-  @media (max-width: 860px) {
-    #rail .modelselect { display: flex; }
-    #modelList, #rail .rail-head { display: none; }
+    padding: 0 10px; min-width: 0; flex: 1 1 300px;
   }
   .search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .search input {
@@ -113,24 +164,8 @@
   .search input::placeholder { color: var(--muted); font-family: "IBM Plex Sans", sans-serif; }
   .search-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
-  .split { display: grid; grid-template-columns: 258px minmax(0, 1fr); gap: 28px; padding-top: 22px; }
-  .split.wide { grid-template-columns: minmax(0, 1fr); }
-  @media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); gap: 12px; padding-top: 14px; } }
-
+  /* Label above a run of boxes on the Year changes page. */
   .rail-head { font: 500 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-bottom: 8px; }
-  .yeargroup > h3 {
-    font-family: Oswald, sans-serif; font-size: 15px; font-weight: 500; letter-spacing: .06em;
-    margin: 12px 0 4px; padding-bottom: 3px; border-bottom: 1px solid var(--line-soft); color: var(--muted);
-  }
-  .modelbtn {
-    display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; cursor: pointer;
-    background: none; border: 0; border-left: 3px solid transparent; padding: 6px 8px;
-    color: var(--ink); font: 400 14px/1.3 "IBM Plex Sans", sans-serif;
-  }
-  .modelbtn:hover { background: var(--surface-2); }
-  .modelbtn[aria-current="true"] { background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
-  .modelbtn .code { margin-left: auto; font-size: 11px; color: var(--muted); font-family: "IBM Plex Mono", monospace; }
-  .es-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; align-self: center; }
 
   .sheet-head { padding-bottom: 14px; border-bottom: 2px solid var(--ink); margin-bottom: 22px; }
   .sheet-title {
@@ -179,7 +214,7 @@
     box-shadow: inset 0 0 0 1px var(--accent);
   }
   td.jcell.is-hit .tag { background: rgba(255,255,255,.22); color: var(--chipfg); }
-  /* Mods & upgrades tab. */
+  /* Mods & upgrades page. */
   .modnav { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 22px; }
   .modnav a {
     padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px;
@@ -366,9 +401,9 @@
   @media print {
     :root { color-scheme: light; }
     body { background: #fff; color: #000; font-size: 11px; }
-    .viewnav, .controls, #rail, .toast, .printhide, .addbtn, .btnrow { display: none !important; }
+    .secnav, .topbar, .pagenav, .toast, .printhide, .addbtn, .btnrow { display: none !important; }
     .shell { max-width: none; padding: 0; }
-    .split { display: block; padding-top: 8px; }
+    main { padding-top: 8px; }
     .masthead { padding-top: 0; }
     .group { break-inside: avoid; margin-bottom: 14px; }
     .prov, .verdict, .trackfig, .tablewrap { background: #fff !important; }
@@ -386,24 +421,21 @@
     </div>
   </header>
 
-  <nav class="viewnav" id="viewnav" role="tablist"></nav>
+  <nav class="secnav" id="secnav" aria-label="Sections"></nav>
 
-  <div class="controls" id="controls">
-    <div class="chipset" id="familyChips"></div>
-    <div class="search">
-      <span class="search-label">Find</span>
-      <input id="q" type="search" placeholder="part number or name&hellip;" autocomplete="off" spellcheck="false">
+  <div class="topbar" id="topbar">
+    <div class="search" role="search">
+      <label class="search-label" for="q">Find</label>
+      <input id="q" type="search" placeholder="part, spec, torque, symptom, mod&hellip;" autocomplete="off" spellcheck="false" enterkeyhint="search">
+    </div>
+    <div class="sledpick">
+      <label class="search-label" for="sledSelect">Sled</label>
+      <select id="sledSelect"></select>
     </div>
   </div>
 
-  <div class="split" id="split">
-    <aside id="rail">
-      <div class="rail-head">Model &middot; year</div>
-      <div class="field modelselect"><label for="modelSelect">Model &middot; year</label><select id="modelSelect"></select></div>
-      <div class="modellist" id="modelList"></div>
-    </aside>
-    <main id="main" role="tabpanel" tabindex="-1"></main>
-  </div>
+  <nav class="pagenav" id="pagenav" aria-label="Pages in this section"></nav>
+  <main id="main" tabindex="-1"></main>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -442,7 +474,7 @@
     MODELS.length + " models · " + Object.keys(P.d).length + " parts" + (DIA ? " · diagrams offline" : "");
 
   var state = {
-    view: "specs", family: "All", modelId: "1992-pz480s", q: "",
+    view: "specs", modelId: "1992-pz480s", q: "",
     /* Jetting inputs live here, so picking another model does not reset them. */
     jet: { alt: "1000", temp: "20", pipe: "stock", refAlt: "0", refTemp: "32" }
   };
@@ -518,8 +550,7 @@
   })();
   function orderSave() {
     try { localStorage.setItem("phazermania.order", JSON.stringify(order)); } catch (e) { /* keep in memory */ }
-    var t = document.getElementById("tab-order");
-    if (t) t.textContent = "Order list" + (order.length ? " (" + order.length + ")" : "");
+    if (PAGES[state.view]) renderNav();
   }
   function orderHas(pn) { return order.some(function (x) { return x.pn === pn; }); }
   function orderAdd(pn, qty) {
@@ -540,29 +571,48 @@
     return ids.length ? ids.length + (ids.length === 1 ? " model" : " models") : "not in the parts index";
   }
 
-  /* ================= view tabs ================= */
-  var VIEWS = [
-    { id: "specs",   label: "Spec sheet" },
-    { id: "jetting", label: "Jetting" },
-    { id: "track",   label: "Track fit" },
-    { id: "carbs",   label: "Carb swap" },
-    { id: "torque",  label: "Torque & springs" },
-    { id: "setup",   label: "Clutch, gearing & suspension" },
-    { id: "changes", label: "Year changes" },
-    { id: "mods",    label: "Mods & upgrades" },
-    { id: "calc",    label: "Calculators" },
-    { id: "ident",   label: "Which sled is this?" },
-    { id: "trouble", label: "Troubleshooting" },
-    { id: "swap",    label: "Interchange" },
-    { id: "service", label: "Maintenance" },
-    { id: "garage",  label: "My garage" },
-    { id: "order",   label: "Order list" },
-    { id: "log",     label: "Tuning log" }
+  /* ================= sections and pages =================
+     Five sections named for what a rider is trying to do, each holding a few
+     pages. The sled picker and the search box sit above all of them. */
+  var SECTIONS = [
+    { id: "sled", label: "My sled", short: "My sled", pages: [
+      { id: "specs",  label: "Quick specs", kw: "spec plug gap jet fuel oil capacity belt clutch rpm" },
+      { id: "sheet",  label: "Full spec sheet", kw: "spec sheet engine carburettor carburetor print" },
+      { id: "ident",  label: "Identify my sled", kw: "which sled serial number frame engine vin year identify" },
+      { id: "garage", label: "My garage", kw: "garage my sleds saved" } ] },
+    { id: "parts", label: "Parts", short: "Parts", pages: [
+      { id: "parts",    label: "Find a part", kw: "parts index part number order" },
+      { id: "diagrams", label: "Diagrams", kw: "diagram fiche exploded partzilla" },
+      { id: "swap",     label: "Interchange", kw: "interchange swap donor fits compare" },
+      { id: "order",    label: "Order list", kw: "order list shopping cart" } ] },
+    { id: "tune", label: "Tune", short: "Tune", pages: [
+      { id: "jetting",    label: "Jetting", kw: "jetting jet main pilot altitude temperature plug reading carb circuit needle" },
+      { id: "clutch",     label: "Clutching", kw: "clutch clutching spring weights primary secondary engagement shift altitude" },
+      { id: "gearing",    label: "Gearing", kw: "gearing gear sprocket chain ratio top speed calculator" },
+      { id: "suspension", label: "Suspension", kw: "suspension shock spring preload ride" },
+      { id: "log",        label: "Tuning log", kw: "tuning log notes" } ] },
+    { id: "fix", label: "Fix", short: "Fix", pages: [
+      { id: "trouble", label: "Troubleshooting", kw: "troubleshooting won't start bog misfire problem symptom" },
+      { id: "service", label: "Maintenance", kw: "maintenance service schedule interval premix oil mix" },
+      { id: "torque",  label: "Torque specs", kw: "torque fastener bolt nut tighten" },
+      { id: "limits",  label: "Service limits", kw: "service limits capacities crank runout deflection free play" } ] },
+    { id: "mods", label: "Mods & history", short: "Mods", pages: [
+      { id: "mods",    label: "Mods & upgrades", kw: "mods upgrades performance" },
+      { id: "track",   label: "Track fit", kw: "track lug height length drivers fitment" },
+      { id: "carbs",   label: "Carb swap", kw: "carb swap vmax flat slide tm38 conversion" },
+      { id: "changes", label: "Year changes", kw: "year changes history what changed" } ] }
   ];
+  var PAGES = {};
+  SECTIONS.forEach(function (sec) { sec.pages.forEach(function (p) { p.sec = sec; PAGES[p.id] = p; }); });
+  /* Old addresses keep working: these tabs were split or renamed. */
+  var OLD_PAGES = { setup: "clutch", calc: "gearing" };
+  function pageOf(id) { id = OLD_PAGES[id] || id; return PAGES[id] ? id : null; }
+  function viewExists(id) { return !!pageOf(id); }
+  var lastPage = {};
 
   /* ================= saved state + shareable links =================
-     The address carries the sled and the tab, e.g. #1992-pz480s/jetting, so a
-     link opens the same sheet for someone else. The browser also remembers the
+     The address carries the sled and the page, e.g. #1992-pz480s/jetting, so a
+     link opens the same page for someone else. The browser also remembers the
      last sled, the jetting inputs, the order list and the tuning log. All of it
      lives in this browser only; nothing is sent anywhere. */
   var store = {
@@ -574,13 +624,12 @@
       try { localStorage.setItem("phazermania." + k, JSON.stringify(v)); } catch (e) { /* private mode: keep going */ }
     }
   };
-  function viewExists(id) { return VIEWS.some(function (v) { return v.id === id; }); }
   function readHash() {
     var h = decodeURIComponent((location.hash || "").replace(/^#/, "")).split("/");
     var out = {};
     if (h[0] && byId[h[0]]) out.modelId = h[0];
-    else if (h[0] && viewExists(h[0])) out.view = h[0];
-    if (h[1] && viewExists(h[1])) out.view = h[1];
+    else if (h[0] && viewExists(h[0])) out.view = pageOf(h[0]);
+    if (h[1] && viewExists(h[1])) out.view = pageOf(h[1]);
     return out;
   }
   function writeHash() {
@@ -601,108 +650,89 @@
     store.set("state", { modelId: state.modelId, jet: state.jet });
     writeHash();
   }
-  var nav = document.getElementById("viewnav");
-  function selectView(id, focus) {
-    state.view = id;
-    Array.prototype.forEach.call(nav.children, function (x, i) {
-      var on = VIEWS[i].id === state.view;
-      x.setAttribute("aria-selected", String(on));
-      x.tabIndex = on ? 0 : -1;
-      if (on && focus) { x.focus(); x.scrollIntoView({ block: "nearest", inline: "nearest" }); }
-    });
-    syncChrome(); render();
+
+  var secNav = document.getElementById("secnav"), pageNav = document.getElementById("pagenav");
+  function badgeHtml(n) { return n ? ' <span class="badge" aria-label="' + n + ' on the order list">' + n + "</span>" : ""; }
+  function renderNav() {
+    var cur = PAGES[state.view].sec;
+    secNav.innerHTML = SECTIONS.map(function (sec) {
+      var on = sec === cur;
+      return '<button type="button" class="sectab" data-sec="' + sec.id + '"' + (on ? ' aria-current="page"' : "") + ">" +
+        '<span class="long">' + esc(sec.label) + '</span><span class="short">' + esc(sec.short) + "</span>" +
+        (sec.id === "parts" ? badgeHtml(order.length) : "") + "</button>";
+    }).join("");
+    pageNav.innerHTML = cur.pages.map(function (p) {
+      var on = p.id === state.view && !state.q.trim();
+      return '<button type="button" class="pagebtn" data-page="' + p.id + '"' + (on ? ' aria-current="page"' : "") + ">" +
+        esc(p.label) + (p.id === "order" ? badgeHtml(order.length) : "") + "</button>";
+    }).join("");
   }
-  VIEWS.forEach(function (v, i) {
-    var b = document.createElement("button");
-    b.className = "viewtab"; b.type = "button"; b.textContent = v.label;
-    b.id = "tab-" + v.id;
-    b.setAttribute("role", "tab");
-    b.setAttribute("aria-controls", "main");
-    b.setAttribute("aria-selected", String(v.id === state.view));
-    b.tabIndex = v.id === state.view ? 0 : -1;
-    b.addEventListener("click", function () { selectView(v.id); });
-    /* Arrow keys move between tabs, as the tab pattern expects. */
-    b.addEventListener("keydown", function (e) {
-      var n = VIEWS.length, j = null;
-      if (e.key === "ArrowRight") j = (i + 1) % n;
-      else if (e.key === "ArrowLeft") j = (i - 1 + n) % n;
-      else if (e.key === "Home") j = 0;
-      else if (e.key === "End") j = n - 1;
-      if (j === null) return;
-      e.preventDefault(); selectView(VIEWS[j].id, true);
-    });
-    nav.appendChild(b);
+  secNav.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-sec]");
+    if (!b) return;
+    var sec = SECTIONS.filter(function (s) { return s.id === b.getAttribute("data-sec"); })[0];
+    selectView(lastPage[sec.id] || sec.pages[0].id);
+  });
+  pageNav.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-page]");
+    if (b) selectView(b.getAttribute("data-page"));
   });
 
-  /* The model rail and part search only apply to the spec sheet and the two
-     mod views that key off the selected sled. */
-  function syncChrome() {
-    var needsRail = state.view === "specs" || state.view === "jetting" || state.view === "track";
-    document.getElementById("rail").style.display = needsRail ? "" : "none";
-    document.getElementById("split").classList.toggle("wide", !needsRail);
-    document.getElementById("controls").style.display = state.view === "specs" ? "" : "none";
-    document.getElementById("main").setAttribute("aria-labelledby", "tab-" + state.view);
-    if (state.view !== "specs") { state.q = ""; document.getElementById("q").value = ""; }
+  /* Go to a page. A search in progress is cleared so the page shows. `anchor`
+     scrolls to one row on it and flashes it, for search results. */
+  function selectView(id, focus, anchor) {
+    id = pageOf(id) || "specs";
+    var changed = id !== state.view || state.q.trim();
+    state.view = id; lastPage[PAGES[id].sec.id] = id;
+    if (state.q) { state.q = ""; qEl.value = ""; }
+    render();
+    if (anchor) {
+      var el = document.getElementById(anchor);
+      if (el) { el.scrollIntoView({ block: "center" }); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+    } else if (changed) {
+      window.scrollTo(0, 0);
+    }
+    if (focus) document.getElementById("main").focus({ preventScroll: true });
   }
 
-  /* ================= family chips + rail ================= */
-  var chipBox = document.getElementById("familyChips");
-  ["All", "Phazer", "Phazer II", "Venture"].forEach(function (f) {
-    var b = document.createElement("button");
-    b.className = "chip"; b.type = "button"; b.textContent = f;
-    b.setAttribute("aria-pressed", String(f === state.family));
-    b.addEventListener("click", function () {
-      state.family = f;
-      Array.prototype.forEach.call(chipBox.children, function (x) {
-        x.setAttribute("aria-pressed", String(x.textContent === state.family));
-      });
-      renderList();
-    });
-    chipBox.appendChild(b);
-  });
-
-  function visibleModels() {
-    return MODELS.filter(function (m) { return state.family === "All" || m.family === state.family; });
-  }
-  function pickModel(id) {
-    state.modelId = id;
-    document.getElementById("q").value = ""; state.q = "";
-    renderList();
-  }
-  var modelSelect = document.getElementById("modelSelect");
-  modelSelect.addEventListener("change", function () { pickModel(modelSelect.value); });
-
-  function renderList() {
-    var list = document.getElementById("modelList");
-    list.innerHTML = "";
-    var vis = visibleModels();
-    if (vis.length && !vis.some(function (m) { return m.id === state.modelId; })) state.modelId = vis[0].id;
+  /* ================= sled picker =================
+     Garage sleds first, then every model by year. Every page that differs by
+     model follows it. */
+  var sledSelect = document.getElementById("sledSelect");
+  function renderSledPicker() {
+    var g = activeSled(), list = garageLoad(), html = "";
+    if (list.length) {
+      html += '<optgroup label="My garage">' + list.map(function (x) {
+        var xm = byId[x.modelId];
+        return '<option value="g:' + esc(x.id) + '"' + (g && g.id === x.id ? " selected" : "") + ">" + esc(x.name) +
+          (xm ? " · " + xm.year + " " + esc(xm.variant) : "") + "</option>";
+      }).join("") + "</optgroup>";
+    }
     var years = [];
-    vis.forEach(function (m) { if (years.indexOf(m.year) < 0) years.push(m.year); });
-    /* The same list as a dropdown, for phones. */
-    modelSelect.innerHTML = years.map(function (y) {
-      return '<optgroup label="' + y + '">' + vis.filter(function (m) { return m.year === y; }).map(function (m) {
-        return '<option value="' + esc(m.id) + '"' + (m.id === state.modelId ? " selected" : "") + ">" +
+    MODELS.forEach(function (m) { if (years.indexOf(m.year) < 0) years.push(m.year); });
+    html += years.map(function (y) {
+      return '<optgroup label="' + y + '">' + MODELS.filter(function (m) { return m.year === y; }).map(function (m) {
+        return '<option value="' + esc(m.id) + '"' + (!g && m.id === state.modelId ? " selected" : "") + ">" +
           y + " " + esc(m.variant) + " (" + esc(m.code) + ")</option>";
       }).join("") + "</optgroup>";
     }).join("");
-    years.forEach(function (y) {
-      var g = document.createElement("div");
-      g.className = "yeargroup";
-      var h = document.createElement("h3"); h.textContent = y; g.appendChild(h);
-      vis.filter(function (m) { return m.year === y; }).forEach(function (m) {
-        var b = document.createElement("button");
-        b.className = "modelbtn"; b.type = "button";
-        b.setAttribute("aria-current", String(m.id === state.modelId));
-        b.innerHTML = (m.start === "electric" ? '<span class="es-dot" title="Electric start"></span>' : "") +
-          "<span>" + esc(m.variant) + '</span><span class="code">' + esc(m.code) + "</span>";
-        b.addEventListener("click", function () { pickModel(m.id); });
-        g.appendChild(b);
-      });
-      list.appendChild(g);
-    });
-    render();
+    sledSelect.innerHTML = html;
   }
+  sledSelect.addEventListener("change", function () {
+    var v = sledSelect.value;
+    if (v.indexOf("g:") === 0) {
+      var g = garageLoad().filter(function (x) { return "g:" + x.id === v; })[0];
+      if (g) { useSled(g); return; }
+    }
+    store.set("garageActive", null);
+    pickModel(v);
+  });
+  function pickModel(id) {
+    if (!byId[id]) return;
+    state.modelId = id;
+    refreshSled();
+  }
+  function refreshSled() { render(); }
 
   /* ================= atmosphere + jetting math =================
      Mikuni's correction factor is a straight air-density ratio:
@@ -832,35 +862,32 @@
   /* ================= renderers ================= */
   function render() {
     persist();
+    renderSledPicker();
+    renderNav();
     var main = document.getElementById("main");
-    renderView(main);
+    if (state.q.trim()) return renderSearch(main);
+    RENDER[state.view](main);
     garageStrip(main);
   }
-  function renderView(main) {
-    if (state.view === "order")   return renderOrder(main);
-    if (state.view === "log")     return renderLog(main);
-    if (state.view === "specs")   return renderSpecs(main);
-    if (state.view === "jetting") return renderJetting(main);
-    if (state.view === "track")   return renderTrack(main);
-    if (state.view === "carbs")   return renderCarbs(main);
-    if (state.view === "torque")  return renderTorque(main);
-    if (state.view === "setup")   return renderSetup(main);
-    if (state.view === "changes") return renderChanges(main);
-    if (state.view === "mods")    return renderMods(main);
-    if (state.view === "calc")    return renderCalc(main);
-    if (state.view === "service") return renderService(main);
-    if (state.view === "trouble") return renderTrouble(main);
-    if (state.view === "ident")   return renderIdent(main);
-    if (state.view === "swap")    return renderSwap(main);
-    if (state.view === "garage")  return renderGarage(main);
-  }
+  var RENDER = {
+    specs: renderQuick, sheet: renderSheet, ident: renderIdent, garage: renderGarage,
+    parts: renderParts, diagrams: renderDiagrams, swap: renderSwap, order: renderOrder,
+    jetting: renderJetting, clutch: renderClutch, gearing: renderGearing, suspension: renderSuspension, log: renderLog,
+    trouble: renderTrouble, service: renderService, torque: renderTorque, limits: renderLimits,
+    mods: renderMods, track: renderTrack, carbs: renderCarbs, changes: renderChanges
+  };
 
   /* unconfirmed: the part number is on the spec sheet but not on this model's own
      scraped diagram, so it is carried over rather than read for this year. */
   var UNCONF_TAG = '<span class="tag tag-unconf" title="Not on this model\u2019s scraped parts list, so not confirmed for this year">unconfirmed</span>';
+  /* While COLLECT is an array, every spec row is also recorded there, so the
+     search reads the same rows the pages show and the two cannot drift. */
+  var COLLECT = null;
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
   function row(label, value, pn, unconfirmed) {
+    if (COLLECT) COLLECT.push({ label: label, value: value, pn: pn });
     var v = value == null || value === "" ? '<span class="gap">needs manual</span>' : esc(value);
-    return '<div class="spec"><dt>' + esc(label) + "</dt><dd>" + v + (unconfirmed ? UNCONF_TAG : "") +
+    return '<div class="spec" id="sp-' + slug(label) + '"><dt>' + esc(label) + "</dt><dd>" + v + (unconfirmed ? UNCONF_TAG : "") +
            (pn ? '<span class="pn">' + esc(pn) + "</span>" : "") + "</dd></div>";
   }
   function partsFor(m) { return P.m[m.partzilla] || []; }
@@ -879,28 +906,84 @@
     return note ? '<div class="prov">' + note + "</div>" : "";
   }
 
-  /* ---------------- spec sheet ---------------- */
-  function renderSpecs(main) {
-    if (state.q.trim()) return renderSearch(main);
+  /* ---------------- shared sled header + source badges ---------------- */
+  function sledHead(m, title, sub) {
+    return '<div class="sheet-head"><h2 class="sheet-title">' + (title || m.year + " Yamaha " + esc(m.variant)) + "</h2>" +
+      '<div class="sheet-sub">' + (sub || "") + "<span>" + (title ? m.year + " " + esc(m.variant) + " &middot; " : "Model code ") + '<span class="mono">' + esc(m.code) + "</span></span>" +
+      "<span>" + (m.start === "electric" ? "Electric start" : "Recoil start") + "</span></div>";
+  }
+  var BADGE_OK = ' <span class="tag tag-ok" title="Read off the manual page that covers this model">manual</span>';
+  function badge(verified, why) {
+    return verified ? BADGE_OK : ' <span class="tag tag-alt" title="' + esc(why) + '">carried over</span>';
+  }
+  /* A link to another page, wired by one delegated listener on main. */
+  function goLink(page, text, anchor) {
+    return '<button type="button" class="linkbtn" style="font-size:inherit" data-goto="' + page + '"' +
+      (anchor ? ' data-anchor="' + esc(anchor) + '"' : "") + ">" + text + "</button>";
+  }
+  function sledButtons(m) {
+    return '<div class="btnrow printhide"><button type="button" class="btn" id="printCard">Print spec card</button>' +
+      '<button type="button" class="btn" id="copyLink">Copy link to this sled</button></div>';
+  }
+  function wireSledButtons(m) {
+    document.getElementById("printCard").addEventListener("click", function () { window.print(); });
+    document.getElementById("copyLink").addEventListener("click", function () {
+      copyText(location.href.split("#")[0] + "#" + m.id, "Link copied");
+    });
+  }
+
+  /* ---------------- quick specs (home page) ----------------
+     The figures riders look up most, on one screen. Every row keeps the same
+     source badge and "unconfirmed" tag as the full spec sheet. */
+  function quickHtml(m) {
+    var t = S.tracks[m.track] || {}, eng = S.engine, carb = S.carburetor, src = m.specSource, html = "";
+    var mine = modelPns(m), unc = function (f) { return !mine[m[f]]; };
+    var cl = clutchFor(m);
+    html += '<section class="group"><h2>Ignition' + badge(src === "clymer8489", "From the 1984-89 PZ480 manual; this model shares the engine part numbers") + '</h2><dl class="specgrid">';
+    html += row("Spark plug", eng.sparkPlug) + row("Plug gap", eng.sparkPlugGap);
+    html += row("Ignition timing", eng.ignitionTiming) + row("Idle speed", eng.idleSpeed);
+    html += "</dl></section>";
+    html += '<section class="group"><h2>Carburettor' + badge(src === "clymer8489" || src === "factory9096", "Same carburettor part numbers as the 1990 Phazer II; no carburettor spec page for this year was checked") + '</h2><dl class="specgrid">';
+    html += row("Main jet (M.J.)", "#" + carb.mainJetStd.size, carb.mainJetStd.pn);
+    html += row("Pilot jet (P.J.)", "#" + carb.pilotJetStd.size, carb.pilotJetStd.pn);
+    html += row("Pilot screw (P.S.)", carb.pilotScrew);
+    html += row("Float height (F.H.)", m.family === "Phazer" ? carb.floatHeight8489 : carb.floatHeight1990);
+    html += '</dl><p class="note">For your altitude and temperature, see ' + goLink("jetting", "Tune &rsaquo; Jetting") + ".</p></section>";
+    html += '<section class="group"><h2>Fluids' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
+    html += row("Fuel tank", S.capacities.fuelTank) + row("Oil tank", S.capacities.oilTank) + row("Chaincase oil", S.capacities.chaincase);
+    html += '</dl><p class="note">Premix for break-in or a dead oil pump: ' + goLink("service", "Fix &rsaquo; Maintenance", "mixCalc") + ".</p></section>";
+    html += '<section class="group"><h2>Drive' + (cl ? BADGE_OK : "") + '</h2><dl class="specgrid">';
+    html += row("Track", t.widthIn ? t.widthIn + " × " + t.lengthIn + " in" + (t.lugIn ? ", " + t.lugIn + " in lug" : "") : null, m.track, unc("track"));
+    html += row("Drive belt", "—", m.belt, unc("belt"));
+    html += row("Belt width, new", S.clutch.beltWidthNew) + row("Belt wear limit", cl ? cl.beltWearLimit || null : null);
+    html += row("Engagement RPM", cl ? cl.engagementRpm : null) + row("Shift RPM", cl ? cl.shiftRpm : null);
+    html += row("Primary spring", cl ? cl.primarySpring : "—", m.primarySpring, unc("primarySpring"));
+    html += "</dl>";
+    if (!cl) html += '<p class="note">' + (m.family === "Venture" ?
+      "No clutch figures are shown for the Venture: there is no Venture manual in the local set." :
+      "No clutch RPM is shown: the local manuals have Phazer II clutch tables for 1990 and 1991 only.") +
+      " Details on the " + goLink("sheet", "full spec sheet") + ".</p>";
+    html += "</section>";
+    return html;
+  }
+  function renderQuick(main) {
     var m = byId[state.modelId];
-    if (!m) { main.innerHTML = '<p class="empty">No model selected.</p>'; return; }
+    var html = sledHead(m, null, "") + sledButtons(m) + "</div>";
+    html += provenance(m);
+    html += '<div class="quick">' + quickHtml(m) + "</div>";
+    html += '<p class="note">Everything else for this sled, engine to brake, is on the ' + goLink("sheet", "full spec sheet") +
+      ". Parts for it are under " + goLink("parts", "Parts") + ".</p>";
+    main.innerHTML = html;
+    wirePnButtons(main);
+    wireSledButtons(m);
+  }
+
+  /* ---------------- full spec sheet ---------------- */
+  function sheetHtml(m) {
     var t = S.tracks[m.track] || {}, eng = S.engine, carb = S.carburetor, html = "";
     var mine = modelPns(m);
     var unc = function (f) { return !mine[m[f]]; };
-
-    html += '<div class="sheet-head"><h2 class="sheet-title">' + m.year + " Yamaha " + esc(m.variant) + "</h2>";
-    html += '<div class="sheet-sub"><span>Model code <span class="mono">' + esc(m.code) + "</span></span>";
-    html += "<span>" + (m.start === "electric" ? "Electric start" : "Recoil start") + "</span>";
-    html += '<span><a class="diagram" href="' + diagramUrl(m, "carburetor") + '" target="_blank" rel="noopener">Partzilla diagrams &rarr;</a></span></div>' +
-      '<div class="btnrow printhide"><button type="button" class="btn" id="printCard">Print spec card</button>' +
-      '<button type="button" class="btn" id="copyLink">Copy link to this sled</button></div></div>';
-    html += provenance(m);
-    /* Per-section source: was this section read off a manual page for this exact sled? */
     var src = m.specSource;
-    var BADGE_OK = ' <span class="tag tag-ok" title="Read off the manual page that covers this model">manual</span>';
-    var badge = function (verified, why) {
-      return verified ? BADGE_OK : ' <span class="tag tag-alt" title="' + esc(why) + '">carried over</span>';
-    };
 
     html += '<section class="group"><h2>Track</h2><div class="trackfig"><span class="dim">' +
             (t.widthIn ? t.widthIn + " × " + t.lengthIn : "—") + '</span><span class="dimnote">in.' +
@@ -936,7 +1019,7 @@
     html += row("Float height (F.H.)", m.family === "Phazer" ? carb.floatHeight8489 : carb.floatHeight1990);
     html += row("Main nozzle", carb.mainNozzleStd.id + " (standard)", carb.mainNozzleStd.pn);
     html += row("Carburettor assy", "—", carb.assembly) + row("Fuel pump", carb.fuelPump);
-    html += "</dl><p class=\"note\">These are the factory figures. The carburettor and its jetting are <strong>confirmed unchanged</strong> between the 1984&ndash;89 PZ480 manual and the 1990 PZ480P/EP manual &mdash; so the identical part numbers across years are real, not a supersession artifact. Altitude jetting is on the <strong>Jetting</strong> tab.</p></section>";
+    html += "</dl><p class=\"note\">These are the factory figures. The carburettor and its jetting are <strong>confirmed unchanged</strong> between the 1984&ndash;89 PZ480 manual and the 1990 PZ480P/EP manual &mdash; so the identical part numbers across years are real, not a supersession artifact. Altitude jetting is under " + goLink("jetting", "Tune &rsaquo; Jetting") + ".</p></section>";
 
     var cl = clutchFor(m);
     html += '<section class="group"><h2>Clutch settings' + (cl ? BADGE_OK : "") + '</h2><dl class="specgrid">';
@@ -946,7 +1029,7 @@
     html += "</dl>";
     if (cl) {
       html += '<p class="note">' + esc(cl.source) + "." + (cl.printNote ? " " + esc(cl.printNote) : "") +
-        (cl.highAltitude ? " High-altitude settings are on the <b>Clutch &amp; setup</b> tab." : "") + "</p>";
+        (cl.highAltitude ? " High-altitude settings are under " + goLink("clutch", "Tune &rsaquo; Clutching") + "." : "") + "</p>";
     } else {
       html += '<p class="note">' + (m.family === "Venture" ?
         "There is no Venture manual in the local set, and the Venture is a touring setup, so no clutch figures are shown rather than borrowing the Phazer’s." :
@@ -981,7 +1064,7 @@
     if (m.primarySpring === SUPERSEDED_SPRING && m.family === "Phazer") {
       html += '<div class="verdict warn"><span class="vlabel">Spring conflict</span><span>Partzilla lists ' + SUPERSEDED_SPRING +
         " for this sled, but Yamaha bulletin S88-007 and the high-altitude table both give 90501-52798 (red-blue, 25.8 kg) for the PZ480. " +
-        "Measure free length and wire diameter before ordering. Details on the <b>Torque &amp; springs</b> tab.</span></div>";
+        "Measure free length and wire diameter before ordering. Details under " + goLink("clutch", "Tune &rsaquo; Clutching") + ".</span></div>";
     }
     if (!g.length) {
       html += '<p class="note"><strong>Gearing not itemised on this year’s diagram.</strong> Confirmed on ' +
@@ -999,10 +1082,27 @@
     }
     html += "</section>";
 
+    return html;
+  }
+  function renderSheet(main) {
+    var m = byId[state.modelId];
+    var html = sledHead(m, null, '<span><a class="diagram" href="' + diagramUrl(m, "carburetor") + '" target="_blank" rel="noopener">Partzilla diagrams &rarr;</a></span>') +
+      sledButtons(m) + "</div>" + provenance(m) + sheetHtml(m);
+    main.innerHTML = html;
+    wirePnButtons(main);
+    wireSledButtons(m);
+  }
+
+  /* ---------------- parts index for the sled ---------------- */
+  function renderParts(main) {
+    var m = byId[state.modelId], html = sledHead(m, "Parts for this sled", "") + "</div>";
+    html += '<div class="field printhide" style="margin-bottom:14px"><label for="pFilter">Filter this sled&rsquo;s parts</label>' +
+      '<input id="pFilter" type="search" placeholder="e.g. piston, bearing, 47110" autocomplete="off" value="' + esc(state.pf || "") + '"></div>';
+    html += '<p class="note" style="margin:-6px 0 18px">To search every model at once, use the Find box at the top.</p>';
     var rows = partsFor(m), bySection = {};
     rows.forEach(function (r) { var p = r.split("|"); (bySection[+p[0]] = bySection[+p[0]] || []).push({ ref: p[1], pn: p[2] }); });
 
-    html += '<section class="group printhide"><h2>Full parts index &mdash; ' + rows.length + " entries</h2>";
+    html += '<section class="group"><h2>Parts index &mdash; ' + rows.length + " entries</h2>";
     html += '<div class="tablewrap"><table><thead><tr><th>Ref</th><th>Part</th><th>Number</th></tr></thead><tbody>';
     P.s.forEach(function (sec, si) {
       var items = bySection[si];
@@ -1015,7 +1115,7 @@
       items.forEach(function (it) {
         var d = P.d[it.pn] || it.pn, f = flagOf(d);
         var tag = f === "std" ? '<span class="tag tag-std">Std</span>' : f === "alt" ? '<span class="tag tag-alt">Alt</span>' : "";
-        html += '<tr><td class="ref">' + esc(it.ref) + "</td><td>" + esc(cleanName(d)) + tag +
+        html += '<tr data-h="' + esc((cleanName(d) + " " + it.pn).toLowerCase()) + '"><td class="ref">' + esc(it.ref) + "</td><td>" + esc(cleanName(d)) + tag +
                 '</td><td class="pncell"><button class="pn" data-pn="' + esc(it.pn) + '">' + esc(it.pn) + "</button>" + addBtn(it.pn) + "</td></tr>";
       });
     });
@@ -1029,57 +1129,193 @@
     }
     html += '<p class="note">Part numbers are Partzilla’s <strong>current replacement</strong> numbers. Yamaha supersedes parts, so these are what to order today — not proof of what left the factory. Click any number to copy it.</p></section>';
 
+    main.innerHTML = html;
+    wirePnButtons(main);
+    var f = document.getElementById("pFilter");
+    var apply = function () {
+      var words = (state.pf || "").toLowerCase().split(/\s+/).filter(Boolean), sec = null, secHits = 0;
+      var flush = function () { if (sec) sec.style.display = secHits || !words.length ? "" : "none"; };
+      Array.prototype.forEach.call(main.querySelectorAll("tbody tr"), function (tr) {
+        if (tr.classList.contains("sectionrow")) { flush(); sec = tr; secHits = 0; return; }
+        var h = tr.getAttribute("data-h") || "", ok = words.every(function (w) { return h.indexOf(w) >= 0; });
+        tr.style.display = ok ? "" : "none";
+        if (ok) secHits++;
+      });
+      flush();
+    };
+    f.addEventListener("input", function () { state.pf = f.value; apply(); });
+    apply();
+  }
+
+  /* ---------------- diagrams ---------------- */
+  function renderDiagrams(main) {
+    var m = byId[state.modelId], html = sledHead(m, "Exploded diagrams", "") + "</div>";
+    var have = {};
+    partsFor(m).forEach(function (r) { have[P.s[+r.split("|")[0]]] = 1; });
+    html += '<section class="group"><h2>On Partzilla &mdash; ' + P.s.length + " sections</h2>" +
+      '<div class="fiches">' + P.s.map(function (sec) {
+        var dfile = DIA && DIA[m.partzilla] ? DIA[m.partzilla][sec] : null;
+        return '<a class="fiche" href="' + (dfile ? "data/diagrams/" + esc(dfile) : diagramUrl(m, sec)) + '" target="_blank" rel="noopener">' +
+          esc(sec.replace(/-/g, " ")) + (have[sec] ? "" : ' <span class="tag tag-alt">no parts data</span>') + "</a>";
+      }).join("") + "</div>" +
+      '<p class="note">Each opens that diagram' + (DIA ? " (the offline copy where one exists)" : " on Partzilla") +
+      '. Sections marked <span class="tag tag-alt">no parts data</span> have no scraped parts list in ' + goLink("parts", "Find a part") + ".</p></section>";
     /* Every fiche the model has, not just the sections the parts scraper kept.
        Local build only: the published artifact ships no diagrams. */
     var fiches = RICHS && RICHS[m.partzilla];
     if (fiches) {
       var names = Object.keys(fiches).sort();
       var covered = {};
-      P.s.forEach(function (sec, si) { if (bySection[si]) covered[sec] = 1; });
-      html += '<section class="group printhide"><h2>Exploded diagrams &mdash; ' + names.length + " sections</h2>";
+      Object.keys(have).forEach(function (sec) { covered[sec] = 1; });
+      html += '<section class="group printhide"><h2>Offline fiches &mdash; ' + names.length + " sections</h2>";
       html += '<div class="fiches">' + names.map(function (sec) {
         return '<a class="fiche" href="data/diagrams-richs/' + esc(fiches[sec]) + '.gif" target="_blank" rel="noopener">' +
           esc(sec.replace(/-/g, " ")) +
           (covered[sec] ? "" : ' <span class="tag tag-alt">no parts data</span>') + "</a>";
       }).join("") + "</div>";
-      html += '<p class="note">Offline copies of every section fiche. Sections marked <span class="tag tag-alt">no parts data</span> have a diagram but no scraped parts list &mdash; the parts index above only covers the ' +
+      html += '<p class="note">Offline copies of every section fiche. Sections marked <span class="tag tag-alt">no parts data</span> have a diagram but no scraped parts list &mdash; the parts index only covers the ' +
         P.s.length + " mechanical sections the scraper was told to keep.</p></section>";
     }
 
     main.innerHTML = html;
-    wirePnButtons(main);
-    document.getElementById("printCard").addEventListener("click", function () { window.print(); });
-    document.getElementById("copyLink").addEventListener("click", function () {
-      var url = location.href.split("#")[0] + "#" + m.id;
-      copyText(url, "Link copied");
-    });
   }
 
+  /* ---------------- search everything ----------------
+     One box finds parts, spec rows, torque values, symptoms, maintenance items
+     and mods. It runs over the data already in the page, so it works offline.
+     Every word typed must appear; a trailing "s" is forgiven ("bogs" finds "bog"). */
+  function searchIndex(m) {
+    var out = [], add = function (sec, page, title, value, sub, hay, anchor, extra) {
+      out.push({ sec: sec, page: page, title: title, value: value || "", sub: sub || "", hay: (title + " " + (value || "") + " " + (sub || "") + " " + (hay || "")).toLowerCase(), anchor: anchor, extra: extra });
+    };
+    SECTIONS.forEach(function (sec) {
+      sec.pages.forEach(function (p) { add("pages", p.id, p.label, "", sec.label, p.kw); });
+    });
+    /* Spec rows: the quick-specs page first, then anything only on the full sheet. */
+    var seen = {};
+    [["specs", quickHtml], ["sheet", sheetHtml], ["limits", limitsHtml]].forEach(function (pg) {
+      COLLECT = [];
+      try { pg[1](m); } finally {
+        COLLECT.forEach(function (r) {
+          if (seen[r.label]) return; seen[r.label] = 1;
+          add("specs", pg[0], r.label, r.value == null || r.value === "" ? "needs manual" : r.value, r.pn || "", "", "sp-" + slug(r.label));
+        });
+        COLLECT = null;
+      }
+    });
+    S.torque.groups.forEach(function (g, gi) {
+      g.rows.forEach(function (r, ri) { add("torque", "torque", r.item, r.nm + " N·m · " + r.ftlb + " ft·lb", g.name, "torque", "tq-" + gi + "-" + ri); });
+    });
+    S.crankshaft.rows.forEach(function (r, i) { add("torque", "limits", r.item, r.mm + " mm", "Crankshaft limits", "crank", "cr-" + i); });
+    S.springs.primary.forEach(function (sp, i) { add("tune", "clutch", "Primary spring " + sp.pn, sp.color, sp.usedOn, "clutch spring primary " + sp.rate, "spp-" + i); });
+    S.springs.secondary.forEach(function (sp, i) { add("tune", "clutch", "Secondary spring " + sp.pn, sp.color, sp.usedOn, "clutch spring secondary " + sp.rate, "sps-" + i); });
+    S.carbTuning.circuits.forEach(function (c, i) { add("tune", "jetting", c.range, "", "Which circuit to change", c.controls, "ct-" + i); });
+    S.suspension.adjustments.forEach(function (a, i) { add("tune", "suspension", a.item, a.std, "", a.effect + " " + a.positions, "su-" + i); });
+    S.troubleshooting.groups.forEach(function (g) {
+      g.items.forEach(function (it) { add("trouble", "trouble", it.symptom, "", g.title, it.checks.join(" ") + " " + (it.note || ""), null, { tsq: it.symptom }); });
+    });
+    S.troubleshooting.electrical.rows.forEach(function (r) { add("trouble", "trouble", r[0], r[1], S.troubleshooting.electrical.title, "resistance ohm", "ts-elec"); });
+    svcItems().forEach(function (it) { add("fix", "service", it.item, "", it.group, it.lube || ""); });
+    S.mods.sections.forEach(function (sec) {
+      sec.items.forEach(function (it, i) { add("mods", "mods", it.title, "", sec.title, it.text + " " + (it.pns || []).join(" "), "mod-" + sec.id + "-" + i); });
+    });
+    S.interchange.facts.forEach(function (it) { add("mods", "swap", it.title, "", "", it.text); });
+    return out;
+  }
+  var SEARCH_GROUPS = [["specs", "Specs for your sled"], ["pages", "Pages"], ["parts", "Parts"], ["torque", "Torque and limits"],
+                       ["tune", "Tuning"], ["trouble", "Troubleshooting"], ["fix", "Maintenance"], ["mods", "Mods and interchange"]];
+  function wordHit(hay, w) {
+    if (hay.indexOf(w) >= 0) return true;
+    return w.length > 3 && /s$/.test(w) && hay.indexOf(w.slice(0, -1)) >= 0;
+  }
   function renderSearch(main) {
-    var q = state.q.trim().toUpperCase();
-    var hits = Object.keys(P.d).filter(function (pn) {
-      return pn.toUpperCase().indexOf(q) >= 0 || (P.d[pn] || "").toUpperCase().indexOf(q) >= 0;
-    }).sort();
-    var html = '<div class="sheet-head"><h2 class="sheet-title">' + hits.length + (hits.length === 1 ? " part" : " parts") +
-               " matching &ldquo;" + esc(state.q.trim()) + "&rdquo;</h2><div class=\"sheet-sub\"><span>Searching all " +
-               MODELS.length + " models, 1986&ndash;1995</span></div></div>";
-    if (!hits.length) {
-      main.innerHTML = html + '<p class="empty">Nothing matched. Try a partial number like <span class="mono">47110</span>, or a name like <span class="mono">jet</span>.</p>';
+    var raw = state.q.trim(), m = byId[state.modelId];
+    var words = raw.toLowerCase().split(/\s+/).filter(Boolean);
+    var match = function (hay) { return words.every(function (w) { return wordHit(hay, w); }); };
+    var hits = searchIndex(m).filter(function (e) { return match(e.hay); });
+    var parts = Object.keys(P.d).filter(function (pn) { return match((pn + " " + P.d[pn]).toLowerCase()); }).sort(function (a, b) {
+      /* This sled's own parts first. */
+      var fa = (fits[a] || []).indexOf(m.id) >= 0 ? 0 : 1, fb = (fits[b] || []).indexOf(m.id) >= 0 ? 0 : 1;
+      return fa - fb || (a < b ? -1 : 1);
+    });
+    var total = hits.length + parts.length;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">' + total + (total === 1 ? " result" : " results") +
+      " for &ldquo;" + esc(raw) + "&rdquo;</h2><div class=\"sheet-sub\"><span>Specs shown for the " + m.year + " " + esc(m.variant) +
+      '</span><span>Parts across all ' + MODELS.length + ' models</span><span><button type="button" class="linkbtn" id="qClear">Clear search</button></span></div></div>';
+    if (!total) {
+      main.innerHTML = html + '<p class="empty">Nothing matched. Try one word, such as <span class="mono">gap</span>, <span class="mono">belt</span>, <span class="mono">bog</span> or a part number like <span class="mono">47110</span>.</p>';
+      document.getElementById("qClear").addEventListener("click", clearSearch);
       return;
     }
-    hits.slice(0, 80).forEach(function (pn) {
-      var d = P.d[pn] || pn, f = flagOf(d);
-      var tag = f === "std" ? '<span class="tag tag-std">Std</span>' : f === "alt" ? '<span class="tag tag-alt">Alt</span>' : "";
-      var ids = fits[pn] || [];
-      var names = ids.map(function (id) { var mm = byId[id]; return mm ? mm.year + " " + mm.variant : id; });
-      html += '<div class="hit"><div class="hit-top"><span class="hit-desc">' + esc(cleanName(d)) + "</span>" + tag +
-              '<span style="margin-left:auto"><button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + "</button>" + addBtn(pn) + "</span></div>" +
-              '<div class="hit-fits"><b>Fits ' + ids.length + (ids.length === 1 ? " model:</b> " : " models:</b> ") +
-              esc(names.join(", ")) + "</div></div>";
+    var CAP = 12;
+    SEARCH_GROUPS.forEach(function (g) {
+      if (g[0] === "parts") {
+        if (!parts.length) return;
+        html += '<section class="rgroup"><h2>' + g[1] + " &mdash; " + parts.length + "</h2>";
+        parts.slice(0, 40).forEach(function (pn) {
+          var d = P.d[pn] || pn, f = flagOf(d);
+          var tag = f === "std" ? '<span class="tag tag-std">Std</span>' : f === "alt" ? '<span class="tag tag-alt">Alt</span>' : "";
+          var ids = fits[pn] || [], mineToo = ids.indexOf(m.id) >= 0;
+          var names = ids.map(function (id) { var mm = byId[id]; return mm ? mm.year + " " + mm.variant : id; });
+          html += '<div class="hit"><div class="hit-top"><span class="hit-desc">' + esc(cleanName(d)) + "</span>" + tag +
+            (mineToo ? ' <span class="tag tag-ok">fits your sled</span>' : "") +
+            '<span style="margin-left:auto"><button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + "</button>" + addBtn(pn) + "</span></div>" +
+            '<div class="hit-fits"><b>Fits ' + ids.length + (ids.length === 1 ? " model:</b> " : " models:</b> ") + esc(names.join(", ")) + "</div></div>";
+        });
+        if (parts.length > 40) html += '<p class="note">Showing 40 of ' + parts.length + ". Add a word to narrow it.</p>";
+        html += "</section>";
+        return;
+      }
+      var list = hits.filter(function (e) { return e.sec === g[0]; });
+      if (!list.length) return;
+      html += '<section class="rgroup"><h2>' + g[1] + " &mdash; " + list.length + "</h2>";
+      list.slice(0, CAP).forEach(function (e, i) {
+        var where = e.sec === "pages" ? e.sub : PAGES[e.page].sec.label + " \u203a " + PAGES[e.page].label;
+        html += '<button type="button" class="ritem" data-r="' + hits.indexOf(e) + '"><span class="rhead">' +
+          '<span class="rt">' + esc(e.title) + "</span>" + (e.value ? '<span class="rv">' + esc(e.value) + "</span>" : "") + "</span>" +
+          '<span class="rs">' + (e.sub && e.sec !== "pages" ? esc(e.sub) + " &middot; " : "") + esc(where) + "</span></button>";
+      });
+      if (list.length > CAP) html += '<p class="note">Showing ' + CAP + " of " + list.length + ". Add a word to narrow it.</p>";
+      html += "</section>";
     });
-    if (hits.length > 80) html += '<p class="note">Showing the first 80 of ' + hits.length + ". Narrow the search to see the rest.</p>";
     main.innerHTML = html;
     wirePnButtons(main);
+    document.getElementById("qClear").addEventListener("click", clearSearch);
+    Array.prototype.forEach.call(main.querySelectorAll("[data-r]"), function (b) {
+      b.addEventListener("click", function () {
+        var e = hits[+b.getAttribute("data-r")];
+        if (e.extra && e.extra.tsq) state.tsq = e.extra.tsq;
+        selectView(e.page, false, e.anchor);
+      });
+    });
+  }
+  function clearSearch() { state.q = ""; qEl.value = ""; render(); qEl.focus(); }
+
+  /* Carb circuits and plug reading: one copy, on the Jetting page. */
+  function carbHelpHtml() {
+    var CT = S.carbTuning;
+    var html = '<section class="group" id="circuits"><h2>Which circuit to change</h2><div class="tablewrap"><table>' +
+      "<thead><tr><th>Throttle opening</th><th>Controlled by</th></tr></thead><tbody>" +
+      CT.circuits.map(function (c, i) {
+        return '<tr id="ct-' + i + '"><td><b>' + esc(c.range) + "</b></td><td>" + esc(c.controls) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div>" +
+      '<div class="verdict warn"><span class="vlabel">Screw direction</span><span>' + esc(CT.airScrewWarning) + "</span></div>" +
+      '<p class="note">' + esc(CT.jetNumbers) + " " + esc(CT.idleProcedure) + " " + esc(CT.torsNote) + "</p>" +
+      '<div class="verdict stop"><span class="vlabel">Air box</span><span>' + esc(CT.airboxWarning) + "</span></div>" +
+      '<p class="note">' + esc(CT.mainJetAccess) + "</p></section>";
+
+    html += '<section class="group" id="plugs"><h2>Reading the plugs</h2><ul class="checklist">' +
+      '<li>Run it hard in top gear, then <b>kill the engine and coast to a stop</b> — don’t idle back, or you’ll read the idle circuit.</li>' +
+      '<li>The main jet only owns the top third of the throttle. Midrange lean spots are the <b>nozzle and needle</b>, which is exactly what Yamaha’s 1996 bulletin addressed.</li>' +
+      '</ul><div class="tablewrap" style="margin-top:10px"><table>' +
+      "<thead><tr><th>Condition</th><th>What you see</th><th>What it means</th></tr></thead><tbody>" +
+      CT.plugReading.map(function (p) {
+        return "<tr><td><b>" + esc(p.condition) + "</b></td><td>" + esc(p.look) + "</td><td>" + esc(p.means) + "</td></tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(CT.finalWord) + "</p></section>";
+
+    return html;
   }
 
   /* ---------------- jetting calculator ---------------- */
@@ -1147,12 +1383,7 @@
       '<p class="note">Every main jet Yamaha catalogued for this carburettor. <span style="color:var(--flag)">Red</span> is the factory #' +
       esc(carb.mainJetStd.size) + '. <span style="color:var(--accent)">Blue</span> is the calculated target. Click any rung to copy its part number.</p></section>';
 
-    html += '<section class="group"><h2>Reading the plugs</h2><ul class="checklist">' +
-      '<li>Run it hard in top gear, then <b>kill the engine and coast to a stop</b> — don’t idle back, or you’ll read the idle circuit.</li>' +
-      '<li><b>Tan to light coffee</b> on the porcelain is right. Chalky white means lean, back to a bigger main.</li>' +
-      '<li>Wet, sooty black means rich — come down one rung at a time.</li>' +
-      '<li>The main jet only owns the top third of the throttle. Midrange lean spots are the <b>nozzle and needle</b>, which is exactly what Yamaha’s 1996 bulletin addressed.</li>' +
-      "</ul></section>";
+    html += carbHelpHtml();
 
     main.innerHTML = html;
 
@@ -1260,7 +1491,7 @@
         esc(carb.mainNozzleAlternates[1].pn) + " if it is still lean; that pair is reported as the richest combination. The 1A " +
         esc(carb.mainNozzleAlternates[0].pn) + " is the other bulletin option. Stock is 3A " + esc(carb.mainNozzleStd.pn) + ".</span></div>";
       h += '<div class="verdict warn"><span class="vlabel">Burn-down risk</span><span>Forum reports include a piston burned within six miles on 148 mains with the two-hole primary, ' +
-        "and melted pistons traced to belt dust blocking the carburettor vent tubes. Read the plugs after every change. More on the <b>Mods &amp; upgrades</b> tab.</span></div>";
+        "and melted pistons traced to belt dust blocking the carburettor vent tubes. Read the plugs after every change. More in " + goLink("mods", "Mods &amp; upgrades") + ".</span></div>";
     }
 
     document.getElementById("jResult").innerHTML = h;
@@ -1368,7 +1599,7 @@
         h += '<div class="verdict stop"><span class="vlabel">Driver conflict</span><span>You have 8-tooth selected. Nobody reports clearing more than 1&frac12;" on the stock drivers.</span></div>';
       }
     }
-    h += '<p class="note">Lug clearances are forum-reported, from riders who have done the swap; Yamaha and Camoplast publish no maximum. Sources and detail on the <b>Mods &amp; upgrades</b> tab.</p>';
+    h += '<p class="note">Lug clearances are forum-reported, from riders who have done the swap; Yamaha and Camoplast publish no maximum. Sources and detail in ' + goLink("mods", "Mods &amp; upgrades") + ".</p>";
     document.getElementById("tResult").innerHTML = h;
   }
 
@@ -1389,8 +1620,8 @@
     }).join("") + "</nav>";
     M.sections.forEach(function (sec) {
       html += '<section class="group" id="mod-' + esc(sec.id) + '"><h2>' + esc(sec.title) + "</h2>";
-      sec.items.forEach(function (it) {
-        html += '<div class="mod' + (it.warn ? " mod-warn" : "") + '"><div class="mod-top"><b>' + esc(it.title) + "</b> " + (MOD_TAGS[it.tag] || "") + "</div>" +
+      sec.items.forEach(function (it, i) {
+        html += '<div class="mod' + (it.warn ? " mod-warn" : "") + '" id="mod-' + esc(sec.id) + "-" + i + '"><div class="mod-top"><b>' + esc(it.title) + "</b> " + (MOD_TAGS[it.tag] || "") + "</div>" +
           "<p>" + esc(it.text) + "</p>" +
           (it.pns ? '<p class="mod-pns">' + it.pns.map(function (pn) {
             return '<button class="pn" data-pn="' + esc(pn) + '">' + esc(pn) + "</button>" + addBtn(pn, 2);
@@ -1403,7 +1634,7 @@
     });
     main.innerHTML = html;
     wirePnButtons(main);
-    /* In-page jumps without touching the hash, which carries the sled and tab. */
+    /* In-page jumps without touching the hash, which carries the sled and page. */
     Array.prototype.forEach.call(main.querySelectorAll("[data-jump]"), function (a) {
       a.addEventListener("click", function (e) {
         e.preventDefault();
@@ -1420,12 +1651,10 @@
       return '<option value="' + v + '"' + (String(v) === String(sel) ? " selected" : "") + ">" + (fmt ? fmt(v) : v) + "</option>";
     }).join("");
   }
-  function renderCalc(main) {
+  /* Gearing calculator: lives on Tune > Gearing. */
+  function gearCalcHtml() {
     var C = S.calc, G = S.gearRatios, cs = store.get("calc", {});
-    var html = '<div class="sheet-head"><h2 class="sheet-title">Calculators</h2>' +
-      '<div class="sheet-sub"><span>Gearing and top speed, premix and oil</span></div></div>';
-
-    html += '<section class="group" id="gearCalc"><h2>Gearing and top speed</h2>' +
+    return '<section class="group" id="gearCalc"><h2>Gearing and top speed</h2>' +
       '<div class="calc">' +
       '<div class="field"><label for="gDrive">Top sprocket</label><select id="gDrive">' + opts(G.drive, cs.drive || G.stdDrive, function (v) { return v + "T" + (v === G.stdDrive ? " (std)" : ""); }) + "</select></div>" +
       '<div class="field"><label for="gDriven">Bottom sprocket</label><select id="gDriven">' + opts(G.driven.map(function (r) { return r.teeth; }), cs.driven || G.stdDriven, function (v) { return v + "T" + (v === G.stdDriven ? " (std)" : ""); }) + "</select></div>" +
@@ -1436,8 +1665,18 @@
       '<p class="note">Speed = engine rpm &divide; clutch ratio &divide; chaincase ratio &times; driver circumference (teeth &times; ' + C.driverPitchIn + '&quot; pitch). ' +
       "It is the track speed with no belt slip and the clutch fully shifted out. " + esc(C.clutchRange.source) +
       " Real top speed is lower; use this to compare one setup with another. " + esc(C.stGearing) + "</p></section>";
-
-    html += '<section class="group" id="mixCalc"><h2>Premix and oil</h2>' +
+  }
+  function wireGearCalc() {
+    ["gDrive", "gDriven", "gTeeth", "gRpm", "gClutch"].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener("input", updateGear); el.addEventListener("change", updateGear);
+    });
+    updateGear();
+  }
+  /* Premix calculator: lives on Fix > Maintenance. */
+  function mixCalcHtml() {
+    var C = S.calc, cs = store.get("calc", {});
+    return '<section class="group" id="mixCalc"><h2>Premix and oil</h2>' +
       '<div class="prov">' + esc(C.autolube) + "</div>" +
       '<div class="calc">' +
       '<div class="field"><label for="pFuel">Fuel</label><input id="pFuel" type="number" inputmode="decimal" step="0.1" min="0" value="' + esc(cs.fuel || 8.4) + '"></div>' +
@@ -1445,26 +1684,24 @@
       '<div class="field"><label for="pRatio">Ratio</label><select id="pRatio">' + opts([24, 32, 40, 50, 100], cs.ratio || 32, function (v) { return v + ":1"; }) + "</select></div>" +
       '</div><div id="pResult"></div>' +
       '<p class="note">' + esc(C.premixNote) + " A full tank is " + esc(S.capacities.fuelTank) + " (1984&ndash;89 manual).</p></section>";
-
-    main.innerHTML = html;
-    ["gDrive", "gDriven", "gTeeth", "gRpm", "gClutch", "pFuel", "pUnit", "pRatio"].forEach(function (id) {
-      var el = document.getElementById(id);
-      el.addEventListener("input", updateCalc);
-      el.addEventListener("change", updateCalc);
-    });
-    updateCalc();
   }
+  function wireMixCalc() {
+    ["pFuel", "pUnit", "pRatio"].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener("input", updateMix); el.addEventListener("change", updateMix);
+    });
+    updateMix();
+  }
+  function calcSave(vals) { var c = store.get("calc", {}); Object.keys(vals).forEach(function (k) { c[k] = vals[k]; }); store.set("calc", c); }
   function mphFor(rpm, clutch, drive, driven, teeth) {
     var inPerMin = rpm / clutch / (driven / drive) * teeth * S.calc.driverPitchIn;
     return inPerMin * 60 / 63360;
   }
-  function updateCalc() {
+  function updateGear() {
     var G = S.gearRatios, v = function (id) { return document.getElementById(id).value; };
     var drive = parseInt(v("gDrive"), 10), driven = parseInt(v("gDriven"), 10), teeth = parseInt(v("gTeeth"), 10);
     var rpm = parseFloat(v("gRpm")), clutch = parseFloat(v("gClutch"));
-    var fuel = parseFloat(v("pFuel")), unit = v("pUnit"), ratio = parseInt(v("pRatio"), 10);
-    store.set("calc", { drive: drive, driven: driven, teeth: teeth, rpm: rpm, clutch: clutch, fuel: fuel, unit: unit, ratio: ratio });
-
+    calcSave({ drive: drive, driven: driven, teeth: teeth, rpm: rpm, clutch: clutch });
     var h;
     if (!(rpm > 0) || !(clutch > 0)) {
       h = '<div class="verdict warn"><span class="vlabel">Check inputs</span><span>Enter an engine rpm and a clutch ratio above zero.</span></div>';
@@ -1485,7 +1722,11 @@
       else if (diff > 0.05) h += '<div class="verdict warn"><span class="vlabel">Geared up</span><span>More top speed only if the engine can still pull its peak rpm. If rpm drops on the lake, it is overgeared.</span></div>';
     }
     document.getElementById("gResult").innerHTML = h;
-
+  }
+  function updateMix() {
+    var v = function (id) { return document.getElementById(id).value; };
+    var fuel = parseFloat(v("pFuel")), unit = v("pUnit"), ratio = parseInt(v("pRatio"), 10);
+    calcSave({ fuel: fuel, unit: unit, ratio: ratio });
     var p;
     if (!(fuel > 0)) {
       p = '<div class="verdict warn"><span class="vlabel">Check inputs</span><span>Enter the amount of fuel.</span></div>';
@@ -1556,8 +1797,9 @@
       '<div class="field"><label for="sHours">Hours</label><input id="sHours" type="number" inputmode="decimal" min="0" step="0.1" value="' + esc(rec.hours) + '"></div>' +
       '<div class="field"><label for="sMiles">Miles</label><input id="sMiles" type="number" inputmode="numeric" min="0" step="1" value="' + esc(rec.miles) + '"></div>' +
       '</div><div id="svcBanner"></div>' +
-      '<p class="note">Type the meter reading, then tap <b>Done</b> on an item when you service it. That stores today&rsquo;s date with these hours and miles, and the item counts down from there. ' + esc(MT.headNote) + '</p></section><div id="svcBody"></div>';
+      '<p class="note">Type the meter reading, then tap <b>Done</b> on an item when you service it. That stores today&rsquo;s date with these hours and miles, and the item counts down from there. ' + esc(MT.headNote) + '</p></section><div id="svcBody"></div>' + mixCalcHtml();
     main.innerHTML = html;
+    wireMixCalc();
     ["sHours", "sMiles"].forEach(function (id) {
       document.getElementById(id).addEventListener("input", function () {
         var r = svcLoad(); r.hours = document.getElementById("sHours").value; r.miles = document.getElementById("sMiles").value; svcSave(r); drawSvc();
@@ -1642,7 +1884,7 @@
   /* ---------------- my garage ----------------
      The rider's own sleds with what has been changed on them. Using one sets
      the model and carries its pipe, track, drivers and gearing into the
-     Jetting, Track fit and Calculators tabs, and gives it its own maintenance
+     Jetting, Gearing and Track fit pages, and gives it its own maintenance
      record. Saved in this browser only. */
   function garageLoad() { return store.get("garage", []); }
   function garageSave(g) { store.set("garage", g); }
@@ -1662,12 +1904,12 @@
   }
   function useSled(g) {
     store.set("garageActive", g.id);
-    state.modelId = g.modelId; state.family = "All";
+    state.modelId = g.modelId;
     state.jet.pipe = g.pipe || "stock";
     var c = store.get("calc", {});
     if (g.drive) c.drive = +g.drive; if (g.driven) c.driven = +g.driven; if (g.teeth) c.teeth = +g.teeth;
     store.set("calc", c);
-    renderList();
+    refreshSled();
   }
   function garageStrip(main) {
     var g = activeSled();
@@ -1686,7 +1928,7 @@
       '<div class="sheet-sub"><span>Your own sleds and what you have changed on them. Saved in this browser only</span></div></div>';
 
     html += '<section class="group"><h2>Your sleds &mdash; ' + list.length + "</h2>";
-    if (!list.length) html += '<p class="empty">No sleds yet. Add one below. When you use it, the Jetting, Track fit and Calculators tabs start from your setup, and Maintenance keeps a record for that sled.</p>';
+    if (!list.length) html += '<p class="empty">No sleds yet. Add one below. When you use it, it appears in the Sled picker at the top, Jetting, Gearing and Track fit start from your setup, and Maintenance keeps a record for that sled.</p>';
     list.forEach(function (g) {
       var gm = byId[g.modelId];
       html += '<div class="mod' + (g.id === act ? " gact" : "") + '"><div class="mod-top"><b>' + esc(g.name) + "</b> " +
@@ -1868,7 +2110,7 @@
     }).join("") + "</section>";
     main.innerHTML = html;
     wirePnButtons(main);
-    document.getElementById("swA").addEventListener("change", function (e) { state.modelId = e.target.value; renderList(); });
+    document.getElementById("swA").addEventListener("change", function (e) { store.set("garageActive", null); pickModel(e.target.value); });
     document.getElementById("swB").addEventListener("change", function (e) { state.swapB = e.target.value; render(); });
   }
 
@@ -1925,11 +2167,11 @@
             var px = D.prefixes.filter(function (x) { return x.modelId === m.id; })[0];
             return '<tr><td class="mono">' + m.year + '</td><td><button type="button" class="linkbtn" style="font-size:13px" data-idgo="' + esc(m.id) + '">' + esc(m.variant) + '</button></td><td class="mono">' + esc(m.code) + '</td><td class="mono">' + (px ? esc(px.start) : '<span class="muted-s">not listed</span>') + "</td></tr>";
           }).join("") + "</tbody></table></div>";
-        if (c.length > 1) o += '<p class="note">To tell the years apart, compare part numbers on the sled with the <b>Year changes</b> tab (drive belt, CDI unit and primary spring change between years), or use <b>Interchange</b> to compare two candidates.</p>';
+        if (c.length > 1) o += '<p class="note">To tell the years apart, compare part numbers on the sled with ' + goLink("changes", "Year changes") + " (drive belt, CDI unit and primary spring change between years), or use " + goLink("swap", "Interchange") + " to compare two candidates.</p>";
       }
       document.getElementById("idOut").innerHTML = o;
       Array.prototype.forEach.call(main.querySelectorAll("[data-idgo]"), function (b) {
-        b.addEventListener("click", function () { state.modelId = b.getAttribute("data-idgo"); state.family = "All"; state.view = "specs"; selectView("specs"); renderList(); });
+        b.addEventListener("click", function () { store.set("garageActive", null); state.modelId = b.getAttribute("data-idgo"); renderSledPicker(); selectView("specs"); });
       });
     };
     document.getElementById("idSn").addEventListener("input", function (e) { f.sn = e.target.value; draw(); });
@@ -1951,7 +2193,7 @@
     html += '<div class="verdict stop"><span class="vlabel">Read this first</span><span>' +
       "<b>Flat-slide jet numbers are a different scale from your round-slide numbers.</b> A 52.5 pilot on TM carbs is not leaner than your #" +
       carb.pilotJetStd.size + " — it is a different family with a different flow curve. " +
-      "The Jetting tab computes for the <b>stock round slides only</b>. Do not carry those numbers across this swap.</span></div>";
+      "The Jetting page computes for the <b>stock round slides only</b>. Do not carry those numbers across this swap.</span></div>";
 
     html += '<section class="group"><h2>What fits</h2><ul class="checklist">' +
       "<li><b>94–96 VMax 600 carbs</b> are reported a direct fit: same centre-to-centre spacing, they slide into the stock boots, and the airbox lines up.</li>" +
@@ -1975,18 +2217,16 @@
   }
 
   /* ---------------- year-over-year changes ---------------- */
-  /* ---------------- clutch, gearing & suspension ---------------- */
-  function renderSetup(main) {
-    var A = S.altitude, G = S.gearRatios, SU = S.suspension, CT = S.carbTuning;
-
-    var html = '<div class="sheet-head"><h2 class="sheet-title">Clutch, gearing &amp; suspension</h2>' +
-      '<div class="sheet-sub"><span>PZ480 high-altitude and setup tables, plus the 1991 Phazer II clutch tables</span></div></div>';
-
+  /* ---------------- clutching ----------------
+     Altitude clutching tables and the spring tables they refer to. */
+  function renderClutch(main) {
+    var A = S.altitude, SP = S.springs, m = byId[state.modelId];
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Clutching</h2>' +
+      '<div class="sheet-sub"><span>Factory high-altitude clutching, plus Yamaha&rsquo;s primary and secondary spring tables</span></div></div>';
     html += '<div class="prov"><b>' + esc(A.factoryBaseline) + "</b> " + esc(A.powerLoss) + "</div>";
-
+    html += '<p class="note" style="margin:-8px 0 22px">The stock clutch settings for your ' + m.year + " " + esc(m.variant) + " are on " + goLink("specs", "My sled &rsaquo; Quick specs") + ".</p>";
     /* The single most actionable finding in the chapter. */
-    html += '<div class="verdict warn"><span class="vlabel">Above 6,000 ft</span><span>' + esc(A.clutchThreshold) + "</span></div>";
-
+    html += '<div class="verdict warn" style="margin-bottom:22px"><span class="vlabel">Above 6,000 ft</span><span>' + esc(A.clutchThreshold) + "</span></div>";
     html += '<section class="group"><h2>High-altitude clutching &mdash; 1984&ndash;89 Phazer (PZ480)</h2><div class="tablewrap"><table>' +
       "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
       A.clutch.rows.map(function (r) {
@@ -2014,15 +2254,46 @@
         '</tbody></table></div><p class="note">' + esc(E.source) + ". Yamaha says to apply these above 2,000 ft (600 m). Unlike the 1984&ndash;89 Phazer, the 1991 Phazer II changes weights as well as the primary spring.</p></section>";
     });
 
-    html += '<section class="group"><h2>High-altitude gearing</h2><div class="tablewrap"><table>' +
-      "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
-      A.gearing.rows.map(function (r) {
-        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + esc(r.std) + '</td><td class="mono">' + esc(r.hi) + "</td></tr>";
+    html += '<section class="group"><h2>Primary clutch springs</h2>' +
+      '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate<br>kg/mm</th><th>Preload<br>kg</th><th>Colour</th>' +
+      "<th>Wire</th><th>OD</th><th>Turns</th><th>Free<br>length</th><th>Used on</th></tr></thead><tbody>" +
+      SP.primary.map(function (s, i) {
+        return '<tr id="spp-' + i + '">' +
+          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button>" + addBtn(s.pn) + "</td>" +
+          '<td class="mono"><b>' + esc(s.rate) + "</b></td><td class=\"mono\">" + esc(s.preload) + "</td><td>" + esc(s.color) + "</td>" +
+          '<td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.turns) + "</td>" +
+          '<td class="mono">' + esc(s.free) + "</td><td>" + esc(s.usedOn) +
+          (s.std ? ' <span class="tag tag-std">Std</span>' : "") + "</td></tr>";
       }).join("") +
-      "</tbody></table></div>" +
-      '<div class="verdict ok"><span class="vlabel">Bottom line</span><span>' + esc(A.gearing.verdict) + "</span></div>" +
-      '<p class="note">' + esc(A.gearing.source) + "</p></section>";
+      "</tbody></table></div></section>";
 
+    html += '<section class="group"><h2>Secondary clutch springs</h2>' +
+      '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate</th><th>Turns</th><th>OD</th><th>Wire</th>' +
+      "<th>Free length</th><th>Colour</th><th>Used on</th></tr></thead><tbody>" +
+      SP.secondary.map(function (s, i) {
+        return '<tr id="sps-' + i + '">' +
+          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button>" + addBtn(s.pn) + "</td>" +
+          '<td class="mono"><b>' + esc(s.rate) + '</b></td><td class="mono">' + esc(s.turns) + "</td>" +
+          '<td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.free) + "</td>" +
+          "<td>" + esc(s.color) + "</td><td>" + esc(s.usedOn) +
+          (s.std ? ' <span class="tag tag-std">Std</span>' : "") + "</td></tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(SP.secondaryNote) + "</p></section>";
+
+    html += '<div class="verdict warn"><span class="vlabel">Primary spring conflict</span><span>' + esc(SP.conflict) + "</span></div>";
+    html += '<div class="verdict warn"><span class="vlabel">Secondary colour conflict</span><span>' + esc(SP.secondaryConflict) + "</span></div>";
+    html += '<p class="note">' + esc(SP.source) + "</p>";
+
+    main.innerHTML = html;
+    wirePnButtons(main);
+  }
+
+  /* ---------------- gearing ---------------- */
+  function renderGearing(main) {
+    var A = S.altitude, G = S.gearRatios;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Gearing</h2>' +
+      '<div class="sheet-sub"><span>Top-speed calculator, the factory ratio chart and high-altitude gearing</span></div></div>';
+    html += gearCalcHtml();
     /* Ratio matrix. Ratios are computed rather than transcribed, since the
        scan is poor and driven/drive is exact arithmetic. */
     html += '<section class="group"><h2>Gear ratio chart</h2><div class="tablewrap"><table><thead><tr>' +
@@ -2042,51 +2313,49 @@
       '</tbody></table></div><p class="note">' + esc(G.note) + " " + esc(G.guidance) + "</p>" +
       '<div class="verdict warn"><span class="vlabel">Read this first</span><span>' + esc(G.caution) + "</span></div></section>";
 
+    html += '<section class="group"><h2>High-altitude gearing</h2><div class="tablewrap"><table>' +
+      "<thead><tr><th>Item</th><th>Standard</th><th>High altitude</th></tr></thead><tbody>" +
+      A.gearing.rows.map(function (r) {
+        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + esc(r.std) + '</td><td class="mono">' + esc(r.hi) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div>" +
+      '<div class="verdict ok"><span class="vlabel">Bottom line</span><span>' + esc(A.gearing.verdict) + "</span></div>" +
+      '<p class="note">' + esc(A.gearing.source) + "</p></section>";
+
+    main.innerHTML = html;
+    wireGearCalc();
+  }
+
+  /* ---------------- suspension ---------------- */
+  function renderSuspension(main) {
+    var SU = S.suspension;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Suspension</h2>' +
+      '<div class="sheet-sub"><span>Factory adjustment ranges and what each one does</span></div></div>';
     html += '<section class="group"><h2>Suspension setup</h2>' +
       '<p class="note" style="margin-top:0">' + esc(SU.principle) + " " + esc(SU.levers) + "</p>" +
       '<div class="tablewrap"><table><thead><tr><th>Adjustment</th><th>Range</th><th>Standard</th><th>What it does</th></tr></thead><tbody>' +
-      SU.adjustments.map(function (a) {
-        return "<tr><td><b>" + esc(a.item) + "</b></td><td>" + esc(a.positions) + "</td>" +
+      SU.adjustments.map(function (a, i) {
+        return '<tr id="su-' + i + '"><td><b>' + esc(a.item) + "</b></td><td>" + esc(a.positions) + "</td>" +
           '<td><span class="tag tag-std">' + esc(a.std) + "</span></td><td>" + esc(a.effect) + "</td></tr>";
       }).join("") +
       '</tbody></table></div><p class="note">' + esc(SU.source) + "</p></section>";
 
-    html += '<section class="group"><h2>Which circuit to change</h2><div class="tablewrap"><table>' +
-      "<thead><tr><th>Throttle opening</th><th>Controlled by</th></tr></thead><tbody>" +
-      CT.circuits.map(function (c) {
-        return "<tr><td><b>" + esc(c.range) + "</b></td><td>" + esc(c.controls) + "</td></tr>";
-      }).join("") +
-      "</tbody></table></div>" +
-      '<div class="verdict warn"><span class="vlabel">Screw direction</span><span>' + esc(CT.airScrewWarning) + "</span></div>" +
-      '<p class="note">' + esc(CT.jetNumbers) + " " + esc(CT.idleProcedure) + " " + esc(CT.torsNote) + "</p>" +
-      '<div class="verdict stop"><span class="vlabel">Air box</span><span>' + esc(CT.airboxWarning) + "</span></div>" +
-      '<p class="note">' + esc(CT.mainJetAccess) + "</p></section>";
-
-    html += '<section class="group"><h2>Reading the plugs</h2><div class="tablewrap"><table>' +
-      "<thead><tr><th>Condition</th><th>What you see</th><th>What it means</th></tr></thead><tbody>" +
-      CT.plugReading.map(function (p) {
-        return "<tr><td><b>" + esc(p.condition) + "</b></td><td>" + esc(p.look) + "</td><td>" + esc(p.means) + "</td></tr>";
-      }).join("") +
-      '</tbody></table></div><p class="note">' + esc(CT.finalWord) + "</p></section>";
-
     main.innerHTML = html;
   }
 
-  /* ---------------- torque & springs ---------------- */
+  /* ---------------- torque specs ---------------- */
   function renderTorque(main) {
-    var T = S.torque, SP = S.springs, CR = S.crankshaft;
-
-    var html = '<div class="sheet-head"><h2 class="sheet-title">Torque &amp; clutch springs</h2>' +
-      '<div class="sheet-sub"><span>PZ480 factory tables, plus Yamaha bulletin S88-007</span></div></div>';
-
+    var T = S.torque;
+    var html = '<div class="sheet-head"><h2 class="sheet-title">Torque specs</h2>' +
+      '<div class="sheet-sub"><span>PZ480 factory tables</span></div></div>';
     html += '<div class="prov"><b>' + esc(T.appliesTo) + ".</b> " + esc(T.note) +
       " The Phazer II and Venture share the engine and driveline, so these carry over, but they were read from the 1984&ndash;89 tables.</div>";
 
-    T.groups.forEach(function (g) {
+    T.groups.forEach(function (g, gi) {
       html += '<section class="group"><h2>' + esc(g.name) + "</h2>";
       html += '<div class="tablewrap"><table><thead><tr><th>Fastener</th><th>N·m</th><th>m·kg</th><th>ft·lb</th><th>Note</th></tr></thead><tbody>';
-      g.rows.forEach(function (r) {
-        html += "<tr><td>" + esc(r.item) + '</td><td class="mono"><b>' + r.nm + '</b></td><td class="mono">' +
+      g.rows.forEach(function (r, ri) {
+        html += '<tr id="tq-' + gi + '-' + ri + '"><td>' + esc(r.item) + '</td><td class="mono"><b>' + r.nm + '</b></td><td class="mono">' +
           (r.mkg != null ? r.mkg : '<span style="color:var(--muted)">&mdash;</span>') + '</td><td class="mono">' + r.ftlb +
           "</td><td>" +
           (r.flag ? '<span class="tag tag-warn">' + esc(r.flag) + "</span> " : "") +
@@ -2096,45 +2365,44 @@
       html += "</tbody></table></div><p class=\"note\">" + esc(g.source) + "</p></section>";
     });
 
+    html += '<p class="note">Clutch springs are under ' + goLink("clutch", "Tune &rsaquo; Clutching") + "; crankshaft limits under " + goLink("limits", "Service limits") + ".</p>";
+    main.innerHTML = html;
+  }
+
+  /* ---------------- service limits ----------------
+     Capacities, adjustments and wear limits in one place, with the same source
+     badge as the spec sheet. */
+  function limitsHtml(m) {
+    var src = m.specSource, cl = clutchFor(m), html = "";
+    html += '<section class="group"><h2>Capacities' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
+    html += row("Fuel tank", S.capacities.fuelTank) + row("Oil tank", S.capacities.oilTank) + row("Chaincase oil", S.capacities.chaincase);
+    html += "</dl></section>";
+    html += '<section class="group"><h2>Adjustments' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
+    html += row("Track deflection", S.service.trackDeflection) + row("Toe-out", S.service.toeOut);
+    html += row("Throttle free play", S.service.throttleCableFreePlay) + row("Oil pump cable", S.service.oilPumpCableFreePlay);
+    html += row("Starter cable free play", S.service.starterCableFreePlay);
+    html += "</dl></section>";
+    html += '<section class="group"><h2>Wear limits' + badge(src === "clymer8489", "From the 1984-89 PZ480 tables; not checked for this model") + '</h2><dl class="specgrid">';
+    html += row("Belt circumference", S.clutch.beltOutsideCircumference) + row("Belt width, new", S.clutch.beltWidthNew);
+    html += row("Belt width limit", S.clutch.beltWidthWearLimit);
+    html += row("Brake disc OD", S.service.brakeDiscOuterDiameter) + row("Brake disc thickness", S.service.brakeDiscThickness);
+    html += row("Pad-to-disc clearance", S.service.padToDiscClearance);
+    html += "</dl></section>";
+    return html;
+  }
+  function renderLimits(main) {
+    var m = byId[state.modelId], CR = S.crankshaft;
+    var html = sledHead(m, "Service limits", "") + "</div>";
+    html += limitsHtml(m);
     html += '<section class="group"><h2>Crankshaft limits</h2>' +
       '<div class="tablewrap"><table><thead><tr><th>Item</th><th>mm</th><th>in</th></tr></thead><tbody>' +
-      CR.rows.map(function (r) {
-        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + esc(r.mm) + '</td><td class="mono">' + esc(r["in"]) + "</td></tr>";
+      CR.rows.map(function (r, i) {
+        return '<tr id="cr-' + i + '"><td>' + esc(r.item) + '</td><td class="mono">' + esc(r.mm) + '</td><td class="mono">' + esc(r["in"]) + "</td></tr>";
       }).join("") +
       "</tbody></table></div><p class=\"note\">" + esc(CR.source) + "</p></section>";
 
-    html += '<section class="group"><h2>Primary clutch springs</h2>' +
-      '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate<br>kg/mm</th><th>Preload<br>kg</th><th>Colour</th>' +
-      "<th>Wire</th><th>OD</th><th>Turns</th><th>Free<br>length</th><th>Used on</th></tr></thead><tbody>" +
-      SP.primary.map(function (s) {
-        return "<tr>" +
-          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button>" + addBtn(s.pn) + "</td>" +
-          '<td class="mono"><b>' + esc(s.rate) + "</b></td><td class=\"mono\">" + esc(s.preload) + "</td><td>" + esc(s.color) + "</td>" +
-          '<td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.turns) + "</td>" +
-          '<td class="mono">' + esc(s.free) + "</td><td>" + esc(s.usedOn) +
-          (s.std ? ' <span class="tag tag-std">Std</span>' : "") + "</td></tr>";
-      }).join("") +
-      "</tbody></table></div></section>";
-
-    html += '<section class="group"><h2>Secondary clutch springs</h2>' +
-      '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate</th><th>Turns</th><th>OD</th><th>Wire</th>' +
-      "<th>Free length</th><th>Colour</th><th>Used on</th></tr></thead><tbody>" +
-      SP.secondary.map(function (s) {
-        return "<tr>" +
-          '<td><button class="pn" data-pn="' + esc(s.pn) + '">' + esc(s.pn) + "</button>" + addBtn(s.pn) + "</td>" +
-          '<td class="mono"><b>' + esc(s.rate) + '</b></td><td class="mono">' + esc(s.turns) + "</td>" +
-          '<td class="mono">' + esc(s.od) + '</td><td class="mono">' + esc(s.wire) + '</td><td class="mono">' + esc(s.free) + "</td>" +
-          "<td>" + esc(s.color) + "</td><td>" + esc(s.usedOn) +
-          (s.std ? ' <span class="tag tag-std">Std</span>' : "") + "</td></tr>";
-      }).join("") +
-      '</tbody></table></div><p class="note">' + esc(SP.secondaryNote) + "</p></section>";
-
-    html += '<div class="verdict warn"><span class="vlabel">Primary spring conflict</span><span>' + esc(SP.conflict) + "</span></div>";
-    html += '<div class="verdict warn"><span class="vlabel">Secondary colour conflict</span><span>' + esc(SP.secondaryConflict) + "</span></div>";
-    html += '<p class="note">' + esc(SP.source) + "</p>";
-
+    html += '<p class="note">Read off the <strong>PZ480 1984&ndash;89</strong> tables. The Phazer II shares the engine and carburettor, but its suspension was revised, and the Venture is a touring setup &mdash; treat the deflection figures as the Phazer baseline unless you have the matching manual page.</p>';
     main.innerHTML = html;
-    wirePnButtons(main);
   }
 
   function renderChanges(main) {
@@ -2268,7 +2536,7 @@
       "</div>" +
       '<div class="field"><label for="lNotes">Notes</label><textarea id="lNotes" class="field-ta" placeholder="Snow, pipe, needle clip, how it pulled&hellip;"></textarea></div>' +
       '<div class="btnrow"><button type="button" class="btn primary" id="lAdd">Save entry</button></div>' +
-      (draft ? '<p class="note">Altitude, temperature and main jet are filled in from the Jetting tab.</p>' : "") +
+      (draft ? '<p class="note">Altitude, temperature and main jet are filled in from the Jetting page.</p>' : "") +
       "</section>";
 
     html += '<section class="group"><h2>Entries &mdash; ' + log.length + "</h2>";
@@ -2325,23 +2593,27 @@
     });
   }
 
-  /* A pasted or edited link moves to that sled and tab. */
+  /* A pasted or edited link moves to that sled and page. */
   window.addEventListener("hashchange", function () {
     var h = readHash();
-    if (h.modelId && h.modelId !== state.modelId) {
-      state.modelId = h.modelId; state.family = "All";
-      Array.prototype.forEach.call(chipBox.children, function (x) { x.setAttribute("aria-pressed", String(x.textContent === "All")); });
-    }
+    if (h.modelId && h.modelId !== state.modelId) { state.modelId = h.modelId; renderSledPicker(); }
     selectView(h.view || "specs");
-    renderList();
+  });
+
+  /* Links to other pages inside a page: data-goto, plus an optional row to show. */
+  document.getElementById("main").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-goto]");
+    if (b) { e.preventDefault(); selectView(b.getAttribute("data-goto"), false, b.getAttribute("data-anchor")); }
   });
 
   var qEl = document.getElementById("q");
   qEl.addEventListener("input", function () { state.q = qEl.value; render(); });
+  qEl.addEventListener("keydown", function (e) { if (e.key === "Escape" && state.q) { e.preventDefault(); clearSearch(); } });
 
-  orderSave();
-  syncChrome();
-  renderList();
+  if (!PAGES[state.view]) state.view = "specs";
+  lastPage[PAGES[state.view].sec.id] = state.view;
+  renderSledPicker();
+  render();
 
   /* Offline: only the GitHub Pages build links a manifest and ships sw.js. */
   if ("serviceWorker" in navigator && window.isSecureContext && document.querySelector('link[rel="manifest"]')) {
