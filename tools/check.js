@@ -50,7 +50,7 @@ for (const [k, rows] of Object.entries(P.m)) {
 }
 
 /* ---- model fields confirmed by that model's own diagram -------------------- */
-const FIELDS = ["track", "slide", "primarySpring", "belt", "cdi", "coil", "brakeDisc"];
+const FIELDS = ["track", "slide", "primarySpring", "belt", "cdi", "coil", "stator", "rotor", "brakeDisc"];
 for (const m of S.models) {
   const pns = new Set((P.m[m.partzilla] || []).map((r) => r.split("|")[2]));
   for (const f of FIELDS) {

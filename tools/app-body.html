@@ -901,6 +901,32 @@
     assumed: "<b>Carburettor carried forward; clutching not verified.</b> The local manuals have no page for this year. It carries the same carburettor and jetting part numbers as 1990 and 1991, so the carburettor figures are very likely right. Its primary spring differs from 1991, so no clutch RPM is shown, and jetting uses the 1991 chart as the nearest factory chart.",
     venture: "<b>Engine shared, chassis not verified.</b> The Venture uses the same 485 cc twin and the same carburettor part numbers as the Phazer, so the engine and jetting figures should hold. There is <b>no VT480 manual</b> in the local set, and the Venture is a touring sled &mdash; its clutching, gearing and suspension figures are NOT verified."
   };
+  /* Flywheel magneto figures for one sled. The two factory tables disagree on the
+     rotor nut torque, so each era gets its own figure and anything later than
+     1990 says plainly that it is carried over. */
+  function magnetoFor(m) {
+    var G = S.magneto, e = G.nut.e8489, f = G.nut.e1990;
+    var tq = function (t) { return t.nm + " N·m (" + t.mkg + " m·kg, " + t.ftlb + " ft·lb)"; };
+    var out = { type: G.type, screw: tq(G.statorScrew) + ", 1991 supplement" };
+    if (m.specSource === "clymer8489") {
+      out.nut = tq(e);
+      out.note = "Flywheel nut from Yamaha\u2019s 1984\u201389 PZ480 table (p.8-5). The 1990 Phazer II table raises it to " + f.nm + " N·m (" + f.ftlb + " ft·lb).";
+    } else if (m.specSource === "factory9096") {
+      out.nut = tq(f);
+      out.note = "Flywheel nut from Yamaha\u2019s 1990 PZ480P/EP table (p.8-6). The 1984\u201389 table gives " + e.nm + " N·m (" + e.ftlb + " ft·lb).";
+    } else {
+      if (m.family === "Venture") {
+        out.type = null; out.nut = null;
+        out.note = "<b>Magneto not confirmed for the Venture.</b> There is no Venture manual in the local set, and the Venture XL has its own stator and rotor part numbers. For reference only, the Phazer tables give " +
+          e.nm + " N·m (" + e.ftlb + " ft·lb) for 1984\u201389 and " + f.nm + " N·m (" + f.ftlb + " ft·lb) for 1990.";
+      } else {
+        out.nut = tq(f) + ", carried over from 1990";
+        out.note = "<b>Flywheel nut not confirmed for this year.</b> No manual page for " + m.year + " restates it, so the 1990 Phazer II figure is shown. The 1984\u201389 table gives " + e.nm + " N·m (" + e.ftlb + " ft·lb).";
+      }
+    }
+    out.note += " Stator and rotor part numbers are from this model\u2019s Generator fiche.";
+    return out;
+  }
   function provenance(m) {
     var note = SOURCE_NOTE[m.specSource];
     return note ? '<div class="prov">' + note + "</div>" : "";
@@ -1074,10 +1100,15 @@
     }
     html += "</section>";
 
-    html += '<section class="group"><h2>Ignition &amp; brake</h2><dl class="specgrid">';
-    html += row("CDI unit", "—", m.cdi, unc("cdi")) + row("Ignition coil", "—", m.coil, unc("coil")) + row("Brake disc", "—", m.brakeDisc, unc("brakeDisc"));
+    html += '<section class="group"><h2>Ignition, charging &amp; brake</h2><dl class="specgrid">';
+    html += row("CDI unit", "—", m.cdi, unc("cdi")) + row("Ignition coil", "—", m.coil, unc("coil"));
+    var mg = magnetoFor(m);
+    html += row("Magneto", mg.type) + row("Stator assembly", "—", m.stator, unc("stator")) + row("Flywheel (rotor)", "—", m.rotor, unc("rotor"));
+    html += row("Flywheel nut torque", mg.nut) + row("Stator plate screws", mg.screw);
+    html += row("Brake disc", "—", m.brakeDisc, unc("brakeDisc"));
     html += "</dl>";
-    if (["track", "slide", "primarySpring", "belt", "cdi", "coil", "brakeDisc"].some(unc)) {
+    html += '<p class="note">' + mg.note + " Resistance checks are under " + goLink("trouble", "Fix &rsaquo; Troubleshooting", "ts-elec") + ".</p>";
+    if (["track", "slide", "primarySpring", "belt", "cdi", "coil", "stator", "rotor", "brakeDisc"].some(unc)) {
       html += '<p class="note">Parts marked <span class="tag tag-unconf">unconfirmed</span> are not on this model\u2019s scraped diagrams, usually because that diagram section was not scraped. They are carried over from related years.</p>';
     }
     html += "</section>";
@@ -1214,7 +1245,7 @@
     S.troubleshooting.groups.forEach(function (g) {
       g.items.forEach(function (it) { add("trouble", "trouble", it.symptom, "", g.title, it.checks.join(" ") + " " + (it.note || ""), null, { tsq: it.symptom }); });
     });
-    S.troubleshooting.electrical.rows.forEach(function (r) { add("trouble", "trouble", r[0], r[1], S.troubleshooting.electrical.title, "resistance ohm", "ts-elec"); });
+    S.troubleshooting.electrical.rows.forEach(function (r) { add("trouble", "trouble", r[0], r.slice(1).filter(function (v) { return v !== "-"; }).join(" | "), S.troubleshooting.electrical.title, "resistance ohm stator magneto", "ts-elec"); });
     svcItems().forEach(function (it) { add("fix", "service", it.item, "", it.group, it.lube || ""); });
     S.mods.sections.forEach(function (sec) {
       sec.items.forEach(function (it, i) { add("mods", "mods", it.title, "", sec.title, it.text + " " + (it.pns || []).join(" "), "mod-" + sec.id + "-" + i); });
@@ -2066,9 +2097,18 @@
     html += '<nav class="modnav printhide">' + T.groups.map(function (g) {
       return '<a href="#" data-jump="ts-' + esc(g.id) + '">' + esc(g.title) + "</a>";
     }).join("") + '<a href="#" data-jump="ts-elec">Resistance table</a></nav><div id="tsBody"></div>';
-    html += '<section class="group" id="ts-elec"><h2>' + esc(T.electrical.title) + ' <span class="tag tag-ok">manual</span></h2><div class="tablewrap"><table><tbody>' +
-      T.electrical.rows.map(function (r) { return "<tr><td>" + esc(r[0]) + '</td><td class="mono">' + esc(r[1]) + "</td></tr>"; }).join("") +
-      '</tbody></table></div><p class="note">' + esc(T.electrical.note) + "</p></section>";
+    var EL = T.electrical;
+    html += '<section class="group" id="ts-elec"><h2>' + esc(EL.title) + ' <span class="tag tag-ok">manual</span></h2>' +
+      (EL.warning ? '<div class="prov"><b>The two manuals disagree.</b> ' + esc(EL.warning) + "</div>" : "") +
+      '<div class="tablewrap"><table>' +
+      (EL.columns ? "<thead><tr><th>Test</th>" + EL.columns.map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr></thead>" : "") +
+      "<tbody>" +
+      EL.rows.map(function (r) {
+        return "<tr><td>" + esc(r[0]) + "</td>" + r.slice(1).map(function (v) {
+          return '<td class="mono">' + (v === "-" ? '<span style="color:var(--muted)">&mdash;</span>' : esc(v)) + "</td>";
+        }).join("") + "</tr>";
+      }).join("") +
+      '</tbody></table></div><p class="note">' + esc(EL.note) + "</p></section>";
     main.innerHTML = html;
     var draw = function () {
       var words = (state.tsq || "").toLowerCase().split(/\s+/).filter(Boolean), shown = 0;
@@ -2103,7 +2143,8 @@
      Compares the parts index for two models section by section: a part number
      both list is a direct swap by Yamaha's catalogue. */
   var KEYPARTS = [["track", "Track"], ["slide", "Slide (hyfax)"], ["belt", "Drive belt"], ["primarySpring", "Primary spring"],
-                  ["cdi", "CDI unit"], ["coil", "Ignition coil"], ["brakeDisc", "Brake disc"]];
+                  ["cdi", "CDI unit"], ["coil", "Ignition coil"], ["stator", "Stator"], ["rotor", "Flywheel (rotor)"],
+                  ["brakeDisc", "Brake disc"]];
   function partsBySection(m) {
     var out = {};
     (P.m[m.partzilla] || []).forEach(function (r) {
@@ -2463,6 +2504,7 @@
       { key: "track", label: "Track" }, { key: "slide", label: "Slide rail" },
       { key: "belt", label: "Drive belt" }, { key: "primarySpring", label: "Primary spring" },
       { key: "cdi", label: "CDI unit" }, { key: "coil", label: "Ignition coil" },
+      { key: "stator", label: "Stator" }, { key: "rotor", label: "Flywheel (rotor)" },
       { key: "brakeDisc", label: "Brake disc" }
     ];
     var FAMS = ["Phazer", "Phazer II", "Venture"];

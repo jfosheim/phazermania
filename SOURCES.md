@@ -172,3 +172,28 @@ The **Calculators** tab's clutch default (1:1 top ratio) is the top of Clymer's 
 - Chain-link counts in Table 4 for combinations other than the standard 17/29.
 - Main jet #121.3: two Partzilla numbers and no manual listing; ask a dealer which is current.
 - 1984-85 (PZ480H/J): in the 1984-89 factory manual, but outside the 1986-1995 scope.
+
+## Flywheel, stator and charging (added 2026-11-24)
+
+**Part numbers** come from each model's *Generator* fiche at Rich's Yamaha, read through a browser on 2026-11-24 (the container's proxy blocks the site) and folded into `data/parts.js` as a new `generator` section with `node tools/parts.js merge`. `merge` now replaces only the sections a scrape file covers, so a one-section file like this one leaves the other 16 sections alone. Only the stator, rotor, coils and lead wire were kept; screws and washers were dropped, as with the Partzilla scrape.
+
+| Part | Part number | Models |
+|---|---|---|
+| Stator assembly | 88F-85510-00-00 | Phazer and Phazer II 1986–1993, Venture GT 1992 |
+| Stator assembly | 8BL-85510-00-00 | Phazer II 1994–1995 |
+| Stator assembly | 88T-85510-01-00 (was -00) | Venture XL 1991–1993, Venture GT 1993 |
+| Stator assembly | 8BK-85510-00-00 | Venture XL 1994–1995 |
+| Rotor (flywheel) | 8V0-85550-21-00 (was -20) | Phazer 1986–89, Phazer II 1990 |
+| Rotor (flywheel) | 88F-85550-00-00 | Phazer II recoil 1991–95, 1991 ST |
+| Rotor (flywheel) | 88H-85550-00-00 | Phazer II LE 1991–95, ST 1992–95, Venture GT |
+| Rotor (flywheel) | 88T-85550-00-00 | Venture XL |
+
+The coils inside the Phazer stator do not change: source 86M-85511-00-00, lighting 8H8-85513-20-00 and 82M-85514-20-00, pulser 82M-85580-20-00. Everything except the 88F rotor was listed as discontinued that day.
+
+**Torque**, read off the scanned factory pages in `Yamaha 1984-1999 Phazer.ZIP`:
+
+- 1984–89 PZ480 table, p.8-5 (PDF p.124): "C.D.I. magneto" nut, M16 × 1.0, **73 N·m / 7.3 m·kg / 53 ft·lb**; spark plug 28 N·m. The same page gives m·kg for every engine fastener, now added to the torque table.
+- 1990 PZ480P/EP table, p.8-6 (PDF p.472): "Magneto rotor" **85 N·m / 8.5 m·kg / 61 ft·lb**. The two factory tables disagree; the app shows each era its own figure and labels 1991–95 as carried over from 1990. No Venture figure is shown.
+- 1991 supplement p.16 (PDF p.506): stator plate screws **7 N·m / 0.7 m·kg / 5.1 ft·lb**, with the install notes (degrease the crank taper, align the stator timing mark with the crankcase seam).
+
+**Resistance table.** The old table had the 1984–89 source coil as "1.16–1.42 ohm". Yamaha's own page (p.8-10, PDF p.129) prints **1.29 kΩ ± 10%**, so the range is 1.16–1.42 **kΩ**; corrected. The table now has a 1990 column from LIT-12618-PZ-50 pp.8-13/8-14 (PDF pp.479–480), which disagrees with 1984–89 on the pickup coil (14 vs 17 Ω), source coil (556 vs 1,290) and grip warmer coil (3 vs 0.66 Ω), and prints the pickup and source figures with no unit. Both columns are shown with a warning rather than one being picked. The magneto is a Mitsubishi F3T368 in both manuals.
