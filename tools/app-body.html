@@ -854,7 +854,7 @@
     aaen:  { label: "Aaen pipe", steps: 2, pilot: 105,
              note: "Forum consensus and Aaen's own guidance: up 2 main sizes and up on the pilot. Aaen will give you a jetting recommendation for your elevation for free — worth a phone call before you buy jets." },
     dg:    { label: "DG pipe", steps: 2, pilot: 105,
-             note: "Reported the same as the Aaen: at least 2 sizes up on the main, and don't skip the pilot. Read the plugs — you want a tan/coffee colour, not white." },
+             note: "Reported the same as the Aaen: at least 2 sizes up on the main, and don't skip the pilot. Riders also fit Yamaha's 80L-14489-00-00 primary nozzle with the 2A main nozzle (8Y2-14941-2A-00) to richen the midrange, where piped sleds burn pistons. Read the plugs — you want a tan/coffee colour, not white." },
     other: { label: "Other aftermarket pipe", steps: 2, pilot: 105,
              note: "Treated as a generic +2 starting point. Any pipe changes the whole curve, not just peak, so the midrange needs checking too." }
   };
@@ -1567,7 +1567,9 @@
       "</b> pilot (" + esc(carb.pilotJetStd.pn) + ") appears in Yamaha’s catalogue for this carburettor, so there are no other pilot part numbers in this data. " +
       "The ~" + pilot + " figure above is the same density correction applied to the pilot, for reference against jets you source elsewhere.</span></div>";
 
-    if (pipe.note) h += '<div class="verdict"><span class="vlabel">' + esc(pipe.label) + "</span><span>" + esc(pipe.note) + "</span></div>";
+    if (pipe.note) h += '<div class="verdict"><span class="vlabel">' + esc(pipe.label) + "</span><span>" + esc(pipe.note) +
+      " Forum-reported, not Yamaha figures. See " + goLink("mods", "the nozzle fix", "mod-carbs-0") + ", and raise the clutch to match on " +
+      goLink("clutch", "Tune &rsaquo; Clutching", "clutch-piped") + ".</span></div>";
 
     if (pipe.steps) {
       h += '<div class="verdict"><span class="vlabel">Nozzle</span><span>A pipe leans the midrange, which the main jet does not reach. ' +
@@ -2347,6 +2349,25 @@
         }).join("") +
         '</tbody></table></div><p class="note">' + esc(E.source) + ". Yamaha says to apply these above 2,000 ft (600 m). Unlike the 1984&ndash;89 Phazer, the 1991 Phazer II changes weights as well as the primary spring.</p></section>";
     });
+
+    /* Piped sleds: rider reports set against this sled's factory figures. */
+    var PP = S.clutch.piped, cl = clutchFor(m);
+    html += '<section class="group"><h2 id="clutch-piped">Piped sled ' + MOD_TAGS[PP.tag] + "</h2>" +
+      '<p class="note" style="margin-top:0">' + esc(PP.intro) + "</p>" +
+      '<div class="tablewrap"><table><thead><tr><th>Item</th><th>Stock, ' + m.year + " " + esc(m.variant) +
+      (cl ? ' <span class="tag tag-ok">manual</span>' : "") + "</th><th>Reported with a pipe</th></tr></thead><tbody>" +
+      PP.rows.map(function (r) {
+        var std = cl && r.key ? cl[r.key] : null;
+        return "<tr><td>" + esc(r.item) + '</td><td class="mono">' + (std ? esc(std) : '<span style="color:var(--muted)">&mdash;</span>') +
+          "</td><td>" + esc(r.piped) + "</td></tr>";
+      }).join("") +
+      "</tbody></table></div>" +
+      '<div class="verdict warn"><span class="vlabel">Before you order</span><span>' + esc(PP.cautions) + "</span></div>" +
+      '<p class="note">Jet the sled for the pipe first: ' + goLink("jetting", "Tune &rsaquo; Jetting") +
+      ". Every reported setup, with its thread, is under " + goLink("mods", "Mods &amp; upgrades &rsaquo; Clutching and gearing", "mod-clutch-3") + ".</p>" +
+      '<p class="mod-src">Sources: ' + PP.sources.map(function (x) {
+        return '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.label) + "</a>";
+      }).join(" &middot; ") + "</p></section>";
 
     html += '<section class="group"><h2>Primary clutch springs</h2>' +
       '<div class="tablewrap"><table><thead><tr><th>Part number</th><th>Rate<br>kg/mm</th><th>Preload<br>kg</th><th>Colour</th>' +
