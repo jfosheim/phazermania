@@ -2670,7 +2670,15 @@
 
   /* Offline: only the GitHub Pages build links a manifest and ships sw.js. */
   if ("serviceWorker" in navigator && window.isSecureContext && document.querySelector('link[rel="manifest"]')) {
-    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () { /* offline mode unavailable */ }); });
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").then(function (reg) {
+        // An installed app can stay open for days. Look for a new deploy each
+        // time it comes back to the foreground; the next open then shows it.
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible" && navigator.onLine) reg.update().catch(function () {});
+        });
+      }).catch(function () { /* offline mode unavailable */ });
+    });
   }
 })();
 </script>
