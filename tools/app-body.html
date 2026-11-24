@@ -1228,10 +1228,62 @@
     if (hay.indexOf(w) >= 0) return true;
     return w.length > 3 && /s$/.test(w) && hay.indexOf(w.slice(0, -1)) >= 0;
   }
+  /* Rider words for the words the manuals and the parts catalogue use. A
+     typed word matches if ANY word in its group appears. Only map terms that
+     really name the same thing: a synonym that pulls in a different part is
+     worse than no result. */
+  var SYNONYMS = [
+    ["flywheel", "magneto", "stator", "source coil", "charge coil", "pickup coil", "lighting coil"],
+    ["hyfax", "slider", "slide rail", "slide runner", "runner"],
+    ["shock", "damper", "absorber", "strut"],
+    ["carb", "carburetor", "carburettor", "mikuni"],
+    ["clutch", "sheave"],
+    ["choke", "enricher", "starter plunger", "starter jet"],
+    ["jug", "cylinder", "barrel"],
+    ["ring", "ringset"],
+    ["bogie", "bogey", "idler", "guide wheel"],
+    ["skid", "rear suspension", "slide rail"],
+    ["chaincase", "chain case", "chain"],
+    ["gas", "fuel", "petrol"],
+    ["premix", "autolube", "oil injection"],
+    ["regulator", "rectifier", "voltage"],
+    ["muffler", "silencer", "exhaust", "pipe"],
+    ["airbox", "air box", "air cleaner", "intake"],
+    ["carbide", "wear bar", "ski runner"],
+    ["bog", "bogging", "stumble", "hesitate", "hesitation", "flat spot"],
+    ["cdi", "c.d.i.", "ignition box"],
+    ["plug", "spark plug"],
+    ["recoil", "pull start", "pull rope", "starter rope", "rope"],
+    ["handlebar", "riser"],
+    ["headlight", "light", "bulb", "lamp"],
+    ["idle", "air screw", "pilot screw"],
+    ["driver", "drive sprocket"],
+    ["lug", "paddle"],
+    ["tie rod", "tie-rod", "tierod"],
+    ["torque", "tighten", "ft-lb", "ft·lb"]
+  ];
+  /* Two-word rider phrases are folded into one search word first. */
+  var PHRASES = [[/\b(won['\u2019]?t|wont|hard|no) start(ing)?\b/g, "start"], [/\bspark plugs?\b/g, "plug"], [/\bair ?box\b/g, "airbox"],
+                 [/\bchain ?case\b/g, "chaincase"], [/\btie[ -]?rods?\b/g, "tierod"], [/\bwear bars?\b/g, "carbide"],
+                 [/\bpull (start|rope)\b/g, "recoil"], [/\bflat spot\b/g, "bog"], [/\bguide wheels?\b/g, "bogie"]];
+  function searchTerms(raw) {
+    var q = raw.toLowerCase();
+    PHRASES.forEach(function (ph) { q = q.replace(ph[0], ph[1]); });
+    return q.split(/\s+/).filter(Boolean).map(function (w) {
+      var base = w.length > 3 && /s$/.test(w) ? w.slice(0, -1) : w;
+      var alts = [w];
+      SYNONYMS.forEach(function (g) {
+        if (g.indexOf(w) >= 0 || g.indexOf(base) >= 0) g.forEach(function (x) { if (alts.indexOf(x) < 0) alts.push(x); });
+      });
+      return alts;
+    });
+  }
   function renderSearch(main) {
     var raw = state.q.trim(), m = byId[state.modelId];
-    var words = raw.toLowerCase().split(/\s+/).filter(Boolean);
-    var match = function (hay) { return words.every(function (w) { return wordHit(hay, w); }); };
+    var terms = searchTerms(raw);
+    var match = function (hay) { return terms.every(function (alts) { return alts.some(function (w) { return wordHit(hay, w); }); }); };
+    var also = [];
+    terms.forEach(function (alts) { alts.slice(1).forEach(function (x) { if (also.indexOf(x) < 0) also.push(x); }); });
     var hits = searchIndex(m).filter(function (e) { return match(e.hay); });
     var parts = Object.keys(P.d).filter(function (pn) { return match((pn + " " + P.d[pn]).toLowerCase()); }).sort(function (a, b) {
       /* This sled's own parts first. */
@@ -1241,7 +1293,8 @@
     var total = hits.length + parts.length;
     var html = '<div class="sheet-head"><h2 class="sheet-title">' + total + (total === 1 ? " result" : " results") +
       " for &ldquo;" + esc(raw) + "&rdquo;</h2><div class=\"sheet-sub\"><span>Specs shown for the " + m.year + " " + esc(m.variant) +
-      '</span><span>Parts across all ' + MODELS.length + ' models</span><span><button type="button" class="linkbtn" id="qClear">Clear search</button></span></div></div>';
+      '</span><span>Parts across all ' + MODELS.length + ' models</span><span><button type="button" class="linkbtn" id="qClear">Clear search</button></span></div>' +
+      (also.length ? '<p class="note" style="margin-top:10px">Also matching ' + also.map(function (x) { return "&ldquo;" + esc(x) + "&rdquo;"; }).join(", ") + ".</p>" : "") + "</div>";
     if (!total) {
       main.innerHTML = html + '<p class="empty">Nothing matched. Try one word, such as <span class="mono">gap</span>, <span class="mono">belt</span>, <span class="mono">bog</span> or a part number like <span class="mono">47110</span>.</p>';
       document.getElementById("qClear").addEventListener("click", clearSearch);
